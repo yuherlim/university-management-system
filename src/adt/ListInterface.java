@@ -32,6 +32,8 @@ public interface ListInterface<T> {
    *          newPosition > getNumberOfEntries()+1
    */
   public boolean add(int newPosition, T newEntry);
+  
+  public boolean addToStart(T newEntry);
 
   /**
    * Task: Removes the entry at a given position from the list. Entries
@@ -45,6 +47,12 @@ public interface ListInterface<T> {
    *          givenPosition > getNumberOfEntries()
    */
   public T remove(int givenPosition);
+  
+  public T remove(T anEntry);
+  
+  public T removeFirst();
+  
+  public T removeLast();
 
   /**
    * Task: Removes all entries from the list.
@@ -62,7 +70,10 @@ public interface ListInterface<T> {
    * empty, givenPosition < 1, or givenPosition > getNumberOfEntries()
    */
   public boolean replace(int givenPosition, T newEntry);
-
+  
+  public boolean replaceFirst(T newEntry);
+  
+  public boolean replaceLast(T newEntry);
   /**
    * Task: Retrieves the entry at a given position in the list.
    *
@@ -72,6 +83,10 @@ public interface ListInterface<T> {
    * empty, givenPosition < 1, or givenPosition > getNumberOfEntries()
    */
   public T getEntry(int givenPosition);
+  
+  public T getFirst();
+  
+  public T getLast();
 
   /**
    * Task: Sees whether the list contains a given entry.
