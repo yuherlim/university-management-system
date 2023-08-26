@@ -9,6 +9,10 @@ package adt;
  * @author Yu
  */
 public class DoublyLinkedList<T> implements ListInterface<T> {
+    private Node firstNode; // reference to first node
+    private Node lastNode;
+    private int numberOfEntries;  	// number of entries in list
+    
 
     @Override
     public boolean add(T newEntry) {
@@ -100,4 +104,22 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    private class Node {
+        private T data;
+        private Node next;
+        private Node prev;
+
+
+        private Node(T data) {
+          this.data = data;
+          this.prev = null;
+          this.next = null;
+        }
+                
+        private Node(T data, Node prev, Node next) {
+          this.data = data;
+          this.next = next;
+          this.prev = prev;
+        }
+    }
 }
