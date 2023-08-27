@@ -186,7 +186,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public boolean isFull() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return false;
     }
     
     private class Node {
