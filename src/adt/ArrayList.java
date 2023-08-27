@@ -184,17 +184,35 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
     @Override
     public T remove(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        T result = null;
+        
+        if(contains(anEntry)){
+            for (int i = 0; i < numberOfEntries; i++) {
+                if(array[i].equals(anEntry)){
+                    result = array[i];
+                    removeGap(i+1);
+                    --numberOfEntries;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public T removeFirst() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        T result = array[0];
+        removeGap(1);
+        --numberOfEntries;
+        return result;
     }
 
     @Override
     public T removeLast() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        T result = array[numberOfEntries-1];
+        removeGap(numberOfEntries);
+        --numberOfEntries;
+        return result;
     }
 
     @Override
