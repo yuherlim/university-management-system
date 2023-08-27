@@ -12,23 +12,81 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     private Node firstNode;
     private int numberOfEntries;  	
     
-    public CircularDoublyLinkedListnkedList() {
+    public CircularDoublyLinkedList() {
         firstNode = null;
+        numberOfEntries = 0;
     }
 
     @Override
     public boolean add(T newEntry) {
+        Node newNode = new Node(newEntry);
         
+        if (isEmpty()) {
+            firstNode = newNode;
+        } else if (numberOfEntries == 1) { // adding a second entry
+            firstNode.next = firstNode.prev = newNode;
+            newNode.next = newNode.prev = firstNode;
+        } else { // adding entry into list with more than 1 element
+            Node currentNode = firstNode;
+            while (currentNode.next != firstNode) { // traverse linked list with pointer pointing to the current node
+                currentNode = currentNode.next;    // while have not reached the last node
+            }
+            currentNode.next = newNode; // make last node reference new node
+            newNode.prev = currentNode; // make new node prev reference previous last node.
+            newNode.next = firstNode;   // make new node linked back to the first node.
+            firstNode.prev = newNode;   // make first node prev link to the new last node.
+        }
+        
+        numberOfEntries++;
+        return true;
     }
 
     @Override
     public boolean add(int newPosition, T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean isSuccessful = true;
+        
+        if ((newPosition >= 1) && (newPosition <= numberOfEntries + 1)) {
+            Node newNode = new Node(newEntry);
+            
+            if (isEmpty() || (newPosition == 1)) { // add to beginning of the list
+                addToStart(newEntry);
+            } else if ((numberOfEntries == 1) && (newPosition == 2) || newPosition == numberOfEntries + 1) { // adding a second entry, or when adding an entry at the end of the list.
+                add(newEntry);
+            }
+            else {
+                Node nodeAtPosition = firstNode;
+                for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
+                    nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
+                }
+                //insert new node at new position.
+                nodeAtPosition.prev.next = newNode;
+                newNode.prev = nodeAtPosition.prev;
+                nodeAtPosition.prev = newNode;
+                newNode.next = nodeAtPosition;
+                numberOfEntries++;
+            }
+        } else {
+            isSuccessful = false;
+        }
+        return isSuccessful;
     }
 
     @Override
     public boolean addToStart(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Node newNode = new Node(newEntry);
+        
+        if (numberOfEntries == 1) { // add to start when there is already one entry.
+            firstNode.prev = firstNode.next = newNode;
+            newNode.next = newNode.prev = firstNode;
+        } else if (numberOfEntries > 1) { // add to start when there is more than 1 entry.
+            firstNode.prev.next = newNode;
+            newNode.prev = firstNode.prev;
+            newNode.next = firstNode;
+            firstNode.prev = newNode;
+        }
+        firstNode = newNode;
+        numberOfEntries++;
+        return true;
     }
     
     private int locateIndex(T givenEntry){
@@ -183,7 +241,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return numberOfEntries == 0;
+        return firstNode == null & numberOfEntries == 0;
     }
 
     @Override
