@@ -32,11 +32,13 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     private int locateIndex(T givenEntry){
         int index = -1;
         Node currentNode = firstNode;
-        for(int i=1; i <= numberOfEntries; i++){
+        for(int i=1; i < numberOfEntries; i++){
             if(currentNode.data.equals(givenEntry)){
                 index = i;
                 break;
-            }
+            }else{
+                currentNode = currentNode.next;
+            }        
         }
         return index;
     }
