@@ -8,15 +8,17 @@ package adt;
  *
  * @author Yu
  */
-public class DoublyLinkedList<T> implements ListInterface<T> {
+public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     private Node firstNode;
-    private Node lastNode;
     private int numberOfEntries;  	
     
+    public CircularDoublyLinkedListnkedList() {
+        firstNode = null;
+    }
 
     @Override
     public boolean add(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
