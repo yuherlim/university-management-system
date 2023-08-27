@@ -10,7 +10,6 @@ package adt;
  */
 public class DoublyLinkedList<T> implements ListInterface<T> {
     private Node firstNode;
-    private Node lastNode;
     private int numberOfEntries;  	
     
 
@@ -67,7 +66,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
                     nodeBeforeIndex.next.prev = nodeBeforeIndex;                // node 4 previous set to node 2
 
                 } else {                                          //the case if index larger than median
-                    Node nodeAfterIndex = lastNode;                  //start from last node
+                    Node nodeAfterIndex = firstNode.prev;                  //start from last node
                     for (int i = numberOfEntries - 1; i > givenPosition + 1; i--) {
                         nodeAfterIndex = nodeAfterIndex.prev;      //given index = 3, stop at 4
                     }
@@ -105,8 +104,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
                 firstNode.prev = null;          //set firstNode.next previous node to             
             }
             else{
-                firstNode = null;
-                lastNode = null;
+                firstNode = null;  
             }
              --numberOfEntries;
         }
@@ -118,15 +116,14 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     public T removeLast() {
         T result = null;
         
-        if(lastNode != null){
+        if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
-                result = lastNode.data;        
-                lastNode = lastNode.prev;     
-                lastNode.next = null;              
+                result = firstNode.prev.data;        
+                firstNode.prev = firstNode.prev.prev;     
+                firstNode.prev.next = null;              
             }
             else{
-                firstNode = null;
-                lastNode = null;       
+                firstNode = null;     
             }
             --numberOfEntries; 
         }
