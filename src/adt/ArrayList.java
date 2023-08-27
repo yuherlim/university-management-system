@@ -209,11 +209,13 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
     @Override
     public T getFirst() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       return array[0];
     }
 
     @Override
     public T getLast() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       return array[numberOfEntries - 1];
     }
+    
+    
 }
