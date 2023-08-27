@@ -9,10 +9,10 @@ package adt;
  * @author Yu
  */
 public class DoublyLinkedList<T> implements ListInterface<T> {
+
     private Node firstNode;
     private Node lastNode;
-    private int numberOfEntries;  	
-    
+    private int numberOfEntries;
 
     @Override
     public boolean add(T newEntry) {
@@ -28,33 +28,30 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     public boolean addToStart(T newEntry) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    private int locateIndex(T givenEntry){
+
+    private int locateIndex(T givenEntry) {
         int index = -1;
         Node currentNode = firstNode;
-        for(int i=1; i < numberOfEntries; i++){
-            if(currentNode.data.equals(givenEntry)){
+        for (int i = 1; i < numberOfEntries; i++) {
+            if (currentNode.data.equals(givenEntry)) {
                 index = i;
                 break;
-            }else{
+            } else {
                 currentNode = currentNode.next;
-            }        
+            }
         }
         return index;
     }
-    
-    
+
     @Override
     public T remove(int givenPosition) {
         T result = null;
-        if(givenPosition == 1){
+        if (givenPosition == 1) {
             result = removeFirst();
-        }
-        else if(givenPosition == numberOfEntries){
+        } else if (givenPosition == numberOfEntries) {
             result = removeLast();
-        }
-        else{
-            if((givenPosition >= 2) && (givenPosition <= numberOfEntries-1)){
+        } else {
+            if ((givenPosition >= 2) && (givenPosition <= numberOfEntries - 1)) {
                 int checkDist = numberOfEntries / 2;
 
                 if (givenPosition <= checkDist) {                     //the case if index smaller than median
@@ -85,52 +82,50 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     @Override
     public T remove(T anEntry) {
         T result = null;
-        
-        if(contains(anEntry)){
+
+        if (contains(anEntry)) {
             int index = locateIndex(anEntry);
             result = remove(index);
         }
-        
+
         return result;
     }
 
     @Override
     public T removeFirst() {
         T result = null;
-        
-        if(firstNode != null){
-            if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
+
+        if (firstNode != null) {
+            if (numberOfEntries > 1) {         //if there is currently more than 1 entry in the link
                 result = firstNode.data;        //data to be returned        
                 firstNode = firstNode.next;     //set the first node to firstNode.next
                 firstNode.prev = null;          //set firstNode.next previous node to             
-            }
-            else{
+            } else {
                 firstNode = null;
                 lastNode = null;
             }
-             --numberOfEntries;
+            --numberOfEntries;
         }
-        
+
         return result;
     }
 
     @Override
     public T removeLast() {
         T result = null;
-        
-        if(lastNode != null){
-            if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
-                result = lastNode.data;        
-                lastNode = lastNode.prev;     
-                lastNode.next = null;              
-            }
-            else{
+
+        if (lastNode != null) {
+            if (numberOfEntries > 1) {         //if there is currently more than 1 entry in the link
+                result = lastNode.data;
+                lastNode = lastNode.prev;
+                lastNode.next = null;
+            } else {
                 firstNode = null;
-                lastNode = null;       
+                lastNode = null;
             }
-            --numberOfEntries; 
+            --numberOfEntries;
         }
-   
+
         return result;
     }
 
@@ -156,55 +151,74 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public T getEntry(int givenPosition) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Node currentNode;
+        T data = null;
+        currentNode = firstNode;
+        if (givenPosition < 1 && givenPosition > this.numberOfEntries) {
+            for (int i = 1; i <= givenPosition; i++) {
+                data = currentNode.data;
+                currentNode = currentNode.next;
+            }
+        }
+
+        return data;
     }
 
     @Override
     public T getFirst() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return firstNode.data;
     }
 
     @Override
     public T getLast() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return firstNode.prev.data;
     }
 
     @Override
     public boolean contains(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Node currentNode;
+        currentNode = firstNode;
+
+        while (currentNode != firstNode) {
+            if (currentNode.data.equals(anEntry)) {
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
+        return currentNode.data.equals(anEntry);
     }
 
     @Override
     public int getNumberOfEntries() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+         return this.numberOfEntries;
     }
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+         return numberOfEntries == 0;
     }
 
     @Override
     public boolean isFull() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return false;
     }
-    
+
     private class Node {
+
         private T data;
         private Node next;
         private Node prev;
 
-
         private Node(T data) {
-          this.data = data;
-          this.prev = null;
-          this.next = null;
+            this.data = data;
+            this.prev = null;
+            this.next = null;
         }
-                
+
         private Node(T data, Node prev, Node next) {
-          this.data = data;
-          this.next = next;
-          this.prev = prev;
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
