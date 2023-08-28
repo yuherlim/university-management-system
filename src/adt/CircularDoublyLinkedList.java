@@ -22,10 +22,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         Node newNode = new Node(newEntry);
         
         if (isEmpty()) {
-            firstNode = newNode;
-        } else if (numberOfEntries == 1) { // adding a second entry
-            firstNode.next = firstNode.prev = newNode;
-            newNode.next = newNode.prev = firstNode;
+            firstNode = firstNode.prev = firstNode.next = newNode;
         } else { // adding entry into list with more than 1 element
             newNode.prev = firstNode.prev;  // link new node to the last node.
             firstNode.prev.next = newNode;  // link last node to the new node.
