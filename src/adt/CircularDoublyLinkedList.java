@@ -90,17 +90,9 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public boolean addToStart(T newEntry) {
         Node newNode = new Node(newEntry);
         
-        if (numberOfEntries == 1) { // add to start when there is already one entry.
-            firstNode.prev = firstNode.next = newNode;
-            newNode.next = newNode.prev = firstNode;
-        } else if (numberOfEntries > 1) { // add to start when there is more than 1 entry.
-            firstNode.prev.next = newNode;
-            newNode.prev = firstNode.prev;
-            newNode.next = firstNode;
-            firstNode.prev = newNode;
-        }
-        firstNode = newNode;
-        numberOfEntries++;
+        add(newEntry);
+        firstNode = newNode; // update the new node added to be the first node.
+        
         return true;
     }
     
@@ -316,7 +308,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return firstNode == null & numberOfEntries == 0;
+        return (firstNode == null) && (numberOfEntries == 0);
     }
 
     @Override
