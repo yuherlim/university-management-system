@@ -194,27 +194,76 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        firstNode = null;    //set the firstnode to null, then all the following node will dereferences
+        numberOfEntries = 0;
+        
     }
 
     @Override
     public boolean replace(int givenPosition, T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        boolean isSuccessful = false;
+        
+        if(givenPosition == 1){                 //if the position is 1, then call the replaceFirst method
+            replaceFirst(newEntry);
+        }else if(givenPosition == numberOfEntries){   //if the position is the last, call the replaceLast method
+            replaceLast(newEntry);
+        }else if(givenPosition >= 2 && givenPosition <= numberOfEntries-1){  //if the position between 2 to numberOfEntries-1 
+            Node currentNode = firstNode.next;
+            for(int i = 2; i < givenPosition ; i++){   //for loop to arrive the givenPosition
+                currentNode = currentNode.next;
+            }
+            currentNode.data = newEntry;
+            isSuccessful = true;
+    }
+        return isSuccessful;
     }
 
     @Override
     public boolean replaceFirst(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean isSuccessful = false;
+        
+        if(!isEmpty()){            //check the list is not empty
+            firstNode.data = newEntry;    //set the data into the currentNode
+            isSuccessful = true;
+        }
+        
+        return isSuccessful;
     }
 
     @Override
     public boolean replaceLast(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean isSuccessful = false;
+        
+        if(!isEmpty()){
+            Node currentNode = firstNode;
+            for(int i = 1 ; i < numberOfEntries; i++){   //for lopp to arrive the last position of the list
+                currentNode = currentNode.next;
+            }
+            currentNode.data = newEntry;
+            isSuccessful = true;
+        }
+        
+        return isSuccessful;
     }
 
     @Override
     public T getEntry(int givenPosition) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        T result = null;
+        
+        if(givenPosition == 1){
+            result = getFirst();
+        }else if(givenPosition == numberOfEntries){
+            result = getLast();
+        }else  if(givenPosition >= 2 && givenPosition <= numberOfEntries-1){
+            Node currentNode = firstNode.next;
+            for(int i = 2; i < givenPosition ; i++){
+                currentNode = currentNode.next;
+            }
+            result = currentNode.data;
+        }
+        
+        return result;
     }
 
     @Override
@@ -228,13 +277,19 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     }
 
     @Override
-    public boolean contains(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean contains(T anEntry) { //jiajie //macam same with getIndex
+        boolean isSuccessful = false;
+        
+        if(!isEmpty()){
+            for(int i = 0; i < numberOfEntries; i++){
+                
+            }
+        }
     }
 
     @Override
-    public int getNumberOfEntries() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int getNumberOfEntries() { //jiajie
+        return numberOfEntries;
     }
 
     @Override
