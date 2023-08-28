@@ -158,11 +158,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
                 result = firstNode.data;        //data to be returned        
-                firstNode = firstNode.next;     //set the first node to firstNode.next
-                firstNode.prev = null;          //set firstNode.next previous node to             
+                firstNode.next.prev = firstNode.prev;
+                firstNode = firstNode.next;
+                firstNode.prev.next = firstNode;
             }
             else{
-                firstNode = null;  
+                firstNode = firstNode.prev = firstNode.next = null; 
             }
              --numberOfEntries;
         }
@@ -176,12 +177,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         
         if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
-                result = firstNode.prev.data;        
+                result = firstNode.prev.data;
                 firstNode.prev = firstNode.prev.prev;     
-                firstNode.prev.next = null;              
+                firstNode.prev.next = firstNode;
             }
             else{
-                firstNode = null;     
+                firstNode = firstNode.prev = firstNode.next = null;   
             }
             --numberOfEntries; 
         }
