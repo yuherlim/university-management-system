@@ -158,7 +158,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public T removeFirst() {
         T result = null;
         
-        if(firstNode != null){
+        if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
                 result = firstNode.data;        //data to be returned        
                 firstNode = firstNode.next;     //set the first node to firstNode.next
