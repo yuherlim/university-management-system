@@ -27,14 +27,10 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             firstNode.next = firstNode.prev = newNode;
             newNode.next = newNode.prev = firstNode;
         } else { // adding entry into list with more than 1 element
-            Node currentNode = firstNode;
-            while (currentNode.next != firstNode) { // traverse linked list with pointer pointing to the current node
-                currentNode = currentNode.next;    // while have not reached the last node
-            }
-            currentNode.next = newNode; // make last node reference new node
-            newNode.prev = currentNode; // make new node prev reference previous last node.
-            newNode.next = firstNode;   // make new node linked back to the first node.
-            firstNode.prev = newNode;   // make first node prev link to the new last node.
+            newNode.prev = firstNode.prev;  // link new node to the last node.
+            firstNode.prev.next = newNode;  // link last node to the new node.
+            firstNode.prev = newNode;  // update first node to link to new node
+            newNode.next = firstNode;  // update new node to link to first node.
         }
         
         numberOfEntries++;
