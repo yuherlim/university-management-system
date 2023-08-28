@@ -199,12 +199,24 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
     @Override
     public boolean replaceFirst(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean isSuccessful = false;
+        
+        if(!isEmpty()){
+            array[0] = newEntry;
+            isSuccessful = true;
+        } 
+        return isSuccessful;
     }
 
     @Override
     public boolean replaceLast(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean isSuccessful = false;
+        
+        if(!isEmpty()){
+            array[numberOfEntries] = newEntry;
+            isSuccessful = true;
+        }
+        return isSuccessful;
     }
 
     @Override
