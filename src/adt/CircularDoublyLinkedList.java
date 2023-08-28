@@ -50,16 +50,38 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
                 add(newEntry);
             }
             else {
-                Node nodeAtPosition = firstNode;
-                for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
-                    nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
+//                Node nodeAtPosition = firstNode;
+//                for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
+//                    nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
+//                }
+//                //insert new node at new position.
+//                nodeAtPosition.prev.next = newNode;
+//                newNode.prev = nodeAtPosition.prev;
+//                nodeAtPosition.prev = newNode;
+//                newNode.next = nodeAtPosition;
+//                numberOfEntries++;
+                int checkDist = numberOfEntries / 2;
+
+                if (newPosition <= checkDist) {                     //the case if index smaller than median
+                    Node nodeBeforeIndex = firstNode;                //start from first node
+                    for (int i = 2; i < givenPosition - 1; i++) {
+                        nodeBeforeIndex = nodeBeforeIndex.next;     //given index =3 , stop at 2
+                    }
+                    result = nodeBeforeIndex.next.data;                         // save node 3 data into result
+                    nodeBeforeIndex.next = nodeBeforeIndex.next.next;           // node 2 -> node 4,
+                    nodeBeforeIndex.next.prev = nodeBeforeIndex;                // node 4 previous set to node 2
+
+                } else {                                          //the case if index larger than median
+                    Node nodeAfterIndex = firstNode.prev;                  //start from last node
+                    for (int i = numberOfEntries - 1; i > givenPosition + 1; i--) {
+                        nodeAfterIndex = nodeAfterIndex.prev;      //given index = 3, stop at 4
+                    }
+                    result = nodeAfterIndex.prev.data;                          //save node 3 data into result
+                    nodeAfterIndex.prev = nodeAfterIndex.prev.prev;             //node 4 -> node 2
+                    nodeAfterIndex.prev.next = nodeAfterIndex;                  //node 2 next set to node 4
+
                 }
-                //insert new node at new position.
-                nodeAtPosition.prev.next = newNode;
-                newNode.prev = nodeAtPosition.prev;
-                nodeAtPosition.prev = newNode;
-                newNode.next = nodeAtPosition;
-                numberOfEntries++;
+                --numberOfEntries;
             }
         } else {
             isSuccessful = false;
@@ -115,7 +137,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
                 if (givenPosition <= checkDist) {                     //the case if index smaller than median
                     Node nodeBeforeIndex = firstNode;                //start from first node
-                    for (int i = 2; i < givenPosition - 1; i++) {
+                    for (int i = 1; i < givenPosition - 1; i++) {
                         nodeBeforeIndex = nodeBeforeIndex.next;     //given index =3 , stop at 2
                     }
                     result = nodeBeforeIndex.next.data;                         // save node 3 data into result
@@ -124,7 +146,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
                 } else {                                          //the case if index larger than median
                     Node nodeAfterIndex = firstNode.prev;                  //start from last node
-                    for (int i = numberOfEntries - 1; i > givenPosition + 1; i--) {
+                    for (int i = numberOfEntries; i > givenPosition + 1; i--) {
                         nodeAfterIndex = nodeAfterIndex.prev;      //given index = 3, stop at 4
                     }
                     result = nodeAfterIndex.prev.data;                          //save node 3 data into result
