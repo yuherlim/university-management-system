@@ -4,11 +4,13 @@
  */
 package adt;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Yu
  */
-public class CircularDoublyLinkedList<T> implements ListInterface<T> {
+public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializable {
     private Node firstNode;
     private int numberOfEntries;  	
     
@@ -302,7 +304,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         return false;
     }
     
-    private class Node {
+    private class Node implements Serializable{
         private T data;
         private Node next;
         private Node prev;
