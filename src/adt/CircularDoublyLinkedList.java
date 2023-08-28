@@ -283,10 +283,17 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         boolean isSuccessful = false;
         
         if(!isEmpty()){
-            for(int i = 0; i < numberOfEntries; i++){
-                
-            }
+            Node currentNode = firstNode;
+            for(int i=1; i < numberOfEntries; i++){
+            if(currentNode.data.equals(anEntry)){
+                isSuccessful = true;
+                break;
+            }else{
+                currentNode = currentNode.next;
+            }        
         }
+        }
+        return isSuccessful;
     }
 
     @Override
