@@ -89,7 +89,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     private int locateIndex(T givenEntry){
         int index = -1;
         Node currentNode = firstNode;
-        for(int i=1; i < numberOfEntries; i++){
+        for(int i=1; i < numberOfEntries + 1; i++){
             if(currentNode.data.equals(givenEntry)){
                 index = i;
                 break;
@@ -234,11 +234,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         boolean isSuccessful = false;
         
         if(!isEmpty()){
-            Node currentNode = firstNode;
-            for(int i = 1 ; i < numberOfEntries; i++){   //for lopp to arrive the last position of the list
-                currentNode = currentNode.next;
-            }
-            currentNode.data = newEntry;
+            firstNode.prev.data = newEntry;
             isSuccessful = true;
         }
         
@@ -280,7 +276,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         
         if(!isEmpty()){
             Node currentNode = firstNode;
-            for(int i=1; i < numberOfEntries; i++){
+            for(int i=1; i < numberOfEntries + 1; i++){
             if(currentNode.data.equals(anEntry)){
                 isSuccessful = true;
                 break;
