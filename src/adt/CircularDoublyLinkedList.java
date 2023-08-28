@@ -43,42 +43,32 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             
             if (isEmpty() || (newPosition == 1)) { // add to beginning of the list
                 addToStart(newEntry);
-            } else if ((numberOfEntries == 1) && (newPosition == 2) || newPosition == numberOfEntries + 1) { // adding a second entry, or when adding an entry at the end of the list.
+            } else if (newPosition == numberOfEntries + 1) { // adding an entry at the end of the list.
                 add(newEntry);
-            }
-            else {
-//                Node nodeAtPosition = firstNode;
-//                for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
-//                    nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
-//                }
-//                //insert new node at new position.
-//                nodeAtPosition.prev.next = newNode;
-//                newNode.prev = nodeAtPosition.prev;
-//                nodeAtPosition.prev = newNode;
-//                newNode.next = nodeAtPosition;
-//                numberOfEntries++;
-                int checkDist = numberOfEntries / 2;
-
-                if (newPosition <= checkDist) {                     //the case if index smaller than median
-                    Node nodeBeforeIndex = firstNode;                //start from first node
-                    for (int i = 2; i < givenPosition - 1; i++) {
-                        nodeBeforeIndex = nodeBeforeIndex.next;     //given index =3 , stop at 2
+            } else {
+                int median = numberOfEntries / 2;
+                Node nodeAtPosition; 
+                if (newPosition <= median) {  //the case if index smaller than or equal to median
+                    nodeAtPosition = firstNode;  //start from first node
+                    
+                    for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
+                        nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
                     }
-                    result = nodeBeforeIndex.next.data;                         // save node 3 data into result
-                    nodeBeforeIndex.next = nodeBeforeIndex.next.next;           // node 2 -> node 4,
-                    nodeBeforeIndex.next.prev = nodeBeforeIndex;                // node 4 previous set to node 2
 
-                } else {                                          //the case if index larger than median
-                    Node nodeAfterIndex = firstNode.prev;                  //start from last node
-                    for (int i = numberOfEntries - 1; i > givenPosition + 1; i--) {
-                        nodeAfterIndex = nodeAfterIndex.prev;      //given index = 3, stop at 4
+                } else {                      //the case if index larger than median
+                    nodeAtPosition = firstNode.prev; //start from last node
+                    
+                    for (int i = numberOfEntries; i > newPosition; i--) {  // traverse linked list until pointer pointing to the node at given position.
+                        nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
                     }
-                    result = nodeAfterIndex.prev.data;                          //save node 3 data into result
-                    nodeAfterIndex.prev = nodeAfterIndex.prev.prev;             //node 4 -> node 2
-                    nodeAfterIndex.prev.next = nodeAfterIndex;                  //node 2 next set to node 4
 
                 }
-                --numberOfEntries;
+                //insert new node at new position.
+                nodeAtPosition.prev.next = newNode;
+                newNode.prev = nodeAtPosition.prev;
+                nodeAtPosition.prev = newNode;
+                newNode.next = nodeAtPosition;
+                numberOfEntries++;
             }
         } else {
             isSuccessful = false;
