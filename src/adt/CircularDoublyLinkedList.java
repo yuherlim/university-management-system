@@ -24,10 +24,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         Node newNode = new Node(newEntry);
         
         if (isEmpty()) {
-            firstNode = newNode;
-        } else if (numberOfEntries == 1) { // adding a second entry
-            firstNode.next = firstNode.prev = newNode;
-            newNode.next = newNode.prev = firstNode;
+            firstNode = firstNode.prev = firstNode.next = newNode;
         } else { // adding entry into list with more than 1 element
             newNode.prev = firstNode.prev;  // link new node to the last node.
             firstNode.prev.next = newNode;  // link last node to the new node.
@@ -48,42 +45,32 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
             
             if (isEmpty() || (newPosition == 1)) { // add to beginning of the list
                 addToStart(newEntry);
-            } else if ((numberOfEntries == 1) && (newPosition == 2) || newPosition == numberOfEntries + 1) { // adding a second entry, or when adding an entry at the end of the list.
+            } else if (newPosition == numberOfEntries + 1) { // adding an entry at the end of the list.
                 add(newEntry);
-            }
-            else {
-//                Node nodeAtPosition = firstNode;
-//                for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
-//                    nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
-//                }
-//                //insert new node at new position.
-//                nodeAtPosition.prev.next = newNode;
-//                newNode.prev = nodeAtPosition.prev;
-//                nodeAtPosition.prev = newNode;
-//                newNode.next = nodeAtPosition;
-//                numberOfEntries++;
-                int checkDist = numberOfEntries / 2;
-
-                if (newPosition <= checkDist) {                     //the case if index smaller than median
-                    Node nodeBeforeIndex = firstNode;                //start from first node
-                    for (int i = 2; i < givenPosition - 1; i++) {
-                        nodeBeforeIndex = nodeBeforeIndex.next;     //given index =3 , stop at 2
+            } else {
+                int median = numberOfEntries / 2;
+                Node nodeAtPosition; 
+                if (newPosition <= median) {  //the case if index smaller than or equal to median
+                    nodeAtPosition = firstNode;  //start from first node
+                    
+                    for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
+                        nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
                     }
-                    result = nodeBeforeIndex.next.data;                         // save node 3 data into result
-                    nodeBeforeIndex.next = nodeBeforeIndex.next.next;           // node 2 -> node 4,
-                    nodeBeforeIndex.next.prev = nodeBeforeIndex;                // node 4 previous set to node 2
 
-                } else {                                          //the case if index larger than median
-                    Node nodeAfterIndex = firstNode.prev;                  //start from last node
-                    for (int i = numberOfEntries - 1; i > givenPosition + 1; i--) {
-                        nodeAfterIndex = nodeAfterIndex.prev;      //given index = 3, stop at 4
+                } else {                      //the case if index larger than median
+                    nodeAtPosition = firstNode.prev; //start from last node
+                    
+                    for (int i = numberOfEntries; i > newPosition; i--) {  // traverse linked list until pointer pointing to the node at given position.
+                        nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
                     }
-                    result = nodeAfterIndex.prev.data;                          //save node 3 data into result
-                    nodeAfterIndex.prev = nodeAfterIndex.prev.prev;             //node 4 -> node 2
-                    nodeAfterIndex.prev.next = nodeAfterIndex;                  //node 2 next set to node 4
 
                 }
-                --numberOfEntries;
+                //insert new node at new position.
+                nodeAtPosition.prev.next = newNode;
+                newNode.prev = nodeAtPosition.prev;
+                nodeAtPosition.prev = newNode;
+                newNode.next = nodeAtPosition;
+                numberOfEntries++;
             }
         } else {
             isSuccessful = false;
@@ -95,24 +82,16 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     public boolean addToStart(T newEntry) {
         Node newNode = new Node(newEntry);
         
-        if (numberOfEntries == 1) { // add to start when there is already one entry.
-            firstNode.prev = firstNode.next = newNode;
-            newNode.next = newNode.prev = firstNode;
-        } else if (numberOfEntries > 1) { // add to start when there is more than 1 entry.
-            firstNode.prev.next = newNode;
-            newNode.prev = firstNode.prev;
-            newNode.next = firstNode;
-            firstNode.prev = newNode;
-        }
-        firstNode = newNode;
-        numberOfEntries++;
+        add(newEntry);
+        firstNode = newNode; // update the new node added to be the first node.
+        
         return true;
     }
     
     private int locateIndex(T givenEntry){
         int index = -1;
         Node currentNode = firstNode;
-        for(int i=1; i < numberOfEntries; i++){
+        for(int i=1; i < numberOfEntries + 1; i++){
             if(currentNode.data.equals(givenEntry)){
                 index = i;
                 break;
@@ -181,11 +160,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
                 result = firstNode.data;        //data to be returned        
-                firstNode = firstNode.next;     //set the first node to firstNode.next
-                firstNode.prev = null;          //set firstNode.next previous node to             
+                firstNode.next.prev = firstNode.prev;
+                firstNode = firstNode.next;
+                firstNode.prev.next = firstNode;
             }
             else{
-                firstNode = null;  
+                firstNode = firstNode.prev = firstNode.next = null; 
             }
              --numberOfEntries;
         }
@@ -199,12 +179,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         
         if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
-                result = firstNode.prev.data;        
+                result = firstNode.prev.data;
                 firstNode.prev = firstNode.prev.prev;     
-                firstNode.prev.next = null;              
+                firstNode.prev.next = firstNode;
             }
             else{
-                firstNode = null;     
+                firstNode = firstNode.prev = firstNode.next = null;   
             }
             --numberOfEntries; 
         }
@@ -256,11 +236,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         boolean isSuccessful = false;
         
         if(!isEmpty()){
-            Node currentNode = firstNode;
-            for(int i = 1 ; i < numberOfEntries; i++){   //for lopp to arrive the last position of the list
-                currentNode = currentNode.next;
-            }
-            currentNode.data = newEntry;
+            firstNode.prev.data = newEntry;
             isSuccessful = true;
         }
         
@@ -302,7 +278,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         
         if(!isEmpty()){
             Node currentNode = firstNode;
-            for(int i=1; i < numberOfEntries; i++){
+            for(int i=1; i < numberOfEntries + 1; i++){
             if(currentNode.data.equals(anEntry)){
                 isSuccessful = true;
                 break;
@@ -321,7 +297,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     @Override
     public boolean isEmpty() {
-        return firstNode == null & numberOfEntries == 0;
+        return (firstNode == null) && (numberOfEntries == 0);
     }
 
     @Override
