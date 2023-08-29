@@ -22,19 +22,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         Node newNode = new Node(newEntry);
         
         if (isEmpty()) {
-            firstNode = newNode;
-        } else if (numberOfEntries == 1) { // adding a second entry
-            firstNode.next = firstNode.prev = newNode;
-            newNode.next = newNode.prev = firstNode;
+            firstNode = firstNode.prev = firstNode.next = newNode;
         } else { // adding entry into list with more than 1 element
-            Node currentNode = firstNode;
-            while (currentNode.next != firstNode) { // traverse linked list with pointer pointing to the current node
-                currentNode = currentNode.next;    // while have not reached the last node
-            }
-            currentNode.next = newNode; // make last node reference new node
-            newNode.prev = currentNode; // make new node prev reference previous last node.
-            newNode.next = firstNode;   // make new node linked back to the first node.
-            firstNode.prev = newNode;   // make first node prev link to the new last node.
+            newNode.prev = firstNode.prev;  // link new node to the last node.
+            firstNode.prev.next = newNode;  // link last node to the new node.
+            firstNode.prev = newNode;  // update first node to link to new node
+            newNode.next = firstNode;  // update new node to link to first node.
         }
         
         numberOfEntries++;
@@ -50,13 +43,25 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             
             if (isEmpty() || (newPosition == 1)) { // add to beginning of the list
                 addToStart(newEntry);
-            } else if ((numberOfEntries == 1) && (newPosition == 2) || newPosition == numberOfEntries + 1) { // adding a second entry, or when adding an entry at the end of the list.
+            } else if (newPosition == numberOfEntries + 1) { // adding an entry at the end of the list.
                 add(newEntry);
-            }
-            else {
-                Node nodeAtPosition = firstNode;
-                for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
-                    nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
+            } else {
+                int median = numberOfEntries / 2;
+                Node nodeAtPosition; 
+                if (newPosition <= median) {  //the case if index smaller than or equal to median
+                    nodeAtPosition = firstNode;  //start from first node
+                    
+                    for (int i = 1; i < newPosition; i++) {  // traverse linked list until pointer pointing to the node at given position.
+                        nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
+                    }
+
+                } else {                      //the case if index larger than median
+                    nodeAtPosition = firstNode.prev; //start from last node
+                    
+                    for (int i = numberOfEntries; i > newPosition; i--) {  // traverse linked list until pointer pointing to the node at given position.
+                        nodeAtPosition = nodeAtPosition.next; // while not pointing at the node at given position.
+                    }
+
                 }
                 //insert new node at new position.
                 nodeAtPosition.prev.next = newNode;
@@ -75,24 +80,16 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public boolean addToStart(T newEntry) {
         Node newNode = new Node(newEntry);
         
-        if (numberOfEntries == 1) { // add to start when there is already one entry.
-            firstNode.prev = firstNode.next = newNode;
-            newNode.next = newNode.prev = firstNode;
-        } else if (numberOfEntries > 1) { // add to start when there is more than 1 entry.
-            firstNode.prev.next = newNode;
-            newNode.prev = firstNode.prev;
-            newNode.next = firstNode;
-            firstNode.prev = newNode;
-        }
-        firstNode = newNode;
-        numberOfEntries++;
+        add(newEntry);
+        firstNode = newNode; // update the new node added to be the first node.
+        
         return true;
     }
     
     private int locateIndex(T givenEntry){
         int index = -1;
         Node currentNode = firstNode;
-        for(int i=1; i < numberOfEntries; i++){
+        for(int i=1; i < numberOfEntries + 1; i++){
             if(currentNode.data.equals(givenEntry)){
                 index = i;
                 break;
@@ -119,7 +116,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
                 if (givenPosition <= checkDist) {                     //the case if index smaller than median
                     Node nodeBeforeIndex = firstNode;                //start from first node
-                    for (int i = 2; i < givenPosition - 1; i++) {
+                    for (int i = 1; i < givenPosition - 1; i++) {
                         nodeBeforeIndex = nodeBeforeIndex.next;     //given index =3 , stop at 2
                     }
                     result = nodeBeforeIndex.next.data;                         // save node 3 data into result
@@ -128,7 +125,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
                 } else {                                          //the case if index larger than median
                     Node nodeAfterIndex = firstNode.prev;                  //start from last node
-                    for (int i = numberOfEntries - 1; i > givenPosition + 1; i--) {
+                    for (int i = numberOfEntries; i > givenPosition + 1; i--) {
                         nodeAfterIndex = nodeAfterIndex.prev;      //given index = 3, stop at 4
                     }
                     result = nodeAfterIndex.prev.data;                          //save node 3 data into result
@@ -161,11 +158,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
                 result = firstNode.data;        //data to be returned        
-                firstNode = firstNode.next;     //set the first node to firstNode.next
-                firstNode.prev = null;          //set firstNode.next previous node to             
+                firstNode.next.prev = firstNode.prev;
+                firstNode = firstNode.next;
+                firstNode.prev.next = firstNode;
             }
             else{
-                firstNode = null;  
+                firstNode = firstNode.prev = firstNode.next = null; 
             }
              --numberOfEntries;
         }
@@ -179,12 +177,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         
         if(!isEmpty()){
             if(numberOfEntries > 1){         //if there is currently more than 1 entry in the link
-                result = firstNode.prev.data;        
+                result = firstNode.prev.data;
                 firstNode.prev = firstNode.prev.prev;     
-                firstNode.prev.next = null;              
+                firstNode.prev.next = firstNode;
             }
             else{
-                firstNode = null;     
+                firstNode = firstNode.prev = firstNode.next = null;   
             }
             --numberOfEntries; 
         }
@@ -236,11 +234,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         boolean isSuccessful = false;
         
         if(!isEmpty()){
-            Node currentNode = firstNode;
-            for(int i = 1 ; i < numberOfEntries; i++){   //for lopp to arrive the last position of the list
-                currentNode = currentNode.next;
-            }
-            currentNode.data = newEntry;
+            firstNode.prev.data = newEntry;
             isSuccessful = true;
         }
         
@@ -282,7 +276,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         
         if(!isEmpty()){
             Node currentNode = firstNode;
-            for(int i=1; i < numberOfEntries; i++){
+            for(int i=1; i < numberOfEntries + 1; i++){
             if(currentNode.data.equals(anEntry)){
                 isSuccessful = true;
                 break;
@@ -301,7 +295,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return firstNode == null & numberOfEntries == 0;
+        return (firstNode == null) && (numberOfEntries == 0);
     }
 
     @Override
