@@ -289,12 +289,20 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     @Override
     public T getFirst() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        T result = null;
+        if (!isEmpty()) {
+            result = firstNode.data;
+        }
+        return result;
     }
 
     @Override
     public T getLast() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        T result = null;
+        if (!isEmpty()) {
+            result = firstNode.prev.data;
+        }
+        return result;
     }
 
     @Override
