@@ -114,21 +114,21 @@ public class Course implements Serializable{
     
     @Override
     public String toString() {
-//        String domains = "";
-//        for(String r: requiredDomainKnowledge)
-//            domains += r + ",";
-//        
-//        domains +="\b";
-//        
-//        String programmeList = "";
-//        for(String p:programmes)
-//            programmeList += p + ",";
-//        
-//        programmeList += "\b";
-//        
-//        return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
-//                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n\n";
-        return courseCode;
+        String domains = "";
+        for(String r: requiredDomainKnowledge)
+            domains += r + ",";
+        
+        domains +="\b";
+        
+        String programmeList = "";
+        for(String p:programmes)
+            programmeList += p + ",";
+        
+        programmeList += "\b";
+        
+        return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
+                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n\n";
+       
     }
     
    

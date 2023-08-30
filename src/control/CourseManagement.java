@@ -32,7 +32,9 @@ public class CourseManagement {
         String code, name;
         int creditHR, programmeSelection;
         double feePerCH;
-        
+        System.out.println("-------------------------------");
+        System.out.println("Adding new course\n");
+        System.out.println("-------------------------------");
         code = courseUI.inputCourseCode();
         name = courseUI.inputCourseName();
         
@@ -82,27 +84,38 @@ public class CourseManagement {
         for(int i=0; i<progList.length;i++){
             progList[i] = inputProgList[i];
         }
-        
-//        for(int i=0;i<progList.length;i++){
-//            System.out.println(progList[i]);
-//        }
-        
+              
         String[] temp = {"temp"};
-//        courseList.add(new Course(code, name, inputDomains, creditHR, feePerCH, progList, temp));
-        //System.out.println(code);
+        courseList.add(new Course(code, name, inputDomains, creditHR, feePerCH, progList, temp));
         
-        System.out.println(new Course(code));
         courseList.add(new Course(code));
         courseDAO.saveToFile(courseList);
     }
+     
+    public void removeCourse(){
+        System.out.println("-------------------------------");
+        System.out.println("Removing a course\n");
+        System.out.println("-------------------------------");
+        
+        //current available cost
+        //option to remove specific course by number
+        //option to remove specific course by ID
+            //check if the ID does exist
+            //return fail to delete / delete success
+            //write the update into file
+    }
 
+    public Course searchCourse(ListInterface<Course> courseList){
+        Course targetCourse = new Course();
+        //search the list , if found return the index
+        
+        return targetCourse;
+    }
 
     public static void main(String[] args) {
         CourseManagement test = new CourseManagement();
-//        CourseManagementUI courseUI2 = new CourseManagementUI();
-        test.addNewCourse();
-        //courseUI2.displayAllCourse(test.courseList);
-        
-       
+        //CourseManagementUI testUI = new CourseManagementUI();
+        test.addNewCourse();  
+        //testUI.displayAllCourse(test.courseList);
     }  
 }

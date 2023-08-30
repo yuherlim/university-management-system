@@ -285,15 +285,27 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         
         return result;
     }
+    
+    @Override
+    public T getEntry(T anEntry) {
+        Node currentNode = firstNode;
+
+        for (int i = 1; i <= numberOfEntries; i++) {
+            if (currentNode.data.equals(anEntry)) {
+                return currentNode.data;
+            }
+        }
+        return null;
+    }
 
     @Override
     public T getFirst() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return firstNode.data;
     }
 
     @Override
     public T getLast() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return firstNode.prev.data;
     }
 
     @Override
@@ -328,6 +340,8 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     public boolean isFull() {
         return false;
     }
+
+    
     
     private class Node implements Serializable{
         private T data;

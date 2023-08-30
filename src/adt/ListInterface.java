@@ -84,6 +84,8 @@ public interface ListInterface<T> {
    */
   public T getEntry(int givenPosition);
   
+  public T getEntry(T anEntry);
+  
   public T getFirst();
   
   public T getLast();
