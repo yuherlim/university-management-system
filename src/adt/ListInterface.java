@@ -88,11 +88,8 @@ public interface ListInterface<T> {
    */
   public T getEntry(int givenPosition);
   
-<<<<<<< HEAD
+
   public T getEntry(T anEntry);
-=======
-  public T getEntry(T anObject);
->>>>>>> master
   
   public T getFirst();
   
