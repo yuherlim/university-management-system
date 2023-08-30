@@ -5,6 +5,7 @@ package adt;
  * @version 2.0
  */
 import java.io.Serializable;
+import java.util.Iterator;
 
 public class ArrayList<T> implements ListInterface<T>, Serializable {
 
@@ -94,6 +95,27 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         }
 
         return result;
+    }
+    
+    @Override
+    public T getEntry(T anObject) {
+        T result = null;
+        int objIndex = indexOf(anObject);
+        if(!isEmpty()) {
+            if (objIndex != -1) {
+                result = array[objIndex];
+            }
+        }
+        return result;
+    }
+    
+    private int indexOf(T anElement) {
+        for (int i = 0; i < numberOfEntries; i++) {
+            if (array[i].equals(anElement)) {
+                return i; // anElement exists in the set
+            }
+        }
+        return -1; // anElement does not exist in the set   
     }
 
     @Override
@@ -264,5 +286,30 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         }
 
         return result;
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        return new ArrayListIterator();
+    }
+
+    private class ArrayListIterator implements Iterator<T> {
+        int index = 0;
+        
+        @Override
+        public boolean hasNext() {
+            return index < numberOfEntries;
+        }
+
+        @Override
+        public T next() {
+            T currentElement = null;
+            if (hasNext()) {
+                currentElement = array[index];
+                index++;
+            }
+            return currentElement;
+        }
+        
     }
 }

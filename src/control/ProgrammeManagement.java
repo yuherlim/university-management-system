@@ -15,6 +15,7 @@ public class ProgrammeManagement {
 
     public static void main(String[] args) {
         ListInterface<Integer> testList = new CircularDoublyLinkedList<>();
+        ListInterface<Integer> testArrayList = new ArrayList<>();
         testList.add(1);
         testList.add(2);
         testList.add(3);
@@ -38,6 +39,27 @@ public class ProgrammeManagement {
         it = testList.getIterator();
         while(it.hasNext()) {
             System.out.println(it.next());
+        }
+        
+        testArrayList.add(1);
+        testArrayList.add(2);
+        testArrayList.add(3);
+        testArrayList.add(4);
+        testArrayList.add(5);
+        
+        System.out.println("\n\n\n\nInteger array list: \n");
+        
+        Iterator<Integer> alit = testArrayList.getIterator();
+        while(alit.hasNext()) {
+            System.out.println(alit.next());
+        }
+        
+        
+        System.out.println("\n\n");
+        
+        alit = testArrayList.getIterator();
+        while(alit.hasNext()) {
+            System.out.println(alit.next());
         }
     }
 }
