@@ -176,7 +176,15 @@ public class CourseManagementUI {
         return programmeSelection;
     }
     
+    public Course searchCourseByCode(ListInterface<Course> courseList, String code){
     
+    return null;
+    }
+    
+     public Course searchCourseByNo(ListInterface<Course> courseList, int no){
+    
+    return null;
+    }
 
     public void displayAllCourse(ListInterface<Course> courseList) {
         for (int i = 1; i <= courseList.getNumberOfEntries(); i++) {

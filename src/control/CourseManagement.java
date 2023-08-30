@@ -33,7 +33,7 @@ public class CourseManagement {
         int creditHR, programmeSelection;
         double feePerCH;
         System.out.println("-------------------------------");
-        System.out.println("Adding new course\n");
+        System.out.println("Adding new course");
         System.out.println("-------------------------------");
         code = courseUI.inputCourseCode();
         name = courseUI.inputCourseName();
@@ -86,15 +86,13 @@ public class CourseManagement {
         }
               
         String[] temp = {"temp"};
-        courseList.add(new Course(code, name, inputDomains, creditHR, feePerCH, progList, temp));
-        
-        courseList.add(new Course(code));
+        courseList.add(new Course(code, name, inputDomains, creditHR, feePerCH, progList, temp));       
         courseDAO.saveToFile(courseList);
     }
      
     public void removeCourse(){
         System.out.println("-------------------------------");
-        System.out.println("Removing a course\n");
+        System.out.println("Removing a course");
         System.out.println("-------------------------------");
         
         //current available cost
@@ -105,17 +103,16 @@ public class CourseManagement {
             //write the update into file
     }
 
-    public Course searchCourse(ListInterface<Course> courseList){
-        Course targetCourse = new Course();
-        //search the list , if found return the index
-        
+    public Course searchCourse(Course course){
+        Course targetCourse = courseList.getEntry(course);   
         return targetCourse;
     }
 
     public static void main(String[] args) {
         CourseManagement test = new CourseManagement();
-        //CourseManagementUI testUI = new CourseManagementUI();
-        test.addNewCourse();  
-        //testUI.displayAllCourse(test.courseList);
+        CourseManagementUI testUI = new CourseManagementUI();
+//        test.addNewCourse();  
+        System.out.println(test.courseList.getNumberOfEntries());
+        testUI.displayAllCourse(test.courseList);
     }  
 }

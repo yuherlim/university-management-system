@@ -265,4 +265,14 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
         return result;
     }
+
+    @Override
+    public T getEntry(T anEntry) {
+        for(int i=0; i < array.length;i++){
+            if(array[i].equals(anEntry)){
+                return array[i];
+            }
+        }
+        return null;
+    }
 }
