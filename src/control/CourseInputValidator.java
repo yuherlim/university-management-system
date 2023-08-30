@@ -5,6 +5,7 @@
  */
 package control;
 
+import adt.ListInterface;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -89,6 +90,16 @@ public class CourseInputValidator {
             }
 
         }
+        return true;
+    }
+        
+        public boolean checkDuplicateProg(ListInterface<String> progList, String programme) {
+        //function to check if user input the same programme during adding new course.
+       for(int i=1;i<=progList.getNumberOfEntries();i++){
+            if (progList.getEntry(i).equals(programme)) 
+                    return false;                       //if found duplicated programme return false;            
+       } 
+        
         return true;
     }
 }

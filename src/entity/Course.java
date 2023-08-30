@@ -5,6 +5,7 @@
  */
 package entity;
 
+import adt.ArrayList;
 import java.io.Serializable;
 
 
@@ -19,10 +20,10 @@ public class Course implements Serializable{
     private int creditHR;
     private double feePCH;
     private double coureseTotalFee;
-    private String[] programmes;
+    private ArrayList<String> programmes;
     private String[] teachingList;
 
-    public Course(String courseCode, String courseName, String[] requiredDomainKnowledge,int creditHR, double feePCH, String[] programmes, String[] teachingList) {
+    public Course(String courseCode, String courseName, String[] requiredDomainKnowledge,int creditHR, double feePCH, ArrayList<String> programmes, String[] teachingList) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.requiredDomainKnowledge = requiredDomainKnowledge;
@@ -80,13 +81,7 @@ public class Course implements Serializable{
         this.coureseTotalFee = coureseTotalFee;
     }
 
-    public String[] getProgrammeList() {
-        return programmes;
-    }
-
-    public void setProgrammeList(String[] programmes) {
-        this.programmes = programmes;
-    }
+    
     
      public String[] getRequiredDomainKnowledge() {
         return requiredDomainKnowledge;
@@ -96,13 +91,7 @@ public class Course implements Serializable{
         this.requiredDomainKnowledge = requiredDomainKnowledge;
     }
 
-    public String[] getProgrammes() {
-        return programmes;
-    }
-
-    public void setProgrammes(String[] programmes) {
-        this.programmes = programmes;
-    }
+    
 
     public String[] getTeachingList() {
         return teachingList;
@@ -111,24 +100,33 @@ public class Course implements Serializable{
     public void setTeachingList(String[] teachingList) {
         this.teachingList = teachingList;
     }
+
+    public ArrayList<String> getProgrammes() {
+        return programmes;
+    }
+
+    public void setProgrammes(ArrayList<String> programmes) {
+        this.programmes = programmes;
+    }
     
     @Override
     public String toString() {
-//        String domains = "";
-//        for(String r: requiredDomainKnowledge)
-//            domains += r + ",";
-//        
-//        domains +="\b";
-//        
-//        String programmeList = "";
-//        for(String p:programmes)
-//            programmeList += p + ",";
-//        
-//        programmeList += "\b";
-//        
-//        return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
-//                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n\n";
-        return courseCode;
+        String domains = "";
+        for(String r: requiredDomainKnowledge)
+            domains += r + ",";
+        
+        domains +="\b";
+        
+        String programmeList = "";
+        for(int i=1; i<=programmes.getNumberOfEntries();i++){
+            programmeList += programmes.getEntry(i) + ",";
+        }
+        
+        programmeList += "\b";
+        
+        return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
+                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n\n";
+       
     }
     
    

@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
  */
 public class CourseDAO {
 
-    private String fileName = "Course.bin";
+    private String fileName = "course.dat";
 
     public void saveToFile(ListInterface<Course> courseList) {
         File file = new File(fileName);
@@ -41,7 +41,7 @@ public class CourseDAO {
         ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
         try {
             ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
-            courseList = (ArrayList<Course>) (oiStream.readObject());
+            courseList = (CircularDoublyLinkedList<Course>) (oiStream.readObject());
             oiStream.close();
         } catch (FileNotFoundException ex) {
             System.out.println("\nNo such file.");

@@ -5,6 +5,7 @@ package adt;
  * @version 2.0
  */
 import java.io.Serializable;
+import java.util.Iterator;
 
 public class ArrayList<T> implements ListInterface<T>, Serializable {
 
@@ -97,6 +98,27 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
     }
 
     @Override
+    public T getEntry(T anObject) {
+        T result = null;
+        int objIndex = indexOf(anObject);
+        if (!isEmpty()) {
+            if (objIndex != -1) {
+                result = array[objIndex];
+            }
+        }
+        return result;
+    }
+
+    private int indexOf(T anElement) {
+        for (int i = 0; i < numberOfEntries; i++) {
+            if (array[i].equals(anElement)) {
+                return i; // anElement exists in the set
+            }
+        }
+        return -1; // anElement does not exist in the set   
+    }
+
+    @Override
     public boolean contains(T anEntry) {
         boolean found = false;
         for (int index = 0; !found && (index < numberOfEntries); index++) {
@@ -182,7 +204,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         if (isArrayFull()) {
             doubleArray();
         }
-        
+
         makeRoom(1);
         array[0] = newEntry;
         numberOfEntries++;
@@ -194,14 +216,10 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         T result = null;
 
         if (contains(anEntry)) {
-            for (int i = 0; i < numberOfEntries; i++) {
-                if (array[i].equals(anEntry)) {
-                    result = array[i];
-                    removeGap(i + 1);
-                    --numberOfEntries;
-                    break;
-                }
-            }
+            int i = indexOf(anEntry);
+            result = array[i];
+            removeGap(i + 1);
+            --numberOfEntries;
         }
         return result;
     }
@@ -246,6 +264,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
     @Override
     public T getFirst() {
+
         T result = null;
 
         if (!isEmpty()) {
@@ -253,6 +272,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         }
 
         return result;
+
     }
 
     @Override
@@ -265,4 +285,30 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
         return result;
     }
+
+    public Iterator<T> getIterator() {
+        return new ArrayListIterator();
+    }
+
+    private class ArrayListIterator implements Iterator<T> {
+
+        int index = 0;
+
+        @Override
+        public boolean hasNext() {
+            return index < numberOfEntries;
+        }
+
+        @Override
+        public T next() {
+            T currentElement = null;
+            if (hasNext()) {
+                currentElement = array[index];
+                index++;
+            }
+            return currentElement;
+        }
+    }
+    
+    
 }

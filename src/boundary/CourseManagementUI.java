@@ -5,6 +5,7 @@
  */
 package boundary;
 
+import adt.ArrayList;
 import adt.ListInterface;
 import control.CourseInputValidator;
 import entity.Course;
@@ -32,7 +33,13 @@ public class CourseManagementUI {
         System.out.print("Enter choice: ");
         return selection;
     }
-
+    
+    public void displayAddCourseMsg(){
+        System.out.println("-------------------------------");
+        System.out.println("Adding new course");
+        System.out.println("-------------------------------");
+    }
+    
     public String inputCourseCode() {
         boolean valid = true;
         String code;
@@ -176,8 +183,51 @@ public class CourseManagementUI {
         return programmeSelection;
     }
     
-    
+    public ListInterface<String> programmeInputList(String[] programmes){
+            int programmeSelection;
+            ListInterface<String> result = new ArrayList<>();
+        do {
+            programmeSelection = inputProgramme();
+            boolean notDuplicated = true;
+            if (programmeSelection >= 1 && programmeSelection <= programmes.length) {
+                if (result.getNumberOfEntries() > 0) {
+                    notDuplicated = validator.checkDuplicateProg(result, programmes[programmeSelection - 1]);
+                }
 
+            } else if (programmeSelection == 0) {
+                if (result.getNumberOfEntries() > 0) {
+                    System.out.println("Exiting");
+                } else {
+                    System.out.println("Programme list cannot be empty.");
+                    programmeSelection = -1;
+                }
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+
+            if ((programmeSelection >= 1 && programmeSelection <= programmes.length) && notDuplicated) {
+                result.add(programmes[programmeSelection - 1]) ;
+            }
+        } while (programmeSelection != 0);
+        
+      
+        return result;
+    }
+    
+    public Course searchCourseByCode(ListInterface<Course> courseList){
+        String code = scanner.nextLine();
+        
+        //replace by iterator later
+        Course target = new Course();
+        for(int i=1;i <= courseList.getNumberOfEntries();i++){
+            target = courseList.getEntry(i);
+            if(target.getCourseCode().equals(code)){
+                return target;
+            }
+        }
+        return null;
+    }
+    
     public void displayAllCourse(ListInterface<Course> courseList) {
         for (int i = 1; i <= courseList.getNumberOfEntries(); i++) {
             System.out.println(courseList.getEntry(i));
