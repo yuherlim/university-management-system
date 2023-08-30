@@ -201,11 +201,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         Node currentNode = firstNode.next;  //set the second node to the currentNode
         firstNode = null; //set the firstNode to null
         
-        for(int i = 2; i <= numberOfEntries ; i++){   //use for loop to clear all the pointer
+        for(int i = 2; i <= numberOfEntries - 1 ; i++){   //use for loop to clear all the pointer
             currentNode.next.prev = null;
             currentNode = currentNode.next;
         }
         
+        currentNode = null;                 //remove the reference to the last node.
         numberOfEntries = 0;
     }
 
