@@ -24,7 +24,8 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         Node newNode = new Node(newEntry);
         
         if (isEmpty()) {
-            firstNode = firstNode.prev = firstNode.next = newNode;
+            firstNode = newNode;
+            firstNode.prev = firstNode.next = newNode;
         } else { // adding entry into list with more than 1 element
             newNode.prev = firstNode.prev;  // link new node to the last node.
             firstNode.prev.next = newNode;  // link last node to the new node.
