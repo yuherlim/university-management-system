@@ -4,10 +4,28 @@
  */
 package control;
 
+import entity.Tutor;
+
 /**
  *
  * @author ong58
  */
 public class TeachingAssignmentManagement {
+
+    public void assignTutor() {
+    }
+
+    public void modifyTutor() {
+    }
+
+    public void replaceTutor(Tutor tutorReplace) {
+    }
+
+    public void replaceTutor() {
+    }
     
+    public void displayTeachingAssignment(){}
+    
+
+
 }
