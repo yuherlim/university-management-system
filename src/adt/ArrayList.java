@@ -288,20 +288,11 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         return result;
     }
 
-    @Override
-<<<<<<< HEAD
-    public T getEntry(T anEntry) {
-        for(int i=0; i < array.length;i++){
-            if(array[i].equals(anEntry)){
-                return array[i];
-            }
-        }
-        return null;
-=======
     public Iterator<T> getIterator() {
         return new ArrayListIterator();
     }
 
+   
     private class ArrayListIterator implements Iterator<T> {
         int index = 0;
         
@@ -319,7 +310,5 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
             }
             return currentElement;
         }
-        
->>>>>>> master
-    }
+       }
 }
