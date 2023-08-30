@@ -5,6 +5,7 @@
 package adt;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  *
@@ -92,7 +93,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     private int locateIndex(T givenEntry){
         int index = -1;
         Node currentNode = firstNode;
-        for(int i=1; i < numberOfEntries + 1; i++){
+        for(int i=1; i <= numberOfEntries; i++){
             if(currentNode.data.equals(givenEntry)){
                 index = i;
                 break;
@@ -201,11 +202,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         Node currentNode = firstNode.next;  //set the second node to the currentNode
         firstNode = null; //set the firstNode to null
         
-        for(int i = 2; i <= numberOfEntries ; i++){   //use for loop to clear all the pointer
+        for(int i = 2; i <= numberOfEntries - 1 ; i++){   //use for loop to clear all the pointer
             currentNode.next.prev = null;
             currentNode = currentNode.next;
         }
         
+        currentNode = null;                 //remove the reference to the last node.
         numberOfEntries = 0;
     }
 
@@ -299,13 +301,41 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
+    public T getEntry(T anObject) {
+        T result = null;
+        
+        if(!isEmpty() && contains(anObject)){
+            int index = locateIndex(anObject);
+            result = getEntry(index);
+        }
+        
+        return result;
+    }
+    
+    @Override
     public T getFirst() {
+<<<<<<< HEAD
         return firstNode.data;
+=======
+        T result = null;
+        if (!isEmpty()) {
+            result = firstNode.data;
+        }
+        return result;
+>>>>>>> master
     }
 
     @Override
     public T getLast() {
+<<<<<<< HEAD
         return firstNode.prev.data;
+=======
+        T result = null;
+        if (!isEmpty()) {
+            result = firstNode.prev.data;
+        }
+        return result;
+>>>>>>> master
     }
 
     @Override
@@ -341,6 +371,36 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return false;
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public Iterator<T> getIterator() {
+        return new CircularDoublyLinkedListIterator();
+    }
+    
+    private class CircularDoublyLinkedListIterator implements Iterator<T> {
+        private Node currentNode = firstNode;
+        private int currentCount = 0;
+
+        @Override
+        public boolean hasNext() {
+            return currentCount < numberOfEntries;
+        }
+
+        @Override
+        public T next() {
+            T currentElement = null;
+            if (hasNext()) {
+                currentElement = currentNode.data;
+                currentNode = currentNode.next;
+                currentCount++;
+            }
+            return currentElement;
+        }
+        
+        
+    }
+>>>>>>> master
     
     
     private class Node implements Serializable{
