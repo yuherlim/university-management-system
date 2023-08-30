@@ -216,14 +216,10 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         T result = null;
 
         if (contains(anEntry)) {
-            for (int i = 0; i < numberOfEntries; i++) {
-                if (array[i].equals(anEntry)) {
-                    result = array[i];
-                    removeGap(i + 1);
-                    --numberOfEntries;
-                    break;
-                }
-            }
+            int i = indexOf(anEntry);
+            result = array[i];
+            removeGap(i + 1);
+            --numberOfEntries;
         }
         return result;
     }
