@@ -91,18 +91,18 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return true;
     }
 
-    private int locateIndex(T givenEntry) {
-        int index = -1;
+    public int locatePosition(T givenEntry) {
+        int position = -1;
         Node currentNode = firstNode;
         for (int i = 1; i <= numberOfEntries; i++) {
             if (currentNode.data.equals(givenEntry)) {
-                index = i;
+                position = i;
                 break;
             } else {
                 currentNode = currentNode.next;
             }
         }
-        return index;
+        return position;
     }
 
     @Override
