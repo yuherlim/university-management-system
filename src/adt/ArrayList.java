@@ -96,19 +96,19 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
         return result;
     }
-    
+
     @Override
     public T getEntry(T anObject) {
         T result = null;
         int objIndex = indexOf(anObject);
-        if(!isEmpty()) {
+        if (!isEmpty()) {
             if (objIndex != -1) {
                 result = array[objIndex];
             }
         }
         return result;
     }
-    
+
     private int indexOf(T anElement) {
         for (int i = 0; i < numberOfEntries; i++) {
             if (array[i].equals(anElement)) {
@@ -204,7 +204,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         if (isArrayFull()) {
             doubleArray();
         }
-        
+
         makeRoom(1);
         array[0] = newEntry;
         numberOfEntries++;
@@ -288,10 +288,10 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         return new ArrayListIterator();
     }
 
-   
     private class ArrayListIterator implements Iterator<T> {
+
         int index = 0;
-        
+
         @Override
         public boolean hasNext() {
             return index < numberOfEntries;
@@ -306,5 +306,5 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
             }
             return currentElement;
         }
-       }
+    }
 }
