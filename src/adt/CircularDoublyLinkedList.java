@@ -146,7 +146,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         T result = null;
 
         if (contains(anEntry)) {
-            int index = locateIndex(anEntry);
+            int index = locatePosition(anEntry);
             result = remove(index);
         }
 
@@ -289,7 +289,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         T result = null;
 
         if (!isEmpty() && contains(anObject)) {
-            int index = locateIndex(anObject);
+            int index = locatePosition(anObject);
             result = getEntry(index);
         }
 
