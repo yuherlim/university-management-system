@@ -90,18 +90,18 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return true;
     }
     
-    private int locateIndex(T givenEntry){
-        int index = -1;
+    public int locatePosition(T givenEntry){
+        int pos = -1;
         Node currentNode = firstNode;
         for(int i=1; i <= numberOfEntries; i++){
             if(currentNode.data.equals(givenEntry)){
-                index = i;
+                pos = i;
                 break;
             }else{
                 currentNode = currentNode.next;
             }        
         }
-        return index;
+        return pos;
     }
     
     
@@ -148,7 +148,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         T result = null;
         
         if(contains(anEntry)){
-            int index = locateIndex(anEntry);
+            int index = locatePosition(anEntry);
             result = remove(index);
         }
         
@@ -293,7 +293,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         T result = null;
         
         if(!isEmpty() && contains(anObject)){
-            int index = locateIndex(anObject);
+            int index = locatePosition(anObject);
             result = getEntry(index);
         }
         
