@@ -302,16 +302,20 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     
     @Override
     public T getFirst() {
-        return firstNode.data;
-       
+        T result = null;
+        if (!isEmpty()) {
+            result = firstNode.data;
+        }
+        return result;
     }
 
     @Override
     public T getLast() {
-
-        return firstNode.prev.data;
-
-   
+        T result = null;
+        if (!isEmpty()) {
+            result = firstNode.prev.data;
+        }
+        return result;
     }
 
     @Override
