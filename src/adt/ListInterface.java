@@ -4,12 +4,16 @@
  */
 package adt;
 
+import java.util.Iterator;
+
 /**
  * @author Frank M. Carrano
  * @version 2.0
  */
 public interface ListInterface<T> {
 
+  public Iterator<T> getIterator();
+    
   /**
    * Task: Adds a new entry to the end of the list. Entries currently in the
    * list are unaffected. The list's size is increased by 1.

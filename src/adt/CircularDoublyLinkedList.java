@@ -5,6 +5,7 @@
 package adt;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  *
@@ -348,6 +349,34 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     @Override
     public boolean isFull() {
         return false;
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        return new CircularDoublyLinkedListIterator();
+    }
+    
+    private class CircularDoublyLinkedListIterator implements Iterator<T> {
+        private Node currentNode = firstNode;
+        private int currentCount = 0;
+
+        @Override
+        public boolean hasNext() {
+            return currentCount < numberOfEntries;
+        }
+
+        @Override
+        public T next() {
+            T currentElement = null;
+            if (hasNext()) {
+                currentElement = currentNode.data;
+                currentNode = currentNode.next;
+                currentCount++;
+            }
+            return currentElement;
+        }
+        
+        
     }
     
     
