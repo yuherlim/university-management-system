@@ -32,34 +32,19 @@ public class TutorManagement {
     
     public void addNewTutor(){
         
+        int id = tutorList.getNumberOfEntries();
+        id++;
+        String tutorID = "T".concat(String.format("%03d", id));
         String tutorName = tutorUI.inputTutorName();
         char tutorGender = tutorUI.inputTutorGender();
         String tutorIC = tutorUI.inputTutorIC();
         String tutorPhoneNum = tutorUI.inputTutorPhoneNum();
         String tutorEmail = tutorUI.inputTutorEmail();
+        String educationLevel = tutorUI.inputTutoerEduLevel();
+        ArrayList<String> tutorDomainList = tutorUI.inputTutorDomain();
         
-        int educationLevelSelection = tutorUI.inputTutoerEduLevel();
-        String educationLevel = "";
-        switch(educationLevelSelection){
-            case 1:
-                educationLevel = "Diploma";
-                break;
-            case 2:
-                educationLevel = "Bachelor's Degree";
-                break;
-            case 3:
-                educationLevel = "Master's Degree";
-                break;
-            case 4:
-                educationLevel = "phD";
-                break;   
-        }
-        
-        String[] tutorDomainList = tutorUI.inputTutorDomain();
-        
-        tutorList.add(new Tutor(tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, educationLevel, tutorDomainList));
-        tutorDAO.saveToFile(tutorList);
-            
+        tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, educationLevel, tutorDomainList));
+        tutorDAO.saveToFile(tutorList);   
     }
     
     public void removeTutor(){
@@ -86,7 +71,7 @@ public class TutorManagement {
     public static void main(String[] args) {
         TutorManagement test = new TutorManagement();
         TutorManagementUI uitest = new TutorManagementUI();
-        //test.addNewTutor();
+        test.addNewTutor();
         
         uitest.displayAllTutors(test.tutorList);
         
