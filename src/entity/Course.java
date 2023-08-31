@@ -109,6 +109,8 @@ public class Course implements Serializable{
         this.programmes = programmes;
     }
     
+    
+    
     @Override
     public String toString() {
         String domains = "";
@@ -125,7 +127,7 @@ public class Course implements Serializable{
         programmeList += "\b";
         
         return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
-                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n\n";
+                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n";
        
     }
     

@@ -6,9 +6,12 @@
 package boundary;
 
 import adt.ArrayList;
+import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
+import adt.StackInterface;
 import control.CourseInputValidator;
 import entity.Course;
+import java.util.Iterator;
 import java.util.Scanner;
 import utility.MessageUI;
 
@@ -173,6 +176,7 @@ public class CourseManagementUI {
                 System.out.println("Your input: ");
 
                 programmeSelection = scanner.nextInt();
+                
                 valid = true;
             } catch (Exception e) {
                 System.out.println("Please enter a valid programme number");
@@ -215,12 +219,15 @@ public class CourseManagementUI {
     }
     
     public Course searchCourseByCode(ListInterface<Course> courseList){
+        System.out.println("Enter course code: ");
         String code = scanner.nextLine();
-        
-        //replace by iterator later
-        Course target = new Course();
-        for(int i=1;i <= courseList.getNumberOfEntries();i++){
-            target = courseList.getEntry(i);
+        code = code.toUpperCase();
+       
+        Iterator<Course> it = courseList.getIterator();
+        Course target;
+        while(it.hasNext()){
+            target = it.next();
+           
             if(target.getCourseCode().equals(code)){
                 return target;
             }
@@ -228,10 +235,111 @@ public class CourseManagementUI {
         return null;
     }
     
-    public void displayAllCourse(ListInterface<Course> courseList) {
-        for (int i = 1; i <= courseList.getNumberOfEntries(); i++) {
-            System.out.println(courseList.getEntry(i));
-
+    public ListInterface<Course> filterCourseByProgramme(ListInterface<Course> courseList){
+        System.out.println("Enter programme: ");
+          String programme = scanner.nextLine();
+        ListInterface<Course> result = new CircularDoublyLinkedList<>();
+        
+        Iterator<Course> it = courseList.getIterator();
+        Course target;
+        while(it.hasNext()){
+            target = it.next();
+            for(int i=1;i<=target.getProgrammes().getNumberOfEntries();i++){
+                String programmeCode = target.getProgrammes().getEntry(i);
+                if(programmeCode.equals(programme)){
+                    result.add(target);
+                }
+            }
         }
+        
+        return result;   
+    }
+       
+    public void displayAllCourse(ListInterface<Course> courseList) {
+        Iterator<Course> it = courseList.getIterator();
+        Course target;
+        int count = 1;
+        System.out.printf("%5s %-15s %-20s %-10s %20s\n", "Count ","Course Code","Course Name","Credit Hour","Take By Programme");
+        while(it.hasNext()){
+            target = it.next();
+            String programmes = "";
+            for(int i=1; i<=target.getProgrammes().getNumberOfEntries(); i++){
+                programmes += target.getProgrammes().getEntry(i) + ",";
+            }
+            programmes += "\b";
+            
+            System.out.printf("%-7d %-16s %-20s %-10d %20s\n", count,target.getCourseCode(), target.getCourseName(), target.getCreditHR(),programmes);
+            ++count;
+        }
+      
+    }
+    
+    public int deleteByNo(ListInterface<Course> courseList){
+        // this is used by default course list
+        int selection = -1;
+        do {
+            displayAllCourse(courseList);
+            System.out.println("Input number to delete(0 to exit): ");
+            selection = scanner.nextInt();
+            if (selection == 0) {
+                break;
+            }else if(selection < 0 || selection > courseList.getNumberOfEntries()){
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (selection < 0 || selection > courseList.getNumberOfEntries());
+        
+        
+        return selection;
+    }
+    
+     public Course deleteFilteredListByNo(ListInterface<Course> courseList){
+        // this is used by course list filtered by programme
+        int selection = -1;
+        do {
+            displayAllCourse(courseList);
+            System.out.println("Input number to delete(0 to exit): ");
+            selection = scanner.nextInt();
+            if (selection == 0) {
+                break;
+            }else if(selection < 0 || selection > courseList.getNumberOfEntries()){
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (selection < 0 || selection > courseList.getNumberOfEntries());
+        
+        
+        return courseList.getEntry(selection);
+    }
+     
+     public char undo(StackInterface<Course> courseStack){
+         
+         System.out.println("-------------------------------");
+         System.out.println("Undo deletion");
+         System.out.println("-------------------------------");
+         System.out.println(courseStack.peek());
+         System.out.println("-------------------------------");
+         System.out.println("One undo deletion at a time");
+         
+         System.out.println("\nUndo the course deletion?(Y = yes): ");
+         char input = scanner.nextLine().charAt(0);
+       
+         return input;
+     }
+    
+    public int deleteCourseMenuSelection(){
+        int selection;
+        
+        System.out.println("-------------------------------");
+        System.out.println("Removing a course");
+        System.out.println("-------------------------------");
+        System.out.println("1. Display all course");
+        System.out.println("2. Search course by a programme");
+        System.out.println("3. Delete a course by code");
+        System.out.println("4. Undo deletion(cannot be undo once exit)");
+        System.out.println("0. Exit");
+        System.out.println("-------------------------------");
+        System.out.println("Your selection: ");
+        selection = scanner.nextInt();
+        scanner.nextLine();
+        return selection;
     }
 }

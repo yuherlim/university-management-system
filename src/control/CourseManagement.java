@@ -20,7 +20,7 @@ public class CourseManagement {
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();
-    private MessageUI message = new MessageUI();
+    
     private CourseInputValidator validator = new CourseInputValidator();
     Scanner scan = new Scanner(System.in);
 
@@ -57,9 +57,58 @@ public class CourseManagement {
     }
      
     public void removeCourse(){
-        System.out.println("-------------------------------");
-        System.out.println("Removing a course");
-        System.out.println("-------------------------------");
+        StackInterface<Integer> undoStackIndex = new ArrayStack();
+        StackInterface<Course> undoStackCourse = new ArrayStack();
+        Course course;
+        int selection;
+        do{
+            selection = courseUI.deleteCourseMenuSelection();
+            int entryAt;
+            switch(selection){
+                case 1:
+                    entryAt = courseUI.deleteByNo(courseList);
+                    if(entryAt >= 1  && entryAt <= courseList.getNumberOfEntries()){
+                        undoStackIndex.push(entryAt);
+                        undoStackCourse.push(courseList.getEntry(entryAt));
+                        courseList.remove(entryAt);             
+                    }
+                    break;
+                    
+                case 2:    
+                    ListInterface<Course> temp = courseUI.filterCourseByProgramme(courseList);
+                    course = courseUI.deleteFilteredListByNo(temp);
+                    undoStackIndex.push(((CircularDoublyLinkedList)(courseList)).locatePosition(course));
+                    undoStackCourse.push(course);
+                    courseList.remove(course);
+                    break;
+                    
+                case 3:
+                    course = courseUI.searchCourseByCode(courseList);
+                    undoStackIndex.push(((CircularDoublyLinkedList)(courseList)).locatePosition(course));
+                    undoStackCourse.push(course);
+                    courseList.remove(course);
+                    break;
+                
+                case 4:
+                    if(!undoStackCourse.isEmpty()){
+                        char undo = courseUI.undo(undoStackCourse);
+                        if(undo == 'Y')
+                            courseList.add(undoStackIndex.pop(), undoStackCourse.pop());                     
+                    }else{
+                        System.out.println("Nothing to undo");
+                        MessageUI.pause();
+                    }
+                    
+                    
+                case 0:                  
+                    MessageUI.displayExit();
+                    undoStackIndex.clear();
+                    undoStackCourse.clear();
+                    break;
+                
+                    
+            }         
+        }while(selection != 0);
         
         //current available cost
         //option to remove specific course by number
@@ -77,12 +126,16 @@ public class CourseManagement {
             System.out.println("Invalid Course Code");
         }
     }
+    
+    public void listAllCourse(){
+        courseUI.displayAllCourse(courseList);
+    }
 
     public static void main(String[] args) {
         CourseManagement test = new CourseManagement();
-        CourseManagementUI testUI = new CourseManagementUI();
+       
 //        test.addNewCourse();  
-        System.out.println(test.courseList.getNumberOfEntries());
-        testUI.displayAllCourse(test.courseList);
+        test.removeCourse();
+//        test.listAllCourse();
     }  
 }
