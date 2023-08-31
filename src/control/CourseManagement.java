@@ -42,16 +42,10 @@ public class CourseManagement {
         creditHR = courseUI.inputCreditHour();
         feePerCH = courseUI.inputFeePerCreditHour();
         
-
-        //programme selection to be amended
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        
         ListInterface<String> inputProgList = courseUI.programmeInputList(programmes);
            
-        String[] temp = {"temp"};
-        courseList.add(new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList, temp));       
+      
+        courseList.add(new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList));       
         courseDAO.saveToFile(courseList);
     }
      
