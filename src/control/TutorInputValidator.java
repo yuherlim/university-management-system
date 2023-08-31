@@ -61,8 +61,8 @@ public class TutorInputValidator {
 
         if (valid) {
             boolean isEvenGenderDigit = Character.getNumericValue(ic.charAt(11)) % 2 == 0;
-            valid = (gender == 'M' && isEvenGenderDigit) ||
-                    (gender == 'F' && !isEvenGenderDigit);
+            valid = (gender == 'M' && !isEvenGenderDigit) ||
+                    (gender == 'F' && isEvenGenderDigit);
         }
     } else {
         valid = false;
@@ -110,17 +110,6 @@ public class TutorInputValidator {
 
         return valid;
     }
-    
-    public boolean containsDomain(String[] domains, String domain) {
-        for (String d : domains) {
-            if (d != null && d.equals(domain)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    
     
     
 }
