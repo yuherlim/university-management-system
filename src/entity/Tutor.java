@@ -16,14 +16,14 @@ public class Tutor implements Serializable{
     private static int nextID = 000;
     private String tutorID;
     private String name;
-    private String gender;
+    private char gender;
     private String ic;
     private String phoneNum;
     private String email;
     private String educationLevel;
     private String[] domainKnowledgeList;
     
-    public Tutor(String name, String gender, String ic, String phoneNum, String email, String educationLevel, String[] domainKnowledgeList){
+    public Tutor(String name, char gender, String ic, String phoneNum, String email, String educationLevel, String[] domainKnowledgeList){
         tutorID = "T".concat(String.valueOf(nextID++));
         this.name = name;
         this.gender = gender;
@@ -72,11 +72,11 @@ public class Tutor implements Serializable{
         this.ic = ic;
     }
 
-    public String getGender() {
+    public char getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(char gender) {
         this.gender = gender;
     }
 
