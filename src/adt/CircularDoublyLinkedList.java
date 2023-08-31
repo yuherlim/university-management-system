@@ -348,6 +348,17 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
+    public String toString() {
+        String outputStr = "";
+        Iterator<T> it = getIterator();
+        while (it.hasNext()) {
+            outputStr += it.next() + "\n";
+        }
+
+        return outputStr;
+    }
+
+    @Override
     public Iterator<T> getIterator() {
         return new CircularDoublyLinkedListIterator();
     }
