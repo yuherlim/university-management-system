@@ -4,7 +4,7 @@
  */
 package entity;
 
-import adt.ListInterface;
+import adt.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public class Programme implements Serializable {
     private double fee;
     private int totalCreditHour;
     private String status;
-    private ListInterface<Course> courseList;
+    private ArrayList<String> courses;
 
     public Programme() {
     }
@@ -116,11 +116,11 @@ public class Programme implements Serializable {
     }
 
     public ListInterface<Course> getCourseList() {
-        return courseList;
+        return courses;
     }
 
     public void setCourseList(ListInterface<Course> courseList) {
-        this.courseList = courseList;
+        this.courses = courseList;
     }
 
     @Override
@@ -147,7 +147,7 @@ public class Programme implements Serializable {
 
     @Override
     public String toString() {
-        return "Programme{" + "code=" + code + ", name=" + name + ", faculty=" + faculty + ", programmeType=" + programmeType + ", description=" + description + ", duration=" + duration + ", fee=" + fee + ", totalCreditHour=" + totalCreditHour + ", status=" + status + ", courseList=" + courseList + '}';
+        return "Programme{" + "code=" + code + ", name=" + name + ", faculty=" + faculty + ", programmeType=" + programmeType + ", description=" + description + ", duration=" + duration + ", fee=" + fee + ", totalCreditHour=" + totalCreditHour + ", status=" + status + ", courseList=" + courses + '}';
     }
     
     
