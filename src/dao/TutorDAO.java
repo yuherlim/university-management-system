@@ -1,12 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dao;
 
 import adt.*;
-import entity.Course;
+import entity.Tutor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,17 +16,17 @@ import java.io.ObjectOutputStream;
 
 /**
  *
- * @author syshe
+ * @author kho ka jie
  */
-public class CourseDAO {
+public class TutorDAO {
+    
+    private String fileName = "Tutor.dat";
 
-    private String fileName = "Course.dat";
-
-    public void saveToFile(ListInterface<Course> courseList) {
+    public void saveToFile(ListInterface<Tutor> tutorList) {
         File file = new File(fileName);
         try {
             ObjectOutputStream ooStream = new ObjectOutputStream(new FileOutputStream(file));
-            ooStream.writeObject(courseList);
+            ooStream.writeObject(tutorList);
             ooStream.close();
         } catch (FileNotFoundException ex) {
             System.out.println("\nFile not found");
@@ -36,12 +35,12 @@ public class CourseDAO {
         }
     }
 
-    public ListInterface<Course> retrieveFromFile() {
+    public ListInterface<Tutor> retrieveFromFile() {
         File file = new File(fileName);
-        ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
+        ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
         try {
             ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
-            courseList = (CircularDoublyLinkedList<Course>) (oiStream.readObject());
+            tutorList = (CircularDoublyLinkedList<Tutor>) (oiStream.readObject());
             oiStream.close();
         } catch (FileNotFoundException ex) {
             System.out.println("\nNo such file.");
@@ -50,7 +49,7 @@ public class CourseDAO {
         } catch (ClassNotFoundException ex) {
             System.out.println("\nClass not found.");
         } finally {
-            return courseList;
+            return tutorList;
         }
     }
 }

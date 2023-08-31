@@ -6,7 +6,9 @@
 package control;
 
 import adt.ListInterface;
+import entity.Course;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -16,7 +18,7 @@ import java.util.Scanner;
 public class CourseInputValidator {
     Scanner scan = new Scanner(System.in);
     
-    public boolean courseCodeCheck(String code){              
+    public boolean courseCodeCheck(String code, ListInterface<Course> courseList){              
         if(code.length() != 8){
             System.out.println("Invalid length");
             return false;
@@ -41,6 +43,18 @@ public class CourseInputValidator {
                 return false;
             }
         }
+        
+        Iterator<Course> it = courseList.getIterator();
+        Course target;
+        while(it.hasNext()){
+            target = it.next();
+                
+                if(target.getCourseCode().equals(code)){
+                    System.out.println("Duplicate course code found. \nCourse code must be unique!");
+                   return false;
+                }
+            }
+        
         
         return true;
     }
@@ -93,10 +107,10 @@ public class CourseInputValidator {
         return true;
     }
         
-        public boolean checkDuplicateProg(ListInterface<String> progList, String programme) {
+        public boolean checkExistInList(ListInterface<String> list, String input) {
         //function to check if user input the same programme during adding new course.
-       for(int i=1;i<=progList.getNumberOfEntries();i++){
-            if (progList.getEntry(i).equals(programme)) 
+       for(int i=1;i<=list.getNumberOfEntries();i++){
+            if (list.getEntry(i).equals(input)) 
                     return false;                       //if found duplicated programme return false;            
        } 
         

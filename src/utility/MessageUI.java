@@ -4,6 +4,8 @@
  */
 package utility;
 
+import java.util.Scanner;
+
 /**
  *
  * @author Yu
@@ -16,5 +18,59 @@ public class MessageUI {
 
     public static void displayExitMessage() {
         System.out.println("\nExiting system");
+    }
+    
+    public static void displayExit(){
+        System.out.println("\nExiting");
+    }
+    
+    public static void pause(){
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    public static void courseDeleteMsg(){
+        System.out.println("Course Deleted");
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    public static void courseUndoDeleteMsg(){
+        System.out.println("Undo deletion successed");
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    public static void courseModificationMsg(){
+        System.out.println("Modification succeed");
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    
+    public static void courseModificationFailMsg(){
+        System.out.println("Modification cancelled");
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    public static void savingIntoFile(){
+        System.out.println("Saving updates");
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    public static void nonExistCourse(){
+        System.out.println("Course doesn't exist");
+        System.out.println("Press any key to continue...");
+        new Scanner(System.in).nextLine();
+    }
+    
+    public static void courseTopDivider(){
+        System.out.println("\n\n\n\n-------------------------------");
+    }
+    
+    public static void courseBtmDivider(){
+        System.out.println("-------------------------------");
     }
 }

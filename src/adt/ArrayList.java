@@ -264,6 +264,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
 
     @Override
     public T getFirst() {
+
         T result = null;
 
         if (!isEmpty()) {
@@ -271,6 +272,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         }
 
         return result;
+
     }
 
     @Override
@@ -307,4 +309,6 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
             return currentElement;
         }
     }
+    
+    
 }
