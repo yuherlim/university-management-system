@@ -27,7 +27,7 @@ public class CourseManagementUI {
 
     public int getCourseMainMenuChoice() {
         MessageUI.courseTopDivider();
-        System.out.println("Course Main Menu");
+        System.out.println("\nCourse Main Menu");
         MessageUI.courseBtmDivider();
         System.out.println("1. Add new course");       
         System.out.println("2. Modify a course");
@@ -41,154 +41,6 @@ public class CourseManagementUI {
         scanner.nextLine();
         return selection;
     }
-    
-    public int getReportMenuChoice(){
-        MessageUI.courseTopDivider();
-        System.out.println("Report Menu");
-        MessageUI.courseBtmDivider();
-        System.out.println("1. Display report");       
-        System.out.println("2. Display report sorted by course code");
-        System.out.println("3. Display report sorted by credit hour");
-        System.out.println("0. Quit");
-         MessageUI.courseBtmDivider();
-        System.out.print("Enter choice: ");
-        int selection = scanner.nextInt();
-        scanner.nextLine();
-        return selection;
-    }
-    
-    public void reportSortByCreditHour(ArrayList<Course> courseList, String[] programme){
-        for (int i = 0; i < programme.length; i++) {
-            System.out.printf("%-10s %-20s %-20s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
-            int totalCreditHours = 0;
-            boolean firstLine = true;
-
-            for(int h = 1; h <= courseList.getNumberOfEntries(); h++){
-                Course course = courseList.getEntry(h);
-                for (int j = 1; j <= courseList.getEntry(h).getProgrammes().getNumberOfEntries(); j++) {
-                    if (courseList.getEntry(h).getProgrammes().getEntry(j).equals(programme[i])) {
-                        if (firstLine) {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
-                            totalCreditHours += course.getCreditHR();
-                            firstLine = false;
-                        } else {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
-                            totalCreditHours += course.getCreditHR();
-                        }
-                    }
-                }
-            }
-            if(totalCreditHours == 0){
-                System.out.printf("%-10s %25s",programme[i],"------------Pending for course assignment------------\n");
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
-            }else
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
-        }
-
-    }
-    
-    public void reportSortByCode(ArrayList<Course> courseList, String[] programme){
-        for (int i = 0; i < programme.length; i++) {
-            System.out.printf("%-10s %-20s %-20s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
-            int totalCreditHours = 0;
-            boolean firstLine = true;
-
-            for(int h = 1; h <= courseList.getNumberOfEntries(); h++){
-                Course course = courseList.getEntry(h);
-                for (int j = 1; j <= courseList.getEntry(h).getProgrammes().getNumberOfEntries(); j++) {
-                    if (courseList.getEntry(h).getProgrammes().getEntry(j).equals(programme[i])) {
-                        if (firstLine) {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
-                            totalCreditHours += course.getCreditHR();
-                            firstLine = false;
-                        } else {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
-                            totalCreditHours += course.getCreditHR();
-                        }
-                    }
-                }
-            }
-            if(totalCreditHours == 0){
-                System.out.printf("%-10s %25s",programme[i],"------------Pending for course assignment------------\n");
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
-            }else
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
-        }
-
-    }
-    
-    public void report(ListInterface<Course> courseList, String[] programme){   
-        Course course = new Course();
-        for (int i = 0; i < programme.length; i++) {
-            Iterator<Course> it = courseList.getIterator();
-            System.out.printf("%-10s %-20s %-20s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
-            int totalCreditHours = 0;
-            boolean firstLine = true;
-
-            while (it.hasNext()) {
-                course = it.next();
-                for (int j = 1; j <= course.getProgrammes().getNumberOfEntries(); j++) {
-                    if (course.getProgrammes().getEntry(j).equals(programme[i])) {
-                        if (firstLine) {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
-                            totalCreditHours += course.getCreditHR();
-                            firstLine = false;
-                        } else {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
-                            totalCreditHours += course.getCreditHR();
-                        }
-                    }
-                }
-            }
-            if(totalCreditHours == 0){
-                System.out.printf("%-10s %25s",programme[i],"------------Pending for course assignment------------\n");
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
-            }else
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
-        }
-
-        //each programme ,courses, total credit hour
-        
-    }
-    
-    public ListInterface<Course> sortByCode(ListInterface<Course> courseList){
-        ListInterface<Course> sorted = convertToArrayList(courseList);
-        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-            for (int j = i+1; j <= sorted.getNumberOfEntries(); j++) {
-                if (sorted.getEntry(i).getCourseCode().compareTo(sorted.getEntry(j).getCourseCode()) > 0) {
-                    Course temp = sorted.getEntry(i);
-                    sorted.replace(i, sorted.getEntry(j));
-                    sorted.replace(j, temp);
-                }
-            }
-        }
-        return sorted;
-    }
-    
-    public ListInterface<Course> sortByCreditHour(ListInterface<Course> courseList){
-        ListInterface<Course> sorted = convertToArrayList(courseList);
-        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-            for (int j = i+1; j <= sorted.getNumberOfEntries(); j++) {
-                if (sorted.getEntry(i).getCreditHR() > sorted.getEntry(j).getCreditHR()) {
-                    Course temp = sorted.getEntry(i);
-                    sorted.replace(i, sorted.getEntry(j));
-                    sorted.replace(j, temp);
-                }
-            }
-        }
-        return sorted;
-    }
-    
-    public ListInterface<Course> convertToArrayList(ListInterface<Course> courseList){
-        ListInterface<Course> presort = new ArrayList<>();
-        Iterator<Course> it = courseList.getIterator();
-        while (it.hasNext()) {
-              Course course = it.next();
-              presort.add(course);
-        }
-        return presort;
-    }
-   
     
     public int getDisplayCourseMenuSelection(){
         MessageUI.courseTopDivider();
@@ -448,10 +300,8 @@ public class CourseManagementUI {
                 MessageUI.displayInvalidChoiceMessage();
             }
 
-            if ((domainSelection >= 1 && domainSelection <= domainList.length) && notDuplicated){ 
+            if ((domainSelection >= 1 && domainSelection <= domainList.length) && notDuplicated) 
                 domains.add(domainList[domainSelection - 1]);
-                System.out.println(domainList[domainSelection-1] + " successfully added.");
-            }
             
         } while (domainSelection != 0);
     
@@ -544,7 +394,6 @@ public class CourseManagementUI {
 
             if ((programmeSelection >= 1 && programmeSelection <= programmes.length) && notDuplicated) {
                 result.add(programmes[programmeSelection - 1]) ;
-                System.out.println(programmes[programmeSelection - 1] + " successfully added.");
             }
         } while (programmeSelection != 0);
         
