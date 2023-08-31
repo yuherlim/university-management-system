@@ -224,4 +224,102 @@ public class TutorManagementUI {
             System.out.println("");
         }
     }
+
+    public int searchTutor() {
+        int searchSelection = 0;
+        boolean valid = false;
+
+        do {
+            try {
+                System.out.println("Search tutor by: ");
+                System.out.println("1. ID");
+                System.out.println("2. Name");
+                System.out.println("3. Email");
+                System.out.println("0. Exit");
+                System.out.print("Your selection: ");
+                searchSelection = sc.nextInt();
+                valid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid. Please select a valid education level...");
+                sc.nextLine();
+                valid = false;
+            }
+            if (searchSelection < 1 || searchSelection > 3) {
+                System.out.println("Invalid. Please select number between 1 to 3...");
+                valid = false;
+            }
+            
+            sc.nextLine();
+
+        } while (!valid);
+
+        return searchSelection;
+    }
+
+    public String inputTargetTutorID() {
+        System.out.println("Please enter the tutor ID you want to search (T000): ");
+        String targetTutorID = sc.nextLine();
+        
+        return targetTutorID;
+    }
+
+    public String inputTargetTutorName() {
+        boolean valid = false;
+        String targetTutorName;
+        do {
+            System.out.println("Please enter the tutor name you want to search: ");
+            targetTutorName = sc.nextLine();
+            valid = validator.checkTutorName(targetTutorName);
+            if (!valid) {
+                System.out.println("Invalid Name. Please enter again...");
+            }
+        } while (!valid);
+        
+        return targetTutorName;
+    }
+
+    public String inputTargetTutorEmail() {
+        boolean valid = false;
+        String targetTutorEmail;
+
+        do {
+            System.out.println("Please enter the tutor email you want to search: ");
+            targetTutorEmail = sc.nextLine();
+            valid = validator.checkTutorEmail(targetTutorEmail);
+            if (!valid) {
+                System.out.println("Invalid Email. Please enter again...");
+            }
+        } while (!valid);
+        
+        return targetTutorEmail;
+    }
+
+    public Tutor searchTutorDetails(ListInterface<Tutor> tutorList, String searchingString, int index) {
+
+        Tutor target = null;
+        Iterator<Tutor> it = tutorList.getIterator();
+
+        while (it.hasNext()) {
+            target = it.next();
+            switch (index) {
+                case 1:
+                    if (target.getTutorID().equals(searchingString)) {
+                        return target;
+                    }
+                    break;
+                case 2:
+                    if (target.getName().equals(searchingString)) {
+                        return target;
+                    }
+                    break;
+                default:
+                    if (target.getEmail().equals(searchingString)) {
+                        return target;
+                    }
+                    break;
+            }
+        }
+
+        return null;
+    }
 }
