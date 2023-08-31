@@ -32,58 +32,50 @@ public class TutorManagement {
     
     public void addNewTutor(){
         
+        int id = tutorList.getNumberOfEntries();
+        id++;
+        String tutorID = "T".concat(String.format("%03d", id));
         String tutorName = tutorUI.inputTutorName();
         char tutorGender = tutorUI.inputTutorGender();
         String tutorIC = tutorUI.inputTutorIC();
         String tutorPhoneNum = tutorUI.inputTutorPhoneNum();
         String tutorEmail = tutorUI.inputTutorEmail();
+        String educationLevel = tutorUI.inputTutoerEduLevel();
+        ArrayList<String> tutorDomainList = tutorUI.inputTutorDomain();
         
-        int educationLevelSelection = tutorUI.inputTutoerEduLevel();
-        String educationLevel = "";
-        switch(educationLevelSelection){
-            case 1:
-                educationLevel = "Diploma";
-                break;
-            case 2:
-                educationLevel = "Bachelor's Degree";
-                break;
-            case 3:
-                educationLevel = "Master's Degree";
-                break;
-            case 4:
-                educationLevel = "phD";
-                break;   
-        }
+        tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, educationLevel, tutorDomainList));
+        tutorDAO.saveToFile(tutorList);   
+    }
+    
+    public void removeTutor(){
         
-        int domainKnowledgeSelection = 0;
-        do{
-            domainKnowledgeSelection = tutorUI.inputTutorDomain();
-            String domainKnowledge = "";
-            String[] domainKnowledgeList;
-            switch(domainKnowledgeSelection){
-                case 1:
-                    domainKnowledge = "Accounting";
-                    break;
-                case 2:
-                    domainKnowledge = "Add.Math";
-                    break;
-                case 3:
-                    domainKnowledge = "Biology";
-                    break;
-                case 4:
-                    domainKnowledge = "Chemistry";
-                    break;
-                case 5:
-                    domainKnowledge = "Physics"; 
-                    break;  
-            }
-        }while(domainKnowledgeSelection!=0);
+    }
+    
+    public void findTutor(){
         
+    }
+    
+    public void modifyTutor(){
+        
+    }
+    
+    public void filterTutor(){
+        
+    }
+    
+    public void generateTutorReport(){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     }
     
     
     public static void main(String[] args) {
         TutorManagement test = new TutorManagement();
+        TutorManagementUI uitest = new TutorManagementUI();
         test.addNewTutor();
+        
+        uitest.displayAllTutors(test.tutorList);
+        
+        
+        
     }
 }

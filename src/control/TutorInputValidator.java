@@ -42,8 +42,8 @@ public class TutorInputValidator {
     
     public boolean checkTutorIC(String ic, char gender){
         boolean valid = true;
-        
-        if (ic.length() == 12) {
+
+    if (ic.length() == 12) {
         int month = Character.getNumericValue(ic.charAt(2)) * 10 + Character.getNumericValue(ic.charAt(3));
         int day = Character.getNumericValue(ic.charAt(4)) * 10 + Character.getNumericValue(ic.charAt(5));
 
@@ -61,15 +61,18 @@ public class TutorInputValidator {
 
         if (valid) {
             boolean isEvenGenderDigit = Character.getNumericValue(ic.charAt(11)) % 2 == 0;
-            valid = (gender == 'M' && isEvenGenderDigit) ||
-                    (gender == 'F' && !isEvenGenderDigit);
+            valid = (gender == 'M' && !isEvenGenderDigit) ||
+                    (gender == 'F' && isEvenGenderDigit);
         }
-        
-        if(!valid){
-            System.out.println("Invalid. Please enter valid ic format and follow your gender...");
-        }
+    } else {
+        valid = false;
     }
-        return valid;
+
+    if (!valid) {
+        System.out.println("Invalid. Please enter a valid IC format and follow your gender...");
+    }
+
+    return valid;
     }
 
     public boolean checkTutorPhoneNum(String tutorPhoneNum) {
@@ -107,8 +110,6 @@ public class TutorInputValidator {
 
         return valid;
     }
-    
-    
     
     
 }

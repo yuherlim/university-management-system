@@ -20,7 +20,7 @@ import java.io.ObjectOutputStream;
  */
 public class TutorDAO {
     
-    private String fileName = "Tutor.bin";
+    private String fileName = "Tutor.dat";
 
     public void saveToFile(ListInterface<Tutor> tutorList) {
         File file = new File(fileName);
@@ -40,7 +40,7 @@ public class TutorDAO {
         ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
         try {
             ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
-            tutorList = (ArrayList<Tutor>) (oiStream.readObject());
+            tutorList = (CircularDoublyLinkedList<Tutor>) (oiStream.readObject());
             oiStream.close();
         } catch (FileNotFoundException ex) {
             System.out.println("\nNo such file.");
