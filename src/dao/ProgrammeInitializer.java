@@ -17,6 +17,8 @@ public class ProgrammeInitializer {
         ProgrammeDAO programmeDAO = new ProgrammeDAO();
         ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
         
+        // insert mock data here.
+        
         
         programmeDAO.saveToFile(programmeList);
     }
