@@ -4,11 +4,14 @@
  */
 package entity;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 /**
  *
  * @author temp
  */
-public class TeachingAssignment {
+public class TeachingAssignment implements Serializable {
         private String teachingAssignmentId;
         private TutorialGroup tutorialGroup;
         private Course course;
@@ -64,17 +67,20 @@ public class TeachingAssignment {
         return "TeachingAssignment{" + "teachingAssignmentId=" + teachingAssignmentId + ", tutorialGroup=" + tutorialGroup + ", course=" + course + ", tutor=" + tutor + '}';
     }
     
-    public boolean equals(TeachingAssignment o) {
-        return this.teachingAssignmentId.equals(o.teachingAssignmentId);
-    }
-    
-    
-        
-        
-                
-                
-                
-                
+    @Override
+    public boolean equals(Object obj) {
+       if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TeachingAssignment other = (TeachingAssignment) obj;
+        return Objects.equals(this.teachingAssignmentId, other.teachingAssignmentId);
+    }         
        
 
         //stub         
