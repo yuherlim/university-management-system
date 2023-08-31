@@ -21,7 +21,7 @@ public class CourseManagement {
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();    
     private CourseInputValidator validator = new CourseInputValidator();
-    private String[] programmes = {"RSW", "RDS", "RSD", "ABC", "DEF", "GHI"};
+    private String[] programmes = {"RSW", "RST", "RDS", "RMM", "RSS"};
     private String[] domainKnowledges = {"Accounting","Add.Math","Biology","Chemistry","Physics"};
     Scanner scan = new Scanner(System.in);
 
@@ -31,7 +31,7 @@ public class CourseManagement {
 
     public void addNewCourse() {
         String code, name;
-        int creditHR, programmeSelection;
+        int creditHR;
         double feePerCH;
         courseUI.displayAddCourseMsg();
         code = courseUI.inputCourseCode(courseList);
@@ -211,6 +211,38 @@ public class CourseManagement {
         }while(selection != 0);        
     }
     
+    public void getReport(){
+         int selection = -1;
+         ListInterface<Course> sortedList;
+        do{
+            selection = courseUI.getReportMenuChoice();
+            switch(selection){
+                case 1:
+                    courseUI.report(courseList, programmes);
+                    break;
+                    
+                case 2:
+                    sortedList = courseUI.sortByCode(courseList);
+                    courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    break;
+                    
+                case 3:
+                    sortedList = courseUI.sortByCreditHour(courseList);
+                    courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    break;
+           
+                case 0:
+                    MessageUI.displayExitMessage();
+                    break;
+                    
+                default:
+                    MessageUI.displayInvalidChoiceMessage();
+                    break;
+            }
+        
+        }while(selection != 0);
+        courseUI.report(courseList, programmes);
+    }
   
     public static void main(String[] args) {
         CourseManagement courseManagement = new CourseManagement();
@@ -236,6 +268,7 @@ public class CourseManagement {
                     break;
                     
                 case 5:
+                    courseManagement.getReport();
                     break;
                     
                 case 0:
@@ -248,5 +281,6 @@ public class CourseManagement {
             }
         
         }while(selection != 0);
+ 
     }  
 }
