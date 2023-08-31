@@ -144,10 +144,10 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     @Override
     public T remove(T anEntry) {
         T result = null;
-
-        if (contains(anEntry)) {
-            int index = locatePosition(anEntry);
-            result = remove(index);
+        int pos = locatePosition(anEntry);
+            
+        if(pos != -1){
+            result = remove(pos);
         }
 
         return result;
