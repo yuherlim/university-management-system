@@ -55,35 +55,42 @@ public class TutorManagement {
                 break;   
         }
         
-        int domainKnowledgeSelection = 0;
-        do{
-            domainKnowledgeSelection = tutorUI.inputTutorDomain();
-            String domainKnowledge = "";
-            String[] domainKnowledgeList;
-            switch(domainKnowledgeSelection){
-                case 1:
-                    domainKnowledge = "Accounting";
-                    break;
-                case 2:
-                    domainKnowledge = "Add.Math";
-                    break;
-                case 3:
-                    domainKnowledge = "Biology";
-                    break;
-                case 4:
-                    domainKnowledge = "Chemistry";
-                    break;
-                case 5:
-                    domainKnowledge = "Physics"; 
-                    break;  
-            }
-        }while(domainKnowledgeSelection!=0);
+        String[] tutorDomainList = tutorUI.inputTutorDomain();
         
+        tutorList.add(new Tutor(tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, educationLevel, tutorDomainList));
+        tutorDAO.saveToFile(tutorList);
+            
+    }
+    
+    public void removeTutor(){
+        
+    }
+    
+    public void findTutor(){
+        
+    }
+    
+    public void modifyTutor(){
+        
+    }
+    
+    public void filterTutor(){
+        
+    }
+    
+    public void generateTutorReport(){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     }
     
     
     public static void main(String[] args) {
         TutorManagement test = new TutorManagement();
-        test.addNewTutor();
+        TutorManagementUI uitest = new TutorManagementUI();
+        //test.addNewTutor();
+        
+        uitest.displayAllTutors(test.tutorList);
+        
+        
+        
     }
 }
