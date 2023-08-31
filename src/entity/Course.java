@@ -16,14 +16,14 @@ import java.io.Serializable;
 public class Course implements Serializable{
     private String courseCode;
     private String courseName;
-    private String[] requiredDomainKnowledge;
+    private ArrayList<String> requiredDomainKnowledge;
     private int creditHR;
     private double feePCH;
     private double coureseTotalFee;
     private ArrayList<String> programmes;
     private String[] teachingList;
-
-    public Course(String courseCode, String courseName, String[] requiredDomainKnowledge,int creditHR, double feePCH, ArrayList<String> programmes, String[] teachingList) {
+    
+    public Course(String courseCode, String courseName, ArrayList<String> requiredDomainKnowledge,int creditHR, double feePCH, ArrayList<String> programmes, String[] teachingList) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.requiredDomainKnowledge = requiredDomainKnowledge;
@@ -45,9 +45,7 @@ public class Course implements Serializable{
         return courseCode;
     }
 
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
+  
 
     public String getCourseName() {
         return courseName;
@@ -63,6 +61,7 @@ public class Course implements Serializable{
 
     public void setCreditHR(int creditHR) {
         this.creditHR = creditHR;
+        this.coureseTotalFee = this.feePCH * this.creditHR;
     }
 
     public double getFeePCH() {
@@ -71,23 +70,18 @@ public class Course implements Serializable{
 
     public void setFeePCH(double feePCH) {
         this.feePCH = feePCH;
+        this.coureseTotalFee = this.feePCH * this.creditHR;
     }
 
     public double getCoureseTotalFee() {
         return coureseTotalFee;
-    }
-
-    public void setCoureseTotalFee(double coureseTotalFee) {
-        this.coureseTotalFee = coureseTotalFee;
-    }
-
+    }    
     
-    
-     public String[] getRequiredDomainKnowledge() {
+     public ArrayList<String> getRequiredDomainKnowledge() {
         return requiredDomainKnowledge;
     }
 
-    public void setRequiredDomainKnowledge(String[] requiredDomainKnowledge) {
+    public void setRequiredDomainKnowledge(ArrayList<String> requiredDomainKnowledge) {
         this.requiredDomainKnowledge = requiredDomainKnowledge;
     }
 
@@ -114,8 +108,9 @@ public class Course implements Serializable{
     @Override
     public String toString() {
         String domains = "";
-        for(String r: requiredDomainKnowledge)
-            domains += r + ",";
+        for(int i=1;i<requiredDomainKnowledge.getNumberOfEntries();i++){
+            domains += requiredDomainKnowledge.getEntry(i) + ",";
+        }
         
         domains +="\b";
         
