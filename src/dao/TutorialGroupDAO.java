@@ -5,21 +5,22 @@
 package dao;
 
 import adt.*;
-import entity.Programme;
+import entity.TutorialGroup;
 import java.io.*;
 
 /**
  *
  * @author Yu
  */
-public class ProgrammeDAO {
-    private final String fileName = "programme.dat"; // For security and maintainability, should not have filename hardcoded here.
+public class TutorialGroupDAO {
 
-    public void saveToFile(ListInterface<Programme> programmeList) {
+    private final String fileName = "tutorialGroup.dat"; // For security and maintainability, should not have filename hardcoded here.
+
+    public void saveToFile(ListInterface<TutorialGroup> tutorialGroupList) {
         File file = new File(fileName);
         try {
             ObjectOutputStream ooStream = new ObjectOutputStream(new FileOutputStream(file));
-            ooStream.writeObject(programmeList);
+            ooStream.writeObject(tutorialGroupList);
             ooStream.close();
         } catch (FileNotFoundException ex) {
             System.out.println("\nFile not found");
@@ -28,12 +29,12 @@ public class ProgrammeDAO {
         }
     }
 
-    public ListInterface<Programme> retrieveFromFile() {
+    public ListInterface<TutorialGroup> retrieveFromFile() {
         File file = new File(fileName);
-        ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
+        ListInterface<TutorialGroup> tutorialGroupList = new CircularDoublyLinkedList<>();
         try {
             ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
-            programmeList = (CircularDoublyLinkedList<Programme>) (oiStream.readObject());
+            tutorialGroupList = (CircularDoublyLinkedList<TutorialGroup>) (oiStream.readObject());
             oiStream.close();
         } catch (FileNotFoundException ex) {
             System.out.println("\nNo such file.");
@@ -42,7 +43,7 @@ public class ProgrammeDAO {
         } catch (ClassNotFoundException ex) {
             System.out.println("\nClass not found.");
         } finally {
-            return programmeList;
+            return tutorialGroupList;
         }
     }
 }
