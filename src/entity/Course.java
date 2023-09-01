@@ -108,7 +108,7 @@ public class Course implements Serializable{
         
         programmeList += "\b";
         
-        return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
+        return "Course: " + courseCode + "\nCourse Name: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
                 "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\n";
        
     }

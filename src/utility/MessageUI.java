@@ -67,10 +67,10 @@ public class MessageUI {
     }
     
     public static void courseTopDivider(){
-        System.out.println("\n\n\n\n-------------------------------");
+        System.out.println("\n\n\n\n---------------------------------------------------------------------------------------------");
     }
     
     public static void courseBtmDivider(){
-        System.out.println("-------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------");
     }
 }
