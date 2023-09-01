@@ -87,6 +87,19 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
     }
 
     @Override
+    public boolean replace(T anEntry, T newEntry) {
+        boolean isSuccessful = false;
+        int index = indexOf(anEntry);
+        
+        if (!isEmpty() && index != -1) {
+            array[index] = newEntry;
+            isSuccessful = true;
+        }
+        
+        return isSuccessful;
+    }
+    
+    @Override
     public T getEntry(int givenPosition) {
         T result = null;
 
