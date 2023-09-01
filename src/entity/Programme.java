@@ -42,6 +42,20 @@ public class Programme implements Serializable {
         this.totalCreditHour = totalCreditHour;
         this.status = "Active";
     }
+    
+    //Used only when initializing data.
+    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, int totalCreditHour, String status, ArrayList<String> courses) {
+        this.code = code;
+        this.name = name;
+        this.faculty = faculty;
+        this.programmeType = programmeType;
+        this.description = description;
+        this.duration = duration;
+        this.totalFee = totalFee;
+        this.totalCreditHour = totalCreditHour;
+        this.status = status;
+        this.courses = courses;
+    }
 
     public String getCode() {
         return code;
@@ -147,7 +161,7 @@ public class Programme implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%-4s %-75s\n", code, name);
+        return String.format("%-4s %-75s", code, name);
     }
 
     
