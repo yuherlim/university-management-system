@@ -18,8 +18,8 @@ public class Programme implements Serializable {
     private String faculty;
     private String programmeType;
     private String description;
-    private String duration;
-    private double fee;
+    private int duration;
+    private double totalFee;
     private int totalCreditHour;
     private String status;
     private ArrayList<String> courses;
@@ -31,16 +31,16 @@ public class Programme implements Serializable {
         this.code = code;
     }
 
-    public Programme(String code, String name, String faculty, String programmeType, String description, String duration, double fee, int totalCreditHour, String status) {
+    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, int totalCreditHour) {
         this.code = code;
         this.name = name;
         this.faculty = faculty;
         this.programmeType = programmeType;
         this.description = description;
         this.duration = duration;
-        this.fee = fee;
+        this.totalFee = totalFee;
         this.totalCreditHour = totalCreditHour;
-        this.status = status;
+        this.status = "Active";
     }
 
     public String getCode() {
@@ -83,20 +83,20 @@ public class Programme implements Serializable {
         this.description = description;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
-    public double getFee() {
-        return fee;
+    public double getTotalFee() {
+        return totalFee;
     }
 
-    public void setFee(double fee) {
-        this.fee = fee;
+    public void setTotalFee(double totalFee) {
+        this.totalFee = totalFee;
     }
 
     public int getTotalCreditHour() {
@@ -115,12 +115,12 @@ public class Programme implements Serializable {
         this.status = status;
     }
 
-    public ListInterface<Course> getCourseList() {
+    public ArrayList<String> getCourses() {
         return courses;
     }
 
-    public void setCourseList(ListInterface<Course> courseList) {
-        this.courses = courseList;
+    public void setCourses(ArrayList<String> courses) {
+        this.courses = courses;
     }
 
     @Override
@@ -147,8 +147,10 @@ public class Programme implements Serializable {
 
     @Override
     public String toString() {
-        return "Programme{" + "code=" + code + ", name=" + name + ", faculty=" + faculty + ", programmeType=" + programmeType + ", description=" + description + ", duration=" + duration + ", fee=" + fee + ", totalCreditHour=" + totalCreditHour + ", status=" + status + ", courseList=" + courses + '}';
+        return String.format("%-4s %-75s\n", code, name);
     }
+
+    
     
     
 }

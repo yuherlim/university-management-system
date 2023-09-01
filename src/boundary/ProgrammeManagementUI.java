@@ -6,6 +6,7 @@ package boundary;
 
 import java.util.Scanner;
 import entity.Programme;
+import utility.MessageUI;
 
 /**
  *
@@ -35,40 +36,179 @@ public class ProgrammeManagementUI {
     }
 
     public void listAllProgrammes(String outputStr) {
-        System.out.println("\nList of Products:\n" + outputStr);
+        System.out.println("\nList of Programmes:\n");
+        System.out.printf("%-4s %-75s\n" + outputStr, "Code", "Name");
     }
 
     public void printProgrammeDetails(Programme programme) {
         System.out.println("Programme Details");
         System.out.println("Programme code:" + programme.getCode());
         System.out.println("Programme name: " + programme.getName());
-        System.out.println("Quantity: " + product.getQuantity());
+        System.out.println("Programme faculty: " + programme.getFaculty());
+        System.out.println("Programme type: " + programme.getProgrammeType());
+        System.out.println("Programme description: " + programme.getDescription());
+        System.out.println("Programme duration (years): " + programme.getDuration());
+        System.out.println("Programme total fees: " + programme.getTotalFee());
+        System.out.println("Programme total credit hours: " + programme.getTotalCreditHour());
+        System.out.println("Programme status: " + programme.getStatus());
     }
 
-    public String inputProductCode() {
-        System.out.print("Enter product code: ");
-        String code = scanner.nextLine();
+    public String inputProgrammeCode() {
+        boolean valid;
+        String code;
+        do {
+            valid = true;
+            System.out.print("Enter programme code: ");
+            code = scanner.nextLine().toUpperCase();
+            if (code.length() != 3) {
+                valid = false;
+                System.out.println("\nInvalid length for programme code.");
+            } else {
+                for (int i = 0; i < code.length(); i++) {
+                    if (!Character.isLetter(code.charAt(i))) {
+                        valid = false;
+                        System.out.println("\nInvalid programme code (must be letters).");
+                        break;
+                    }
+                }
+            }
+        } while (valid == false);
         return code;
     }
 
-    public String inputProductName() {
-        System.out.print("Enter product name: ");
-        String name = scanner.nextLine();
+    public String inputProgrammeName() {
+        boolean valid;
+        String name;
+        do {
+            valid = true;
+            System.out.print("Enter programme name: ");
+            name = scanner.nextLine();
+            for (int i = 0; i < name.length(); i++) {
+                if (Character.isDigit(name.charAt(i))) {
+                    valid = false;
+                    System.out.println("\nInvalid programme name (must be letters).");
+                    break;
+                }
+            }
+        } while (valid == false);
         return name;
     }
 
-    public int inputQuantity() {
-        System.out.print("Enter quantity: ");
-        int quantity = scanner.nextInt();
-        scanner.nextLine();
-        return quantity;
+    public String inputProgrammeFaculty() {
+        boolean valid;
+        String faculty;
+        do {
+            valid = true;
+            System.out.print("Enter faculty name: ");
+            faculty = scanner.nextLine();
+            for (int i = 0; i < faculty.length(); i++) {
+                if (Character.isDigit(faculty.charAt(i))) {
+                    valid = false;
+                    System.out.println("\nInvalid faculty name (must be letters).");
+                    break;
+                }
+            }
+        } while (valid == false);
+        return faculty;
     }
 
-    public Product inputProductDetails() {
-        String productCode = inputProductCode();
-        String productName = inputProductName();
-        int quantity = inputQuantity();
+    public String inputProgrammeType() {
+        System.out.println("Enter programme type: ");
+        System.out.println("Choose from the following selection: ");
+        String programmeType = "";
+        switch (getProgrammeTypeMenuChoice()) {
+            case 1:
+                programmeType = "Foundation";
+                break;
+            case 2:
+                programmeType = "Diploma";
+                break;
+            case 3:
+                programmeType = "Bachelor";
+                break;
+            case 4:
+                programmeType = "Masters";
+                break;
+            case 5:
+                programmeType = "PhD";
+                break;
+        }
+        return programmeType;
+    }
+
+    private int getProgrammeTypeMenuChoice() {
+        System.out.println("Programme types: ");
+        System.out.println("1. Foundation");
+        System.out.println("2. Diploma");
+        System.out.println("3. Bachelor");
+        System.out.println("4. Masters");
+        System.out.println("5. PhD");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 1 || choice <= 5) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
         System.out.println();
-        return new Product(productCode, productName, quantity);
+        return choice;
+    }
+    
+    public String inputProgrammeDescription() {
+        boolean valid;
+        String description;
+        do {
+            valid = true;
+            System.out.print("Enter programme description: ");
+            description = scanner.nextLine();
+            for (int i = 0; i < description.length(); i++) {
+                if (Character.isDigit(description.charAt(i))) {
+                    valid = false;
+                    System.out.println("\nInvalid programme description (must be letters).");
+                    break;
+                }
+            }
+        } while (valid == false);
+        return description;
+    }
+    
+    public int inputProgrammeDuration() {
+        System.out.print("Enter programme duration (years): ");
+        int duration = scanner.nextInt();
+        scanner.nextLine();
+        return duration;
+    }
+    
+    public double inputProgrammeTotalFees() {
+        System.out.print("Enter programme total fee: ");
+        double totalFee = scanner.nextDouble();
+        scanner.nextLine();
+        return totalFee;
+    }
+    
+    public int inputProgrammeTotalCreditHours() {
+        System.out.print("Enter programme total credit hours: ");
+        int totalCreditHours = scanner.nextInt();
+        scanner.nextLine();
+        return totalCreditHours;
+    }
+
+    public Programme inputProgrammeDetails() {
+        String code = inputProgrammeCode();
+        String name = inputProgrammeName();
+        String faculty = inputProgrammeFaculty();
+        String programmeType = inputProgrammeType();
+        String description = inputProgrammeDescription();
+        int duration = inputProgrammeDuration();
+        double totalFee = inputProgrammeTotalFees();
+        int totalCreditHour = inputProgrammeTotalCreditHours();
+        System.out.println("");
+        System.out.println("New programme added successfully.\n");
+        return new Programme(code, name, faculty, programmeType, description, duration, totalFee, totalCreditHour);
     }
 }
