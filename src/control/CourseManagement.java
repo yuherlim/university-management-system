@@ -43,10 +43,13 @@ public class CourseManagement {
         feePerCH = courseUI.inputFeePerCreditHour();
         
         ListInterface<String> inputProgList = courseUI.programmeInputList(programmes);
-           
-      
-        courseList.add(new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList));       
+       
+        Course course = new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList);
+         //Not using annoymous object in add due to the need to display the new course added
+        courseList.add(course);      
         courseDAO.saveToFile(courseList);
+        System.out.println(course + "successfully added.");
+        MessageUI.pause();
     }
      
     public void removeCourse(){
@@ -116,6 +119,9 @@ public class CourseManagement {
                             MessageUI.savingIntoFile();
                             courseDAO.saveToFile(courseList);
                         }
+                        else{
+                            selection = -1;
+                        }                                             
                     }
                     break;
                 
@@ -209,16 +215,19 @@ public class CourseManagement {
             switch(selection){
                 case 1:
                     courseUI.report(courseList, programmes);
+                    MessageUI.pause();
                     break;
                     
                 case 2:
                     sortedList = courseUI.sortByCode(courseList);
                     courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    MessageUI.pause();
                     break;
                     
                 case 3:
                     sortedList = courseUI.sortByCreditHour(courseList);
                     courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    MessageUI.pause();
                     break;
            
                 case 0:
