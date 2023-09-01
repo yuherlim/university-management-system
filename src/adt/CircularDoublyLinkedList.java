@@ -333,7 +333,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public int getNumberOfEntries() { //jiajie
+    public int getNumberOfEntries() { 
         return numberOfEntries;
     }
 
