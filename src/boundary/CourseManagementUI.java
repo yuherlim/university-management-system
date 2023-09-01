@@ -360,7 +360,7 @@ public class CourseManagementUI {
             } else {
                 int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
                 ListInterface<String> inputProgList = course.getProgrammes();
-                int index = inputProgramme() - 1; //user input will return int value to access predifined programmes list;
+                int index = inputProgramme(programmes) - 1; //user input will return int value to access predifined programmes list;
                 boolean notExist = true, modification = false;
                 notExist = validator.checkExistInList(inputProgList, programmes[index]);
                 if (selection == 1) {
@@ -500,17 +500,20 @@ public class CourseManagementUI {
         return feePerCH;
     }
 
-    public int inputProgramme() {
+    public int inputProgramme(String[] programmes) {
         int programmeSelection = 0;
         boolean valid = true;
         do {
             try {
                 System.out.println("\nInput the programme that are taking the course");
-                System.out.println("1. RSW");
-                System.out.println("2. RST");
-                System.out.println("3. RDS");
-                System.out.println("4. RMM");
-                System.out.println("5. RSS");
+                for(int i =0; i <programmes.length;i++){
+                    System.out.println(i+1 + ". " + programmes[i]);
+                }
+//                System.out.println("1. RSW");
+//                System.out.println("2. RST");
+//                System.out.println("3. RDS");
+//                System.out.println("4. RMM");
+//                System.out.println("5. RSS");
                 System.out.println("0. Quit");
                 System.out.println("Your input: ");
                 programmeSelection = scanner.nextInt();
@@ -529,7 +532,7 @@ public class CourseManagementUI {
             int programmeSelection;
             ListInterface<String> result = new ArrayList<>();
         do {
-            programmeSelection = inputProgramme();
+            programmeSelection = inputProgramme(programmes);
             boolean notDuplicated = true;
             if (programmeSelection >= 1 && programmeSelection <= programmes.length) {
                 if (result.getNumberOfEntries() > 0) {

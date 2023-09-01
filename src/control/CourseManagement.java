@@ -18,15 +18,22 @@ import utility.MessageUI;
  */
 public class CourseManagement {
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
+    private ListInterface<Programme> progList = new CircularDoublyLinkedList<>();
+    private ProgrammeDAO progDAO = new ProgrammeDAO();
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();    
     private CourseInputValidator validator = new CourseInputValidator();
-    private String[] programmes = {"RSW", "RST", "RDS", "RMM", "RSS"};
+    private String[] programmes;
     private String[] domainKnowledges = {"Accounting","Add.Math","Biology","Chemistry","Physics"};
     Scanner scan = new Scanner(System.in);
 
     public CourseManagement() {
         courseList = courseDAO.retrieveFromFile();
+        progList = progDAO.retrieveFromFile();
+        programmes = new String[progList.getNumberOfEntries()];
+        for(int i = 0; i < programmes.length;i++){
+            programmes[i] = progList.getEntry(i+1).getCode();
+        }
     }
 
     public void addNewCourse() {
@@ -248,6 +255,7 @@ public class CourseManagement {
         CourseManagementUI courseManagementUI = new CourseManagementUI();
         int selection = -1;
         do{
+            System.out.println(courseManagement.progList);
             selection = courseManagementUI.getCourseMainMenuChoice();
             switch(selection){
                 case 1:
