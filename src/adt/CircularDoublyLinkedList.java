@@ -285,11 +285,11 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public T getEntry(T anObject) {
+    public T getEntry(T anEntry) {
         T result = null;
 
-        if (!isEmpty() && contains(anObject)) {
-            int index = locatePosition(anObject);
+        if (!isEmpty() && contains(anEntry)) {
+            int index = locatePosition(anEntry);
             result = getEntry(index);
         }
 

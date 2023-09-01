@@ -70,7 +70,7 @@ public class ProgrammeManagement {
         Programme newProgramme = programmeManagementUI.inputProgrammeDetails();
         programmeList.add(newProgramme);
         programmeDAO.saveToFile(programmeList);
-        programmeManagementUI.listAllProgrammes(getAllProgrammes());
+        programmeManagementUI.printProgrammeDetails(newProgramme);
     }
 
     public String getAllProgrammes() {
@@ -85,10 +85,10 @@ public class ProgrammeManagement {
 
     public void displayProgrammes() {
         programmeManagementUI.listAllProgrammes(getAllProgrammes());
-        System.out.println("Enter a programme code to view programme details.");
+        System.out.println("\nEnter a programme code to view programme details.");
         String code = programmeManagementUI.inputProgrammeCode();
         Programme programmeToView = programmeList.getEntry(new Programme(code));
-        
+
         if (programmeToView != null) {
             programmeManagementUI.printProgrammeDetails(programmeToView);
         } else {
@@ -97,17 +97,7 @@ public class ProgrammeManagement {
     }
 
     private void removeProgramme() {
-        programmeManagementUI.listAllProgrammes(getAllProgrammes());
-        System.out.println("Enter a programme code to modify programme details.");
-        String code = programmeManagementUI.inputProgrammeCode();
-        Programme programmeToView = programmeList.getEntry(new Programme(code));
-        
-        if (programmeToView != null) {
-            programmeManagementUI.printProgrammeDetails(programmeToView);
-        } else {
-            System.out.println("\nThe programme code entered does not exist.");
-        }
-        System.out.println("");
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void findProgramme() {
@@ -115,7 +105,62 @@ public class ProgrammeManagement {
     }
 
     private void ammendProgramme() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        programmeManagementUI.listAllProgrammes(getAllProgrammes());
+        System.out.println("\nEnter a programme code to modify programme details.");
+        String code = programmeManagementUI.inputProgrammeCode();
+        Programme programmeToModify = programmeList.getEntry(new Programme(code));
+        Programme programmeToBeReplacedWith = programmeToModify;
+        if (programmeToModify != null) {
+            programmeManagementUI.printProgrammeDetails(programmeToModify);
+        } else {
+            System.out.println("\nThe programme code entered does not exist.");
+        }
+        System.out.println("");
+        boolean stop = false;
+        do {
+            switch (programmeManagementUI.getModifyProgrammeMenuChoice()) {
+                case 0:
+                    stop = true;
+                    break;
+                case 1:
+                    String newCode = programmeManagementUI.inputProgrammeCode();
+                    programmeToModify.setCode(newCode);
+                    break;
+                case 2:
+                    String newName = programmeManagementUI.inputProgrammeName();
+                    programmeToModify.setName(newName);
+                    break;
+                case 3:
+                    String newFaculty = programmeManagementUI.inputProgrammeFaculty();
+                    programmeToModify.setFaculty(newFaculty);
+                    break;
+                case 4:
+                    String newProgrammeType = programmeManagementUI.inputProgrammeType();
+                    programmeToModify.setProgrammeType(newProgrammeType);
+                    break;
+                case 5:
+                    String newDescription = programmeManagementUI.inputProgrammeDescription();
+                    programmeToModify.setDescription(newDescription);
+                    break;
+                case 6:
+                    int newDuration = programmeManagementUI.inputProgrammeDuration();
+                    programmeToModify.setDuration(newDuration);
+                    break;
+                case 7:
+                    double newTotalFees = programmeManagementUI.inputProgrammeTotalFees();
+                    programmeToModify.setTotalFee(newTotalFees);
+                    break;
+                case 8:
+                    int newTotalCreditHours = programmeManagementUI.inputProgrammeTotalCreditHours();
+                    programmeToModify.setTotalCreditHour(newTotalCreditHours);
+                    break;
+
+            }
+            programmeManagementUI.printProgrammeDetails(programmeToModify);
+        } while (stop == false);
+        programmeList.replace(programmeList.get);
+        programmeDAO.saveToFile(programmeList);
+        System.out.println("Exiting programme modifications...");
     }
 
     private void addTutorialGroupToProgramme() {
@@ -133,7 +178,7 @@ public class ProgrammeManagement {
     private void generateReports() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     public static void main(String[] args) {
         ProgrammeManagement programmeManagement = new ProgrammeManagement();
         programmeManagement.runProgrammeManagement();

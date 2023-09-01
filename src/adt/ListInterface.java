@@ -89,7 +89,7 @@ public interface ListInterface<T> {
   public T getEntry(int givenPosition);
   
 
-  public T getEntry(T anObject);
+  public T getEntry(T anEntry);
   
   public T getFirst();
   
