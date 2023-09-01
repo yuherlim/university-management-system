@@ -64,6 +64,26 @@ public class ProgrammeManagement {
 
     public void displayProgrammes() {
         programmeManagementUI.listAllProgrammes(getAllProgrammes());
+        System.out.println("Enter a programme code to view programme details.");
+        String code = programmeManagementUI.inputProgrammeCode();
+        Iterator<Programme> it = programmeList.getIterator();
+        Programme currentProgramme = null;
+        boolean found = true;
+        while(it.hasNext()) {
+            currentProgramme = it.next();
+            if (currentProgramme.equals(new Programme(code))) {
+                found = true;
+                break;
+            } else {
+                found = false;
+            }
+        }
+        if (found == true) {
+            programmeManagementUI.printProgrammeDetails(currentProgramme);
+        } else {
+            System.out.println("The programme code entered does not exist.");
+        }
+        
     }
 
     public static void main(String[] args) {

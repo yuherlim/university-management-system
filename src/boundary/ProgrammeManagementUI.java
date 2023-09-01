@@ -41,16 +41,16 @@ public class ProgrammeManagementUI {
     }
 
     public void printProgrammeDetails(Programme programme) {
-        System.out.println("Programme Details");
-        System.out.println("Programme code:" + programme.getCode());
-        System.out.println("Programme name: " + programme.getName());
-        System.out.println("Programme faculty: " + programme.getFaculty());
-        System.out.println("Programme type: " + programme.getProgrammeType());
-        System.out.println("Programme description: " + programme.getDescription());
-        System.out.println("Programme duration (years): " + programme.getDuration());
-        System.out.println("Programme total fees: " + programme.getTotalFee());
+        System.out.println("\nProgramme Details:");
+        System.out.println("Programme code              : " + programme.getCode());
+        System.out.println("Programme name              : " + programme.getName());
+        System.out.println("Programme faculty           : " + programme.getFaculty());
+        System.out.println("Programme type              : " + programme.getProgrammeType());
+        System.out.println("Programme description       : " + programme.getDescription());
+        System.out.println("Programme duration (years)  : " + programme.getDuration());
+        System.out.printf("Programme total fees (RM)   : %.2f\n", programme.getTotalFee());
         System.out.println("Programme total credit hours: " + programme.getTotalCreditHour());
-        System.out.println("Programme status: " + programme.getStatus());
+        System.out.println("Programme status            : " + programme.getStatus());
     }
 
     public String inputProgrammeCode() {
