@@ -59,7 +59,8 @@ public class CourseManagementUI {
     
     public void reportSortByCreditHour(ArrayList<Course> courseList, String[] programme){
         for (int i = 0; i < programme.length; i++) {
-            System.out.printf("%-10s %-20s %-20s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
+            MessageUI.courseTopDivider();
+            System.out.printf("%-10s %-20s %-50s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
             int totalCreditHours = 0;
             boolean firstLine = true;
 
@@ -68,11 +69,11 @@ public class CourseManagementUI {
                 for (int j = 1; j <= courseList.getEntry(h).getProgrammes().getNumberOfEntries(); j++) {
                     if (courseList.getEntry(h).getProgrammes().getEntry(j).equals(programme[i])) {
                         if (firstLine) {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                             firstLine = false;
                         } else {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                         }
                     }
@@ -80,16 +81,18 @@ public class CourseManagementUI {
             }
             if(totalCreditHours == 0){
                 System.out.printf("%-10s %25s",programme[i],"------------Pending for course assignment------------\n");
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
+                System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
             }else
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
+                System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
+            MessageUI.courseBtmDivider();
         }
 
     }
     
     public void reportSortByCode(ArrayList<Course> courseList, String[] programme){
         for (int i = 0; i < programme.length; i++) {
-            System.out.printf("%-10s %-20s %-20s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
+            MessageUI.courseTopDivider();
+            System.out.printf("%-10s %-20s %-50s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
             int totalCreditHours = 0;
             boolean firstLine = true;
 
@@ -98,11 +101,11 @@ public class CourseManagementUI {
                 for (int j = 1; j <= courseList.getEntry(h).getProgrammes().getNumberOfEntries(); j++) {
                     if (courseList.getEntry(h).getProgrammes().getEntry(j).equals(programme[i])) {
                         if (firstLine) {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                             firstLine = false;
                         } else {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                         }
                     }
@@ -110,9 +113,10 @@ public class CourseManagementUI {
             }
             if(totalCreditHours == 0){
                 System.out.printf("%-10s %25s",programme[i],"------------Pending for course assignment------------\n");
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
+                System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
             }else
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
+                System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
+            MessageUI.courseBtmDivider();
         }
 
     }
@@ -120,8 +124,9 @@ public class CourseManagementUI {
     public void report(ListInterface<Course> courseList, String[] programme){   
         Course course = new Course();
         for (int i = 0; i < programme.length; i++) {
+            MessageUI.courseTopDivider();
             Iterator<Course> it = courseList.getIterator();
-            System.out.printf("%-10s %-20s %-20s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
+            System.out.printf("%-10s %-20s %-50s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
             int totalCreditHours = 0;
             boolean firstLine = true;
 
@@ -130,11 +135,11 @@ public class CourseManagementUI {
                 for (int j = 1; j <= course.getProgrammes().getNumberOfEntries(); j++) {
                     if (course.getProgrammes().getEntry(j).equals(programme[i])) {
                         if (firstLine) {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", programme[i], course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                             firstLine = false;
                         } else {
-                            System.out.printf("%-10s %-20s %-20s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", "", course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                         }
                     }
@@ -142,9 +147,10 @@ public class CourseManagementUI {
             }
             if(totalCreditHours == 0){
                 System.out.printf("%-10s %25s",programme[i],"------------Pending for course assignment------------\n");
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
+                System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
             }else
-                System.out.printf("Total Credit Hour: %44d\n\n\n\n", totalCreditHours);
+                System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
+            MessageUI.courseBtmDivider();
         }
 
         //each programme ,courses, total credit hour
@@ -443,7 +449,7 @@ public class CourseManagementUI {
                 }
 
             } else if (domainSelection == 0) {
-              System.out.println("Exiting domain input");            
+              System.out.println("Exiting domain input\n");            
             } else {
                 MessageUI.displayInvalidChoiceMessage();
             }
@@ -451,7 +457,8 @@ public class CourseManagementUI {
             if ((domainSelection >= 1 && domainSelection <= domainList.length) && notDuplicated){ 
                 domains.add(domainList[domainSelection - 1]);
                 System.out.println(domainList[domainSelection-1] + " successfully added.");
-            }
+            }else if(!notDuplicated)
+                System.out.println("The domain already in the list.\n");
             
         } while (domainSelection != 0);
     
@@ -500,14 +507,12 @@ public class CourseManagementUI {
             try {
                 System.out.println("\nInput the programme that are taking the course");
                 System.out.println("1. RSW");
-                System.out.println("2. RDS");
-                System.out.println("3. RSD");
-                System.out.println("4. ABC");
-                System.out.println("5. DEF");
-                System.out.println("6. GHI");
+                System.out.println("2. RST");
+                System.out.println("3. RDS");
+                System.out.println("4. RMM");
+                System.out.println("5. RSS");
                 System.out.println("0. Quit");
                 System.out.println("Your input: ");
-
                 programmeSelection = scanner.nextInt();
                 
                 valid = true;
@@ -533,7 +538,7 @@ public class CourseManagementUI {
 
             } else if (programmeSelection == 0) {
                 if (result.getNumberOfEntries() > 0) {
-                    System.out.println("Exiting");
+                    System.out.println("Exiting programme input\n");
                 } else {
                     System.out.println("Programme list cannot be empty.");
                     programmeSelection = -1;
@@ -545,7 +550,9 @@ public class CourseManagementUI {
             if ((programmeSelection >= 1 && programmeSelection <= programmes.length) && notDuplicated) {
                 result.add(programmes[programmeSelection - 1]) ;
                 System.out.println(programmes[programmeSelection - 1] + " successfully added.");
-            }
+            }else if(!notDuplicated)
+                System.out.println("The programme already in the list.\n");
+            
         } while (programmeSelection != 0);
         
       
@@ -577,7 +584,7 @@ public class CourseManagementUI {
 //        Iterator<Course> it = courseList.getIterator();
         Course target;
         int count = 1;
-        System.out.printf("%5s %-15s %-20s %-10s %20s\n", "Count ","Course Code","Course Name","Credit Hour","Take By Programme");
+        System.out.printf("%5s %-15s %-40s %-10s %30s\n", "Count ","Course Code","Course Name","Credit Hour","Take By Programme");
 //        while(it.hasNext()){
 //            target = it.next();
         for(int j=1; j<=courseList.getNumberOfEntries();j++){
@@ -588,7 +595,7 @@ public class CourseManagementUI {
             }
             programmes += "\b";
             
-            System.out.printf("%-7d %-16s %-20s %-10d %20s\n", count,target.getCourseCode(), target.getCourseName(), target.getCreditHR(),programmes);
+            System.out.printf("%-6d %-16s %-40s %5d %35s\n", count,target.getCourseCode(), target.getCourseName(), target.getCreditHR(),programmes);
             ++count;
             
         }
@@ -654,33 +661,53 @@ public class CourseManagementUI {
         return courseList.getEntry(selection);
     }
      
-     public char undo(StackInterface<Course> courseStack){
+     public char exitConfirmationForDelete(){
+         //if stack isn't empty tell user once exit undo will be clear
+         char input = ' ';
+         System.out.println("Confirm to exit?");
+         System.out.println("Once exit undo will be clear");
+         do{
+            System.out.println("Your choice(Y = yes, other input to back to delete function): ");
+            input = scanner.nextLine().charAt(0);
+            input = Character.toUpperCase(input);
+         }while(input == ' ');
          
-         System.out.println("-------------------------------");
+         if(input != 'Y'){
+             System.out.println("Back to delete menu");
+         }
+         
+         return input;
+     }
+     
+     public char undo(StackInterface<Course> courseStack){
+         char input = ' ';
+         MessageUI.courseTopDivider();
          System.out.println("Undo deletion");
-         System.out.println("-------------------------------");
+          MessageUI.courseBtmDivider();
          System.out.println(courseStack.peek());
-         System.out.println("-------------------------------");
+         MessageUI.courseBtmDivider();
          System.out.println("One undo deletion at a time");
          System.out.println("The latest deletion will be undo first");
-         System.out.println("\nUndo the course deletion?(Y = yes): ");
-         char input = scanner.nextLine().charAt(0);
-         input = Character.toUpperCase(input);
+         do{
+            System.out.println("\nUndo the course deletion?(Y = yes): ");
+            input = scanner.nextLine().charAt(0);
+            input = Character.toUpperCase(input);
+         }while(input == ' ');
          return input;
      }
     
     public int deleteCourseMenuSelection(){
         int selection;
         
-        System.out.println("-------------------------------");
+        MessageUI.courseTopDivider();
         System.out.println("Removing a course");
-        System.out.println("-------------------------------");
-        System.out.println("1. Display all course");
-        System.out.println("2. Search course by a programme");
+        MessageUI.courseBtmDivider();
+        System.out.println("1. Display all course to delete a course");
+        System.out.println("2. Search course by a PROGRAMME");
         System.out.println("3. Delete a course by code");
         System.out.println("4. Undo deletion(cannot be undo once exit)");
         System.out.println("0. Exit");
-        System.out.println("-------------------------------");
+        MessageUI.courseBtmDivider();
         System.out.println("Your selection: ");
         selection = scanner.nextInt();
         scanner.nextLine();

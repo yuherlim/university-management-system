@@ -75,6 +75,8 @@ public interface ListInterface<T> {
    */
   public boolean replace(int givenPosition, T newEntry);
   
+  public boolean replace(T anEntry, T newEntry);
+  
   public boolean replaceFirst(T newEntry);
   
   public boolean replaceLast(T newEntry);
@@ -89,7 +91,7 @@ public interface ListInterface<T> {
   public T getEntry(int givenPosition);
   
 
-  public T getEntry(T anObject);
+  public T getEntry(T anEntry);
   
   public T getFirst();
   

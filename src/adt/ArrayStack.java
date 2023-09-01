@@ -45,7 +45,7 @@ public class ArrayStack<T> implements StackInterface<T> {
   @Override
   public T pop() {
     T top = null;
-     System.out.println(top);
+  
     if (!isEmpty()) {
       top = array[topIndex];
       array[topIndex] = null;
