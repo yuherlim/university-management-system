@@ -21,7 +21,6 @@ public class Programme implements Serializable {
     private int duration;
     private double totalFee;
     private int totalCreditHour;
-    private String status;
     private ArrayList<String> courses;
 
     public Programme() {
@@ -40,11 +39,10 @@ public class Programme implements Serializable {
         this.duration = duration;
         this.totalFee = totalFee;
         this.totalCreditHour = totalCreditHour;
-        this.status = "Active";
     }
     
     //Used only when initializing data.
-    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, int totalCreditHour, String status, ArrayList<String> courses) {
+    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, int totalCreditHour, ArrayList<String> courses) {
         this.code = code;
         this.name = name;
         this.faculty = faculty;
@@ -53,7 +51,6 @@ public class Programme implements Serializable {
         this.duration = duration;
         this.totalFee = totalFee;
         this.totalCreditHour = totalCreditHour;
-        this.status = status;
         this.courses = courses;
     }
 
@@ -119,14 +116,6 @@ public class Programme implements Serializable {
 
     public void setTotalCreditHour(int totalCreditHour) {
         this.totalCreditHour = totalCreditHour;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public ArrayList<String> getCourses() {

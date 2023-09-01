@@ -159,6 +159,19 @@ public class ProgrammeManagementUI {
         return choice;
     }
     
+    private int getModifyProgrammeMenuChoice() {
+        System.out.println("Select a field to modify: ");
+        System.out.println("1. Programme code");
+        System.out.println("2. Programme name");
+        System.out.println("3. Programme Faculty");
+        System.out.println("4. Programme type");
+        System.out.println("5. Programme description");
+        System.out.println("6. Programme duration");
+        System.out.println("7. Programme total fees");
+        System.out.println("8. Programme total credit hours");
+        
+    }
+    
     public String inputProgrammeDescription() {
         boolean valid;
         String description;
