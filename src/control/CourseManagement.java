@@ -60,7 +60,6 @@ public class CourseManagement {
             
             switch(selection){
                 case 1:
-
                     entryAt = courseUI.deleteByNo(courseList);
                     if(entryAt >= 1  && entryAt <= courseList.getNumberOfEntries()){
                         undoStackPosition.push(entryAt);
@@ -88,8 +87,6 @@ public class CourseManagement {
                         undoStackCourse.push(course);
                         courseList.remove(course);
                         MessageUI.courseDeleteMsg();
-                    }else{
-                        System.out.println("No match found");
                     }
                     break;
                 
@@ -100,7 +97,7 @@ public class CourseManagement {
                             courseList.add(undoStackPosition.pop(), undoStackCourse.pop()); 
                             MessageUI.courseUndoDeleteMsg();
                         }else{
-                            System.out.println("exiting undo");
+                            System.out.println("Exiting undo");
                         }
                     }else{
                         System.out.println("Nothing to undo");
@@ -109,10 +106,17 @@ public class CourseManagement {
                     break;
                     
                     
-                case 0:                  
-                    MessageUI.displayExit();
-                    undoStackPosition.clear();
-                    undoStackCourse.clear();
+                case 0:
+                    if (!undoStackCourse.isEmpty()) {
+                        char confirmation = courseUI.exitConfirmationForDelete();
+                        if (confirmation == 'Y') {
+                            undoStackPosition.clear();
+                            undoStackCourse.clear();
+                            MessageUI.displayExit();
+                            MessageUI.savingIntoFile();
+                            courseDAO.saveToFile(courseList);
+                        }
+                    }
                     break;
                 
                     
@@ -127,15 +131,7 @@ public class CourseManagement {
             //write the update into file
     }
 
-    public void searchCourse(){
-        Course targetCourse = courseUI.searchCourseByCode(courseList);   
-        if(targetCourse!=null){
-            System.out.println(targetCourse);
-        }else{
-            System.out.println("Invalid Course Code");
-        }
-    }
-    
+  
     public void modifyCourse() {
         courseUI.displayModifyCourseMenuMsg();
         courseUI.displayAllCourse(courseList);
