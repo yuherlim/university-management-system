@@ -4,6 +4,8 @@
  */
 package boundary;
 
+import adt.*;
+import dao.ProgrammeDAO;
 import java.util.Scanner;
 import entity.Programme;
 import utility.MessageUI;
@@ -15,6 +17,8 @@ import utility.MessageUI;
 public class ProgrammeManagementUI {
 
     Scanner scanner = new Scanner(System.in);
+    private ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
+    private ProgrammeDAO programmeDAO = new ProgrammeDAO();
 
     public int getMenuChoice() {
         System.out.println("\nPROGRAMME MANAGEMENT MENU");
@@ -159,7 +163,7 @@ public class ProgrammeManagementUI {
     }
     
     public int getModifyProgrammeMenuChoice() {
-        System.out.println("Select a field to modify: ");
+        System.out.println("\nSelect a field to modify: ");
         System.out.println("0. Stop modifications");
         System.out.println("1. Programme code");
         System.out.println("2. Programme name");
@@ -224,7 +228,7 @@ public class ProgrammeManagementUI {
     }
 
     public Programme inputProgrammeDetails() {
-        String code = inputProgrammeCode();
+        String code = getValidProgrammeCode();
         String name = inputProgrammeName();
         String faculty = inputProgrammeFaculty();
         String programmeType = inputProgrammeType();
@@ -232,8 +236,36 @@ public class ProgrammeManagementUI {
         int duration = inputProgrammeDuration();
         double totalFee = inputProgrammeTotalFees();
         int totalCreditHour = inputProgrammeTotalCreditHours();
-        System.out.println("");
-        System.out.println("New programme added successfully.\n");
         return new Programme(code, name, faculty, programmeType, description, duration, totalFee, totalCreditHour);
+    }
+    
+    public String getValidProgrammeCode() {
+        programmeList = programmeDAO.retrieveFromFile();
+        boolean validCode;
+        String code;
+        do {
+            validCode = true;
+            code = inputProgrammeCode();
+            if (programmeList.contains(new Programme(code))) {
+                validCode = false;
+                System.out.println("Duplicate code found. Please ensure code is unique.");
+            }
+        } while (validCode == false);
+        return code;
+    }
+    
+    public char inputConfirmation() {
+        char confirmation;
+        boolean isValid = false;
+        do {
+            System.out.print("Enter (Y/N): ");
+            confirmation = scanner.nextLine().toUpperCase().charAt(0);
+            if (confirmation == 'Y' || confirmation == 'N') {
+                isValid = true;
+            } else {
+                System.out.println("Please enter (Y/N).");
+            }
+        } while (isValid == false);
+        return confirmation;
     }
 }
