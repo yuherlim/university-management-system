@@ -101,8 +101,22 @@ public class ProgrammeManagement {
         return outputStr;
     }
 
+    private String getAllProgrammesFromStack(ArrayStack<Programme> undoStackProgramme) {
+        String outputStr = "";
+        Iterator<Programme> it = undoStackProgramme.getIterator();
+        while (it.hasNext()) {
+            outputStr += it.next() + "\n";
+        }
+        return outputStr;
+    }
+
     public void displayProgrammes() {
-        programmeManagementUI.listAllProgrammes(getAllProgrammes());
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+
+        programmeManagementUI.listProgrammes(getAllProgrammes());
         System.out.println("\nEnter a programme code to view programme details.");
         String code = programmeManagementUI.inputProgrammeCode();
         Programme programmeToView = programmeList.getEntry(new Programme(code));
@@ -115,37 +129,138 @@ public class ProgrammeManagement {
     }
 
     private void removeProgramme() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+
+        System.out.println("");
+        ArrayStack<Integer> undoStackPosition = new ArrayStack<>();
+        ArrayStack<Programme> undoStackProgramme = new ArrayStack<>();
+        boolean isRemoved = false;
+        ArrayList<String> codeToRemove = new ArrayList<>(); // used to modify course list if there is changes to programme code.
+        char confirmation;
+        char removeConfirmation;
+        char undoConfirmation;
+        int selection;
+        do {
+            selection = programmeManagementUI.getRemoveProgrammeMenuChoice();
+            switch (selection) {
+                case 0:
+                    if (isRemoved) {
+                        programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
+                        System.out.println("\nConfirm the removal of the above programmes? (this action cannot be undone.)");
+                        confirmation = programmeManagementUI.inputConfirmation();
+                        if (confirmation == 'Y') {
+                            // clear the undo stack data.
+                            while (!(undoStackProgramme.isEmpty())) {
+                                codeToRemove.add(undoStackProgramme.pop().getCode());
+                            }
+                            undoStackPosition.clear();
+
+                            programmeDAO.saveToFile(programmeList);
+                            System.out.println("\nThe above programmes has been successfully removed.");
+                            removeProgrammeFromCourseList(codeToRemove);
+                        } else { // reset list to original.
+                            programmeList = programmeDAO.retrieveFromFile();
+                        }
+                    }
+                    break;
+                case 1:
+                    if (programmeList.isEmpty()) {
+                        System.out.println("\nThere are currently no programmes.");
+                        break;
+                    }
+                        
+                    programmeManagementUI.listProgrammes(getAllProgrammes());
+                    System.out.println("\nEnter the programme code of the program to remove.");
+                    String code = programmeManagementUI.inputProgrammeCode();
+                    Programme programmeToRemove = programmeList.getEntry(new Programme(code));
+                    int removedProgrammePosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToRemove);
+
+                    if (programmeToRemove != null) {
+                        programmeManagementUI.printProgrammeDetails(programmeToRemove);
+                        System.out.println("\nAre you sure you want to remove the above programme?");
+                        removeConfirmation = programmeManagementUI.inputConfirmation();
+                        if (removeConfirmation == 'Y') {
+                            undoStackProgramme.push(programmeToRemove);
+                            undoStackPosition.push(removedProgrammePosition);
+                            programmeList.remove(programmeToRemove);
+                            System.out.println("\nProgramme successfully removed.");
+                            isRemoved = true;
+                            programmeManagementUI.listProgrammes(getAllProgrammes());
+                        } else {
+                            System.out.println("\nRemoval of this programme cancelled.");
+                        }
+                    } else {
+                        System.out.println("\nThe programme code entered does not exist.");
+                    }
+                    break;
+                case 2:
+                    if (!(undoStackProgramme.isEmpty())) {
+                        programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
+
+                        System.out.println("\nAre you sure you want to undo the removal of the above programmes?");
+                        undoConfirmation = programmeManagementUI.inputConfirmation();
+                        if (undoConfirmation == 'Y') {
+                            while (!(undoStackProgramme.isEmpty())) {
+                                programmeList.add(undoStackPosition.pop(), undoStackProgramme.pop());
+                            }
+                            System.out.println("Undo successful.");
+                            isRemoved = false;
+                            programmeManagementUI.listProgrammes(getAllProgrammes());
+                        } else {
+                            System.out.println("Undo cancelled.");
+                        }
+                    } else {
+                        System.out.println("\nThere is nothing to undo.");
+                    }
+                    break;
+            }
+        } while (selection != 0);
+
+        System.out.println("Exiting programme removal...");
     }
 
     private void findProgramme() {
+//        if (programmeList.isEmpty()) {
+//            System.out.println("\nThere are currently no programmes.");
+//            return;
+//        }
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void ammendProgramme() {
-        programmeManagementUI.listAllProgrammes(getAllProgrammes());
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+
+        programmeManagementUI.listProgrammes(getAllProgrammes());
         System.out.println("\nEnter a programme code to modify programme details.");
         String code = programmeManagementUI.inputProgrammeCode();
         Programme programmeToModify = programmeList.getEntry(new Programme(code));
-        String codeBeforeModification = programmeToModify.getCode(); // used to modify course list if there is changes to programme code.
-        boolean modifiedCode = false;
+        String codeBeforeModification;
+        boolean modifyCode = false;
         boolean isModified = false;
         int programmeToModifyPosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToModify);
-        boolean stop = false;
+        int selection;
         char confirmation;
         if (programmeToModify != null) {
+            codeBeforeModification = programmeToModify.getCode(); // used to modify course list if there is changes to programme code.
             programmeManagementUI.printProgrammeDetails(programmeToModify);
             System.out.println("");
             do {
-                switch (programmeManagementUI.getModifyProgrammeMenuChoice()) {
+                selection = programmeManagementUI.getModifyProgrammeMenuChoice();
+                switch (selection) {
                     case 0:
-                        stop = true;
                         if (isModified) {
                             System.out.println("Confirm the following modification?");
                             confirmation = programmeManagementUI.inputConfirmation();
                             if (confirmation == 'Y') {
                                 programmeDAO.saveToFile(programmeList);
-                                if (modifiedCode) {
+                                System.out.println("\nProgramme ammendment successful.");
+                                if (modifyCode) {
                                     modifyCourseList(codeBeforeModification, programmeToModify.getCode());
                                 }
                             } else { // reset list to original.
@@ -154,10 +269,10 @@ public class ProgrammeManagement {
                         }
                         break;
                     case 1:
-                        String newCode = programmeManagementUI.getValidProgrammeCode();
+                        String newCode = programmeManagementUI.inputUniqueProgrammeCode();
                         programmeToModify.setCode(newCode);
                         isModified = true;
-                        modifiedCode = true;
+                        modifyCode = true;
                         break;
                     case 2:
                         String newName = programmeManagementUI.inputProgrammeName();
@@ -197,28 +312,43 @@ public class ProgrammeManagement {
 
                 }
                 programmeManagementUI.printProgrammeDetails(programmeList.getEntry(programmeToModifyPosition));
-
-            } while (stop == false);
+            } while (selection != 0);
         } else {
             System.out.println("\nThe programme code entered does not exist.");
         }
 
-        System.out.println("Exiting programme modifications...");
+        System.out.println("Exiting programme ammendment...");
     }
 
     private void addTutorialGroupToProgramme() {
+//        if (programmeList.isEmpty()) {
+//            System.out.println("\nThere are currently no programmes.");
+//            return;
+//        }
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void removeTutorialGroupFromProgramme() {
+//        if (programmeList.isEmpty()) {
+//            System.out.println("\nThere are currently no programmes.");
+//            return;
+//        }
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void displayTutorialGroupForProgramme() {
+//        if (programmeList.isEmpty()) {
+//            System.out.println("\nThere are currently no programmes.");
+//            return;
+//        }
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void generateReports() {
+//        if (programmeList.isEmpty()) {
+//            System.out.println("\nThere are currently no programmes.");
+//            return;
+//        }
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -237,6 +367,23 @@ public class ProgrammeManagement {
             ArrayList<String> courseProgrammeList = currentCourse.getProgrammes();
             if (courseProgrammeList != null) {
                 courseProgrammeList.replace(code, newCode);
+            }
+        }
+        courseDAO.saveToFile(courseList);
+    }
+
+    private void removeProgrammeFromCourseList(ArrayList<String> codeToRemove) {
+        CourseDAO courseDAO = new CourseDAO();
+        ListInterface<Course> courseList = courseDAO.retrieveFromFile();
+
+        Iterator<Course> it = courseList.getIterator();
+        while (it.hasNext()) {
+            Course currentCourse = it.next();
+            ArrayList<String> courseProgrammeList = currentCourse.getProgrammes();
+            if (courseProgrammeList != null) {
+                for (int i = 1; i <= codeToRemove.getNumberOfEntries(); i++) {
+                    courseProgrammeList.remove(codeToRemove.getEntry(i));
+                }
             }
         }
         courseDAO.saveToFile(courseList);

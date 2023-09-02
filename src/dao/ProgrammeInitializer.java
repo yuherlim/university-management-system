@@ -6,6 +6,7 @@ package dao;
 
 import adt.*;
 import entity.Programme;
+import java.util.Iterator;
 
 /**
  *
@@ -121,5 +122,23 @@ public class ProgrammeInitializer {
         ListInterface<Programme> programmeList = programmeDAO.retrieveFromFile();
         
         System.out.println("\nRead programmes :\n" + programmeList);
+//        StackInterface<String> test = new ArrayStack<>();
+//        
+//        test.push("Jimmy");
+//        test.push("Timmy");
+//        test.push("Jimmin");
+//        test.push("Adam");
+//        test.push("George");
+//        
+//        
+//        
+//        System.out.println("after display stack: ");
+//        Iterator<String> it = test.getIterator();
+//        while (it.hasNext()) {
+//            System.out.println(it.next());
+//        }
+//        
+//        System.out.println("Before display stack: ");
+//        System.out.println(test);
     }
 }

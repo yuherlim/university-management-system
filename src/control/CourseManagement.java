@@ -18,15 +18,22 @@ import utility.MessageUI;
  */
 public class CourseManagement {
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
+    private ListInterface<Programme> progList = new CircularDoublyLinkedList<>();
+    private ProgrammeDAO progDAO = new ProgrammeDAO();
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();    
     private CourseInputValidator validator = new CourseInputValidator();
-    private String[] programmes = {"RSW", "RST", "RDS", "RMM", "RSS"};
+    private String[] programmes;
     private String[] domainKnowledges = {"Accounting","Add.Math","Biology","Chemistry","Physics"};
     Scanner scan = new Scanner(System.in);
 
     public CourseManagement() {
         courseList = courseDAO.retrieveFromFile();
+        progList = progDAO.retrieveFromFile();
+        programmes = new String[progList.getNumberOfEntries()];
+        for(int i = 0; i < programmes.length;i++){
+            programmes[i] = progList.getEntry(i+1).getCode();
+        }
     }
 
     public void addNewCourse() {
@@ -47,9 +54,10 @@ public class CourseManagement {
         Course course = new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList);
          //Not using annoymous object in add due to the need to display the new course added
         courseList.add(course);      
-        courseDAO.saveToFile(courseList);
-        System.out.println(course + "successfully added.");
-        MessageUI.pause();
+        courseDAO.saveToFile(courseList);      
+        System.out.println(course + "successfully added.");      
+        courseUI.addCourseInProgramme(course, progList, progDAO);
+     
     }
      
     public void removeCourse(){
@@ -57,7 +65,9 @@ public class CourseManagement {
         StackInterface<Course> undoStackCourse = new ArrayStack();
         Course course;
         int selection;
-        do{      
+        do{ 
+            System.out.println(courseList.getNumberOfEntries());
+            courseUI.displayAllCourse(courseList);
             selection = courseUI.deleteCourseMenuSelection();
             int entryAt;
             
@@ -113,8 +123,10 @@ public class CourseManagement {
                     if (!undoStackCourse.isEmpty()) {
                         char confirmation = courseUI.exitConfirmationForDelete();
                         if (confirmation == 'Y') {
+                            while(!undoStackCourse.isEmpty()){
+                                courseUI.removeACourseFromAllProgramme(undoStackCourse.pop(), progList, progDAO);
+                            }
                             undoStackPosition.clear();
-                            undoStackCourse.clear();
                             MessageUI.displayExit();
                             MessageUI.savingIntoFile();
                             courseDAO.saveToFile(courseList);
@@ -165,7 +177,7 @@ public class CourseManagement {
                         break;
 
                     case 5:
-                        courseList = courseUI.modifyCourseProgList(courseList, programmes, target);
+                        courseList = courseUI.modifyCourseProgList(courseList, programmes, target, progList, progDAO);
                         break;
 
                     case 0:
@@ -175,8 +187,6 @@ public class CourseManagement {
                         break;
                 }
             } while (selection != 0);
-        }else{
-            MessageUI.nonExistCourse();
         }
     }
     
@@ -248,6 +258,11 @@ public class CourseManagement {
         CourseManagementUI courseManagementUI = new CourseManagementUI();
         int selection = -1;
         do{
+//            System.out.println(courseManagement.progList.getFirst().getCourses());
+//            System.out.println(courseManagement.progList.getLast());
+//            System.out.println(courseManagement.progList.getLast().getCourses());
+         
+            
             selection = courseManagementUI.getCourseMainMenuChoice();
             switch(selection){
                 case 1:
