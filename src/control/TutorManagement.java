@@ -29,10 +29,10 @@ public class TutorManagement {
     }
 
     public void addNewTutor() {
-        char yOrN;
+
         do {
             int id = tutorList.getNumberOfEntries();
-            ArrayList<String> tutorDomainList = null;
+            ArrayList<String> tutorDomainList = new ArrayList<>();
             id++;
             String tutorID = "T".concat(String.format("%03d", id));
             String tutorName = tutorUI.inputTutorName();
@@ -40,33 +40,150 @@ public class TutorManagement {
             String tutorIC = tutorUI.inputTutorIC();
             String tutorPhoneNum = tutorUI.inputTutorPhoneNum();
             String tutorEmail = tutorUI.inputTutorEmail();
+            double tutorSalary = tutorUI.inputTutorSalary();
             String educationLevel = tutorUI.inputTutorEduLevel();
             tutorDomainList = (ArrayList<String>) tutorUI.inputTutorDomain(tutorDomainList);
 
-            tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, educationLevel, tutorDomainList));
+            tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, tutorSalary, educationLevel, tutorDomainList));
             tutorDAO.saveToFile(tutorList);
 
             System.out.print("Do you want to add more tutor? (Y/N): ");
 
-            // Check if there is a line available to read
-            if (sc.hasNextLine()) {
-                String input = sc.nextLine();
-                yOrN = input.trim().equalsIgnoreCase("Y") ? 'Y' : 'N';
-            } else {
-                // Handle the case where no input is available (e.g., assume 'N')
-                yOrN = 'N';
-            }
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
 
-        } while (yOrN == 'Y');
-
-        System.out.println();
     }
 
     public void removeTutor() {
 
+        StackInterface<Integer> index = new ArrayStack<>();
+        StackInterface<Tutor> deleteTutorList = new ArrayStack<>();
+        //StackInterface<TeachingAssignment> TeachingAssignmentList = new CircularDoublyLinkedList<>();
+
+        int selection = tutorUI.removeTutorSelection();
+        switch (selection) {
+            case 1:
+                Tutor targetTutor = findTutorSelection();
+
+                char confirmation = tutorUI.removeTutorConfirmation(targetTutor);
+                if (confirmation == 'Y') {
+
+//                    Iterator<TeachingAssignment> it = teachingAssignmentList.getIterator();
+//                    
+//                    while(it.hasNext()){
+//                        TeachingAssignment teachingAssignment = it.next();
+//                        
+//                        if(teachingAssignment.get) //check if the tutor exist in the list
+//                        if exist, then break;
+//                          show invalid message
+//                          get the position
+//                          push the position into indexStack
+//                          push the tutor into deleteTutorList
+//                    }
+                }
+                break;
+            case 2:
+                //add confirmation
+                Tutor undoTutor = deleteTutorList.pop();
+                int undoIndex = index.pop();
+                tutorList.add(undoIndex, undoTutor);
+
+        }
+
     }
 
-    public Tutor findTutor() {
+    public void findTutor() {
+
+        do {
+            Tutor targetTutor = findTutorSelection();
+
+            if (targetTutor != null) {
+                System.out.println(targetTutor);
+            } else {
+                System.out.println("This tutor is not existing in the list...");
+            }
+
+            System.out.print("Do you want to find any more tutor details?");
+
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+
+    }
+
+    public void modifyTutor() {
+
+        tutorUI.displayModifyTutorMenu();
+        tutorUI.displayAllTutors(tutorList);
+
+        do {
+            Tutor targetTutor = findTutorSelection();
+
+            if (targetTutor != null) {
+                int selection = -1;
+                do {
+                    selection = tutorUI.modifyTutorSelection(targetTutor);
+                    if (selection != 0) {
+                        switch (selection) {
+                            case 1:
+                                targetTutor.setName(tutorUI.inputTutorName());
+                                break;
+                            case 2:
+                                targetTutor.setPhoneNum(tutorUI.inputTutorPhoneNum());
+                                break;
+                            case 3:
+                                targetTutor.setEmail(tutorUI.inputTutorEmail());
+                                break;
+                            case 4:
+                                targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
+                                break;
+                            case 5:
+                                tutorUI.modifyTutorDomain(tutorList, targetTutor);
+                                break;
+                        }
+                    } else {
+                        System.out.println("Done edit...");
+                    }
+                } while (selection != 0);
+            }else{
+                System.out.println("This tutor is not existing in the list...");
+            }
+
+            System.out.print("Do you want to modify any more tutor details?");
+
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+
+        tutorDAO.saveToFile(tutorList);
+
+    }
+
+    public void filterTutor() {
+
+        do {
+            int selection = tutorUI.filterTutorMenu();
+            switch (selection) {
+                case 1:
+                    char filterGender = tutorUI.inputTutorGender();
+                    tutorUI.filterByGender(tutorList, filterGender);
+                    break;
+                case 2:
+                    String filterEducationLevel = tutorUI.inputTutorEduLevel();
+                    tutorUI.filterByEducationLevel(tutorList, filterEducationLevel);
+                    break;
+                case 3:
+                    String filterDomain = tutorUI.inputOneDomain();
+                    if (filterDomain != null) {
+                        tutorUI.filterByDomainKnowLedge(tutorList, filterDomain);
+                    }
+                    break;
+            }
+            System.out.println("Do you want to filter more tutor details (Y or N)");
+
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+    }
+
+    public void generateTutorReport() {
+
+    }
+
+    public Tutor findTutorSelection() {
 
         int findSelection = tutorUI.searchTutorMenu();
 
@@ -84,54 +201,7 @@ public class TutorManagement {
                 String targetTutorEmail = tutorUI.inputTargetTutorEmail();
                 targetTutor = tutorUI.searchTutorDetails(tutorList, targetTutorEmail, findSelection);
         }
-
-        if (targetTutor != null) {
-            System.out.println(targetTutor);
-        } else {
-            System.out.println("This tutor is not existing in the list...");
-        }
-
         return targetTutor;
-
-    }
-
-    public void modifyTutor() {
-
-        tutorUI.displayModifyTutorMenu();
-        tutorUI.displayAllTutors(tutorList);
-
-        do {
-            Tutor targetTutor = findTutor();
-
-            if (targetTutor != null) {
-                int selection = -1;
-                do {
-                    selection = tutorUI.modifyTutorSelection(targetTutor);
-                    if (selection != 0) {
-                        tutorList = tutorUI.modifyTutorDetails(tutorList, targetTutor, selection);
-                    } else {
-                        System.out.println("Done edit...");
-                    }
-                } while (selection != 0);
-
-                System.out.print("Do you want to modify any more tutor details?");
-            }
-            else{
-                System.out.print("Do you want to modify any more tutor details?");
-            }
-        } while (sc.next().equalsIgnoreCase("Y"));
-        
-        tutorDAO.saveToFile(tutorList);
-
-    }
-
-    public void filterTutor() {
-        //filter by gender
-        //domain knowledfe
-    }
-
-    public void generateTutorReport() {
-
     }
 
     public static void main(String[] args) {
@@ -140,7 +210,8 @@ public class TutorManagement {
         //test.addNewTutor();
 
         uitest.displayAllTutors(test.tutorList);
-        test.modifyTutor();
+        //test.modifyTutor();
+        //test.findTutor();
 
     }
 }

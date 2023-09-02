@@ -4,8 +4,6 @@
  */
 package boundary;
 
-import adt.ArrayList;
-import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import control.TutorInputValidator;
 import entity.Tutor;
@@ -28,6 +26,7 @@ public class TutorManagementUI {
     String tutorIC;
     String tutorPhoneNum;
     String tutorEmail;
+    double tutorSalary;
 
     public int tutorMainMenu() {
         System.out.println("\nMAIN MENU");
@@ -40,6 +39,7 @@ public class TutorManagementUI {
         System.out.println("7. Generate report");
         System.out.println("0. Exit");
 
+        System.out.print("Your selection : ");
         int selection = sc.nextInt();
         return selection;
 
@@ -61,7 +61,7 @@ public class TutorManagementUI {
         boolean valid = true;
 
         do {
-            System.out.println("Enter tutor gender (F=Female,M=Male) : ");
+            System.out.print("Enter tutor gender (F=Female,M=Male) : ");
             tutorGender = sc.nextLine().toUpperCase().charAt(0);
             valid = validator.checkTutorGender(tutorGender);
         } while (!valid);
@@ -106,6 +106,25 @@ public class TutorManagementUI {
         return tutorEmail;
     }
 
+    public double inputTutorSalary() {
+        boolean valid = false;
+
+        do {
+            try {
+                System.out.print("Enter tutor salary : ");
+                tutorSalary = sc.nextDouble();
+                valid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid. Please select a valid salary...");
+                sc.nextLine();
+                valid = false;
+            }
+        } while (!valid);
+
+        return tutorSalary;
+
+    }
+
     public String inputTutorEduLevel() {
         boolean valid = true;
         int tutorEduLevelSelection = 0;
@@ -117,7 +136,7 @@ public class TutorManagementUI {
                 System.out.println("2. Bachelor's Degree");
                 System.out.println("3. Master's Degree");
                 System.out.println("4. phD");
-                System.out.println("Your input: ");
+                System.out.print("Your input : ");
                 tutorEduLevelSelection = sc.nextInt();
                 valid = true;
             } catch (Exception e) {
@@ -153,7 +172,7 @@ public class TutorManagementUI {
     public ListInterface<String> inputTutorDomain(ListInterface<String> domains) {
 
         do {
-            System.out.println("\nInput the tutor domain knowledge : ");
+            System.out.println("Input the tutor domain knowledge : ");
             System.out.println("1. Accounting");
             System.out.println("2. Add.Math");
             System.out.println("3. Biology");
@@ -164,7 +183,7 @@ public class TutorManagementUI {
             boolean valid = true;
             do {
                 try {
-                    System.out.println("Your input: ");
+                    System.out.print("Your input: ");
                     tutorDomainSelection = sc.nextInt();
                     sc.nextLine(); // Consume the newline character
                     valid = true;
@@ -178,12 +197,14 @@ public class TutorManagementUI {
                     valid = false;
                 } else {
                     String domain = getDomainName(tutorDomainSelection);
+
                     if (!domains.contains(domain)) {
                         domains.add(domain);
                         System.out.println("Domain added: " + domain);
                     } else {
                         System.out.println("This domain is already selected.");
                     }
+
                 }
             } while (!valid);
 
@@ -218,15 +239,12 @@ public class TutorManagementUI {
 
         } else {
 
+            System.out.printf("%-8s %-20s %-7s %-15s %-14s %-20s %-8s %-25s %-50s\n", "Tutor ID", "Name", "Gender", "IC", "Phone Number", "Email", "Salary", "Education Level", "Domain Knowledge");
             Iterator<Tutor> it = tutorList.getIterator();
 
             while (it.hasNext()) {
                 Tutor tutor = it.next();
-                System.out.printf("%-5s %-15s %c %-12s %-12s %-20s %-20s", tutor.getTutorID(), tutor.getName(), tutor.getGender(), tutor.getIc(), tutor.getPhoneNum(), tutor.getEmail(), tutor.getEducationLevel());
-                for (int i = 1; i <= tutor.getDomainKnowledgeList().getNumberOfEntries(); i++) {
-                    System.out.printf("%-10s ", tutor.getDomainKnowledgeList().getEntry(i));
-                }
-                System.out.println("");
+                System.out.println(tutor);
             }
         }
     }
@@ -243,16 +261,16 @@ public class TutorManagementUI {
                 System.out.println("2. Name");
                 System.out.println("3. Email");
                 System.out.println("0. Exit");
-                System.out.print("Your selection: ");
+                System.out.print("Your selection : ");
                 searchSelection = sc.nextInt();
                 valid = true;
             } catch (Exception e) {
-                System.out.println("Invalid. Please select a valid education level...");
+                System.out.println("Invalid. Please select a valid selection...");
                 sc.nextLine();
                 valid = false;
             }
             if (searchSelection < 1 || searchSelection > 3) {
-                System.out.println("Invalid. Please select number between 1 to 3...");
+                System.out.println("Invalid. Please select number between 0 to 3...");
                 valid = false;
             }
 
@@ -264,7 +282,7 @@ public class TutorManagementUI {
     }
 
     public String inputTargetTutorID() {
-        System.out.println("Please enter the tutor ID you want to search (T000): ");
+        System.out.print("Please enter the tutor ID you want to search (T000): ");
         String targetTutorID = sc.nextLine();
 
         return targetTutorID;
@@ -274,7 +292,7 @@ public class TutorManagementUI {
         boolean valid = false;
         String targetTutorName;
         do {
-            System.out.println("Please enter the tutor name you want to search: ");
+            System.out.print("Please enter the tutor name you want to search: ");
             targetTutorName = sc.nextLine();
             valid = validator.checkTutorName(targetTutorName);
             if (!valid) {
@@ -290,7 +308,7 @@ public class TutorManagementUI {
         String targetTutorEmail;
 
         do {
-            System.out.println("Please enter the tutor email you want to search: ");
+            System.out.print("Please enter the tutor email you want to search: ");
             targetTutorEmail = sc.nextLine();
             valid = validator.checkTutorEmail(targetTutorEmail);
             if (!valid) {
@@ -364,36 +382,9 @@ public class TutorManagementUI {
             }
 
             sc.nextLine();
-            
+
         } while (!valid);
         return selection;
-    }
-
-    public ListInterface<Tutor> modifyTutorDetails(ListInterface<Tutor> tutorList, Tutor tutor, int selection) {
-
-        int targetPosition = ((CircularDoublyLinkedList) tutorList).locatePosition(tutor);
-        switch (selection) {
-            case 1:
-                tutor.setName(inputTutorName());
-                break;
-            case 2:
-                tutor.setPhoneNum(inputTutorPhoneNum());
-                break;
-            case 3:
-                tutor.setEmail(inputTutorEmail());
-                break;
-            case 4:
-                tutor.setEducationLevel(inputTutorEduLevel());
-                break;
-            case 5:
-                modifyTutorDomain(tutorList, tutor);
-                break;
-
-        }
-        tutorList.replace(targetPosition, tutor);
-
-        return tutorList;
-
     }
 
     public void modifyTutorDomain(ListInterface<Tutor> tutorList, Tutor tutor) {
@@ -442,13 +433,13 @@ public class TutorManagementUI {
 
         while (it.hasNext()) {
             domain = it.next();
-            System.out.println(i + ".");
+            System.out.print(i + ".");
             System.out.println(domain);
             i++;
         }
 
         boolean valid = true;
-        int selection = -1;
+        int selection = 0;
 
         do {
             try {
@@ -464,7 +455,7 @@ public class TutorManagementUI {
                 valid = false;
             } else {
                 if (domains.contains(domain)) {
-                    domains.remove(selection -1);
+                    domains.remove(selection);
                 } else {
                     System.out.println("domain is not in the list...");
                 }
@@ -472,6 +463,163 @@ public class TutorManagementUI {
         } while (!valid);
 
         return domains;
+    }
+
+    public int removeTutorSelection() {
+
+        boolean valid = true;
+        int selection = 0;
+
+        do {
+            try {
+                System.out.println("1. Delete tutor: ");
+                System.out.println("2. Undo deletion(once per time)");
+                System.out.println("0. Exit");
+                System.out.print("Your selection : ");
+                selection = sc.nextInt();
+                valid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid. Please select a valid selection...");
+                sc.nextLine();
+                valid = false;
+            }
+            if (selection < 0 || selection > 2) {
+                System.out.println("Invalid. Please select number between 0 to 2...");
+                valid = false;
+            }
+        } while (!valid);
+
+        return selection;
+    }
+
+    public char removeTutorConfirmation(Tutor tutor) {
+
+        System.out.println(tutor);
+        System.out.print("Are you sure want to delete the above tutor? ");
+        return sc.nextLine().toUpperCase().charAt(0);
+
+    }
+
+    public int filterTutorMenu() {
+        int filterSelection = 0;
+        boolean valid = false;
+
+        do {
+            try {
+                System.out.println("Filter tutor");
+                System.out.println("1. Filter by gender");
+                System.out.println("2. Filter by education level");
+                System.out.println("3. Filter by domain knowledge");
+                System.out.println("0. Exit");
+                System.out.print("Your selection: ");
+                filterSelection = sc.nextInt();
+                valid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid. Please select a valid selection...");
+                sc.nextLine();
+                valid = false;
+            }
+            if (filterSelection < 0 || filterSelection > 3) {
+                System.out.println("Invalid. Please select number between 0 to 3...");
+                valid = false;
+            } else if (filterSelection == 0) {
+                System.out.println("Exit filter function...");
+            }
+
+            sc.nextLine();
+
+        } while (!valid);
+
+        return filterSelection;
+    }
+
+    public void filterByGender(ListInterface<Tutor> tutorList, char gender) {
+
+        Tutor target = null;
+        Iterator<Tutor> it = tutorList.getIterator();
+
+        while (it.hasNext()) {
+            target = it.next();
+
+            if (target.getGender() == gender) {
+                System.out.println(target);
+            }
+
+        }
+    }
+
+    public void filterByEducationLevel(ListInterface<Tutor> tutorList, String educationLevel) {
+
+        Tutor target = null;
+        Iterator<Tutor> it = tutorList.getIterator();
+
+        while (it.hasNext()) {
+            target = it.next();
+
+            if (target.getEducationLevel().equals(educationLevel)) {
+                System.out.println(target);
+            }
+
+        }
+    }
+
+    public void filterByDomainKnowLedge(ListInterface<Tutor> tutorList, String domainKnowledge) {
+        Tutor target = null;
+        Iterator<Tutor> it = tutorList.getIterator();
+
+        String domain = null;
+
+        while (it.hasNext()) {
+            target = it.next();
+
+            Iterator<String> et = target.getDomainKnowledgeList().getIterator();
+            while (et.hasNext()) {
+                domain = et.next();
+
+                if (domain.equals(domainKnowledge)) {
+                    System.out.println(target);
+                }
+            }
+        }
+    }
+
+    public String inputOneDomain() {
+
+        String domain = null;
+        System.out.println("Input the tutor domain knowledge : ");
+        System.out.println("1. Accounting");
+        System.out.println("2. Add.Math");
+        System.out.println("3. Biology");
+        System.out.println("4. Chemistry");
+        System.out.println("5. Physics");
+        System.out.println("0. Exit");
+
+        int tutorDomainSelection = 0;
+        boolean valid = true;
+        do {
+            try {
+                System.out.println("Your input: ");
+                tutorDomainSelection = sc.nextInt();
+                sc.nextLine();
+                valid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                valid = false;
+            }
+
+            if (tutorDomainSelection < 0 || tutorDomainSelection > 5) {
+                System.out.println("Invalid. Please select a number between 1 to 5...");
+                valid = false;
+            } else if (tutorDomainSelection == 0) {
+                System.out.println("Exit...");
+                return null;
+            } else {
+                domain = getDomainName(tutorDomainSelection);
+            }
+        } while (!valid);
+
+        return domain;
+
     }
 
 }
