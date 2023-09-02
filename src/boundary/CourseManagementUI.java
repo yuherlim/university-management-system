@@ -339,7 +339,8 @@ public class CourseManagementUI {
        return courseList;
     }
     
-    public ListInterface<Course> modifyCourseProgList(ListInterface<Course> courseList, String[] programmes, Course course) {
+    public ListInterface<Course> modifyCourseProgList(ListInterface<Course> courseList, String[] programmes, Course course, 
+            ListInterface<Programme> progList, ProgrammeDAO progDAO) {
        
         int selection = -1;
 
@@ -362,10 +363,12 @@ public class CourseManagementUI {
             } else {
                 int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
                 ListInterface<String> inputProgList = course.getProgrammes();
-                int index = inputProgramme(programmes) - 1; //user input will return int value to access predifined programmes list;
+
                 boolean notExist = true, modification = false;
-                notExist = validator.checkExistInList(inputProgList, programmes[index]);
+
                 if (selection == 1) {
+                    int index = inputProgramme(programmes, 'I') - 1; //user input will return int value to access predifined programmes list;
+                    notExist = validator.checkExistInList(inputProgList, programmes[index]);
                     if (notExist) {
                         inputProgList.add(programmes[index]);
                         modification = true;
@@ -374,6 +377,8 @@ public class CourseManagementUI {
                     }
 
                 } else if (selection == 2) {
+                    int index = inputProgramme(programmes, 'D') - 1; //user input will return int value to access predifined programmes list;
+                    notExist = validator.checkExistInList(inputProgList, programmes[index]);
                     if (!notExist) {
                         inputProgList.remove(programmes[index]);
                         modification = true;
@@ -384,6 +389,7 @@ public class CourseManagementUI {
                 if (modification) {
                     course.setProgrammes((ArrayList<String>) inputProgList);
                     courseList.replace(targetPos, course);
+                    modifyCourseInProgramme(course, progList, progDAO, selection);
                     MessageUI.courseModificationMsg();
                 }
             }
@@ -502,20 +508,18 @@ public class CourseManagementUI {
         return feePerCH;
     }
 
-    public int inputProgramme(String[] programmes) {
+    public int inputProgramme(String[] programmes, char addOrDelete) {
         int programmeSelection = 0;
         boolean valid = true;
         do {
             try {
-                System.out.println("\nInput the programme that are taking the course");
+                if(addOrDelete == 'I')
+                    System.out.println("\nInput the programme that are taking the course");
+                else
+                    System.out.println("\nRemove the programme from taking the course");
                 for(int i =0; i <programmes.length;i++){
                     System.out.println(i+1 + ". " + programmes[i]);
                 }
-//                System.out.println("1. RSW");
-//                System.out.println("2. RST");
-//                System.out.println("3. RDS");
-//                System.out.println("4. RMM");
-//                System.out.println("5. RSS");
                 System.out.println("0. Quit");
                 System.out.println("Your input: ");
                 programmeSelection = scanner.nextInt();
@@ -534,7 +538,7 @@ public class CourseManagementUI {
             int programmeSelection;
             ListInterface<String> result = new ArrayList<>();
         do {
-            programmeSelection = inputProgramme(programmes);
+            programmeSelection = inputProgramme(programmes, 'I');
             boolean notDuplicated = true;
             if (programmeSelection >= 1 && programmeSelection <= programmes.length) {
                 if (result.getNumberOfEntries() > 0) {
@@ -579,7 +583,7 @@ public class CourseManagementUI {
                 return target;
             }
         }
-        System.out.println("Course doesn't exist");
+        MessageUI.nonExistCourse();
         return null;
     }
     
@@ -723,11 +727,56 @@ public class CourseManagementUI {
         Iterator<Programme> it = progList.getIterator();
         while (it.hasNext()) {
             Programme currentProgramme = it.next();
-            ArrayList<String> courseProgrammeList = current.getCourses();
-            if (courseProgrammeList != null) {
-                courseProgrammeList.replace(code, newCode);
+            String currentProgrammeCode = currentProgramme.getCode();
+            for(int i=1;i<=course.getProgrammes().getNumberOfEntries();i++){
+                if (course.getProgrammes().getEntry(i).equals(currentProgrammeCode) && !currentProgramme.getCourses().contains(course.getCourseCode())) {
+                    currentProgramme.getCourses().add(course.getCourseCode());         
+                    System.out.println("Course " + course.getCourseCode() + " has been added into " + currentProgrammeCode + " course list.\n");
+                }
             }
         }
-        progDAO.saveToFile(progList);
+        
+        MessageUI.savingIntoFile();
+        progDAO.saveToFile(progList);      
+    }
+    
+    public void removeCourseInProgramme(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO) {
+        Iterator<Programme> it = progList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
+            for (int i = 1; i <= courseListInProgramme.getNumberOfEntries(); i++) {
+                if (courseListInProgramme.contains(course.getCourseCode()) && !course.getProgrammes().contains(currentProgramme.getCode())) {
+                    courseListInProgramme.remove(course.getCourseCode());
+                    currentProgramme.setCourses(courseListInProgramme);
+                    System.out.println("Course " + course.getCourseCode() + " has been removed from " + currentProgramme.getCode() + " course list due to the modification.\n");
+                        
+                }
+            }
+        }
+        MessageUI.savingIntoFile();
+        progDAO.saveToFile(progList);    
+    }
+
+    public void modifyCourseInProgramme(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO, int addOrDelete) {  
+           if (addOrDelete == 1) {
+                addCourseInProgramme(course, progList, progDAO);
+            } else {
+                removeCourseInProgramme(course,progList,progDAO);
+            }
+    }
+    
+    public void removeACourseFromAllProgramme(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO){
+        Iterator<Programme> it = progList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
+            if(courseListInProgramme.contains(course.getCourseCode())){
+                courseListInProgramme.remove(course.getCourseCode());
+                currentProgramme.setCourses(courseListInProgramme);          
+            }
+        }
+        
+        progDAO.saveToFile(progList);    
     }
 }

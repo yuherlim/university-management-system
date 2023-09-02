@@ -54,9 +54,10 @@ public class CourseManagement {
         Course course = new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList);
          //Not using annoymous object in add due to the need to display the new course added
         courseList.add(course);      
-        courseDAO.saveToFile(courseList);
-        System.out.println(course + "successfully added.");
-        MessageUI.pause();
+        courseDAO.saveToFile(courseList);      
+        System.out.println(course + "successfully added.");      
+        courseUI.addCourseInProgramme(course, progList, progDAO);
+     
     }
      
     public void removeCourse(){
@@ -122,8 +123,10 @@ public class CourseManagement {
                     if (!undoStackCourse.isEmpty()) {
                         char confirmation = courseUI.exitConfirmationForDelete();
                         if (confirmation == 'Y') {
+                            while(!undoStackCourse.isEmpty()){
+                                courseUI.removeACourseFromAllProgramme(undoStackCourse.pop(), progList, progDAO);
+                            }
                             undoStackPosition.clear();
-                            undoStackCourse.clear();
                             MessageUI.displayExit();
                             MessageUI.savingIntoFile();
                             courseDAO.saveToFile(courseList);
@@ -174,7 +177,7 @@ public class CourseManagement {
                         break;
 
                     case 5:
-                        courseList = courseUI.modifyCourseProgList(courseList, programmes, target);
+                        courseList = courseUI.modifyCourseProgList(courseList, programmes, target, progList, progDAO);
                         break;
 
                     case 0:
@@ -184,8 +187,6 @@ public class CourseManagement {
                         break;
                 }
             } while (selection != 0);
-        }else{
-            MessageUI.nonExistCourse();
         }
     }
     
@@ -257,7 +258,11 @@ public class CourseManagement {
         CourseManagementUI courseManagementUI = new CourseManagementUI();
         int selection = -1;
         do{
-          
+//            System.out.println(courseManagement.progList.getFirst().getCourses());
+//            System.out.println(courseManagement.progList.getLast());
+//            System.out.println(courseManagement.progList.getLast().getCourses());
+         
+            
             selection = courseManagementUI.getCourseMainMenuChoice();
             switch(selection){
                 case 1:
