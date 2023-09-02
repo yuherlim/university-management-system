@@ -69,14 +69,34 @@ public class CourseInitializer {
 
     public static void main(String[] args) {
 
-        CourseDAO courseDAO = new CourseDAO();
-        CourseInitializer cI = new CourseInitializer();
-        cI.initializeCourseList();
-        ListInterface<Course> courseList = courseDAO.retrieveFromFile();
+//        CourseDAO courseDAO = new CourseDAO();
+//        CourseInitializer cI = new CourseInitializer();
+//        cI.initializeCourseList();
+//        ListInterface<Course> courseList = courseDAO.retrieveFromFile();
         
 //        Iterator<Course> it = courseList.getIterator();
 //        while(it.hasNext()) {
 //            System.out.println(it.next());
 //        }
+        ListInterface<String> test = new CircularDoublyLinkedList<>();
+        
+        test.add("Jimmy");
+        test.add("Timmy");
+        test.add("Jimmin");
+        test.add("Adam");
+        test.add("George");
+        
+        System.out.println("List: ");
+        System.out.println(test);
+        
+        String removed = test.removeFirst();
+        
+        System.out.println("List: ");
+        System.out.println(test);
+        
+        test.addToStart(removed);
+        
+        System.out.println("List: ");
+        System.out.println(test);
     }
 }

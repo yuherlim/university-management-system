@@ -64,7 +64,9 @@ public class CourseManagement {
         StackInterface<Course> undoStackCourse = new ArrayStack();
         Course course;
         int selection;
-        do{      
+        do{ 
+            System.out.println(courseList.getNumberOfEntries());
+            courseUI.displayAllCourse(courseList);
             selection = courseUI.deleteCourseMenuSelection();
             int entryAt;
             
@@ -255,7 +257,7 @@ public class CourseManagement {
         CourseManagementUI courseManagementUI = new CourseManagementUI();
         int selection = -1;
         do{
-            System.out.println(courseManagement.progList);
+          
             selection = courseManagementUI.getCourseMainMenuChoice();
             switch(selection){
                 case 1:
