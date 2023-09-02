@@ -140,7 +140,7 @@ public class ProgrammeManagementUI {
     }
 
     private int getProgrammeTypeMenuChoice() {
-        System.out.println("Programme types: ");
+        System.out.println("\nProgramme types: ");
         System.out.println("1. Foundation");
         System.out.println("2. Diploma");
         System.out.println("3. Bachelor");
@@ -180,6 +180,26 @@ public class ProgrammeManagementUI {
             choice = scanner.nextInt();
             scanner.nextLine();
             if (choice >= 0 && choice <= 8) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getRemoveProgrammeMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Stop removing programmes");
+        System.out.println("1. Remove a programme");
+        System.out.println("2. Undo programme removal");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 2) {
                 valid = true;
             } else {
                 MessageUI.displayInvalidChoiceMessage();
@@ -228,7 +248,7 @@ public class ProgrammeManagementUI {
     }
 
     public Programme inputProgrammeDetails() {
-        String code = getValidProgrammeCode();
+        String code = inputUniqueProgrammeCode();
         String name = inputProgrammeName();
         String faculty = inputProgrammeFaculty();
         String programmeType = inputProgrammeType();
@@ -239,7 +259,7 @@ public class ProgrammeManagementUI {
         return new Programme(code, name, faculty, programmeType, description, duration, totalFee, totalCreditHour);
     }
     
-    public String getValidProgrammeCode() {
+    public String inputUniqueProgrammeCode() {
         programmeList = programmeDAO.retrieveFromFile();
         boolean validCode;
         String code;
