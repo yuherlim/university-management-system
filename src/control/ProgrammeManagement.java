@@ -115,7 +115,66 @@ public class ProgrammeManagement {
     }
 
     private void removeProgramme() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        programmeManagementUI.listAllProgrammes(getAllProgrammes());
+        System.out.println("");
+        ArrayStack<Integer> undoStackPosition = new ArrayStack<>();
+        ArrayStack<Programme> undoStackProgramme = new ArrayStack<>();
+        boolean stop = false;
+        boolean isRemoved = false;
+        boolean removeProgramme = false;
+        ArrayList<String> codeToRemove = new ArrayList<>(); // used to modify course list if there is changes to programme code.
+        char confirmation;
+        int selection = programmeManagementUI.getRemoveProgrammeMenuChoice();
+        do {
+            switch (selection) {
+                case 0:
+                    stop = true;
+                    if (isRemoved) {
+                        System.out.println("\nConfirm the following modification?");
+                        confirmation = programmeManagementUI.inputConfirmation();
+                        if (confirmation == 'Y') {
+                            // clear the undo stack data.
+                            while (!(undoStackProgramme.isEmpty())) {
+                                codeToRemove.add(undoStackProgramme.pop().getCode());
+                            }
+                            undoStackPosition.clear();
+                            
+                            programmeDAO.saveToFile(programmeList);
+                            if (removeProgramme) {
+                                removeProgrammeFromCourseList(codeToRemove);
+                            }
+                        } else { // reset list to original.
+                            programmeList = programmeDAO.retrieveFromFile();
+                        }
+                    }
+                    break;
+                case 1:
+                    System.out.println("\nEnter the programme code of the program to remove.");
+                    String code = programmeManagementUI.inputProgrammeCode();
+                    Programme programmeToRemove = programmeList.getEntry(new Programme(code));
+                    int removedProgrammePosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToRemove);
+                    
+                    char removeConfirmation;
+                    if (programmeToRemove != null) {
+                        programmeManagementUI.printProgrammeDetails(programmeToRemove);
+                        System.out.println("\nAre you sure you want to remove the above programme?");
+                        removeConfirmation = programmeManagementUI.inputConfirmation();
+                        if (removeConfirmation == 'Y') {
+                            undoStackProgramme.push(programmeToRemove);
+                            undoStackPosition.push(removedProgrammePosition);
+                            programmeList.remove(programmeToRemove);
+                        }
+                    } else {
+                        System.out.println("\nThe programme code entered does not exist.");
+                    }
+                    break;
+                case 2:
+                    
+                    break;
+            }
+        } while (selection != 0);
+
+        System.out.println("Exiting programme removal...");
     }
 
     private void findProgramme() {
@@ -128,7 +187,7 @@ public class ProgrammeManagement {
         String code = programmeManagementUI.inputProgrammeCode();
         Programme programmeToModify = programmeList.getEntry(new Programme(code));
         String codeBeforeModification = programmeToModify.getCode(); // used to modify course list if there is changes to programme code.
-        boolean modifiedCode = false;
+        boolean modifyCode = false;
         boolean isModified = false;
         int programmeToModifyPosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToModify);
         boolean stop = false;
@@ -145,7 +204,7 @@ public class ProgrammeManagement {
                             confirmation = programmeManagementUI.inputConfirmation();
                             if (confirmation == 'Y') {
                                 programmeDAO.saveToFile(programmeList);
-                                if (modifiedCode) {
+                                if (modifyCode) {
                                     modifyCourseList(codeBeforeModification, programmeToModify.getCode());
                                 }
                             } else { // reset list to original.
@@ -154,10 +213,10 @@ public class ProgrammeManagement {
                         }
                         break;
                     case 1:
-                        String newCode = programmeManagementUI.getValidProgrammeCode();
+                        String newCode = programmeManagementUI.inputUniqueProgrammeCode();
                         programmeToModify.setCode(newCode);
                         isModified = true;
-                        modifiedCode = true;
+                        modifyCode = true;
                         break;
                     case 2:
                         String newName = programmeManagementUI.inputProgrammeName();
@@ -240,6 +299,10 @@ public class ProgrammeManagement {
             }
         }
         courseDAO.saveToFile(courseList);
+    }
+
+    private void removeProgrammeFromCourseList(ArrayList<String> codeToRemove) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
 
