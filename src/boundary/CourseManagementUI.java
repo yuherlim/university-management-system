@@ -10,7 +10,9 @@ import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import adt.StackInterface;
 import control.CourseInputValidator;
+import dao.ProgrammeDAO;
 import entity.Course;
+import entity.Programme;
 import java.util.Iterator;
 import java.util.Scanner;
 import utility.MessageUI;
@@ -715,5 +717,17 @@ public class CourseManagementUI {
         selection = scanner.nextInt();
         scanner.nextLine();
         return selection;
+    }
+    
+    public void addCourseInProgramme(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO){
+        Iterator<Programme> it = progList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            ArrayList<String> courseProgrammeList = current.getCourses();
+            if (courseProgrammeList != null) {
+                courseProgrammeList.replace(code, newCode);
+            }
+        }
+        progDAO.saveToFile(progList);
     }
 }

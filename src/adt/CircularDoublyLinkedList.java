@@ -85,9 +85,17 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     public boolean addToStart(T newEntry) {
         Node newNode = new Node(newEntry);
 
-        add(newEntry);
-        firstNode = newNode; // update the new node added to be the first node.
-
+        if (isEmpty()) {
+            firstNode = newNode;
+            firstNode.prev = firstNode.next = newNode;
+        } else { // adding entry into list with more than 1 element
+            newNode.prev = firstNode.prev;  // link new node to the last node.
+            firstNode.prev.next = newNode;  // link last node to the new node.
+            firstNode.prev = newNode;  // update first node to link to new node
+            newNode.next = firstNode;  // update new node to link to first node.
+            firstNode = newNode; // update the new node added to be the first node.
+        }
+        numberOfEntries++;
         return true;
     }
 
