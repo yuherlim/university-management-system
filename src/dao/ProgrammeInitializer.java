@@ -121,7 +121,7 @@ public class ProgrammeInitializer {
         System.out.println("Reading data from programme.dat");
         ListInterface<Programme> programmeList = programmeDAO.retrieveFromFile();
         
-//        System.out.println("\nRead programmes :\n" + programmeList);
+        System.out.println("\nRead programmes :\n" + programmeList);
 //        StackInterface<String> test = new ArrayStack<>();
 //        
 //        test.push("Jimmy");

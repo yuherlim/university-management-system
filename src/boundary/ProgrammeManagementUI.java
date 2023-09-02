@@ -39,8 +39,8 @@ public class ProgrammeManagementUI {
         return choice;
     }
 
-    public void listAllProgrammes(String outputStr) {
-        System.out.println("\nList of Programmes:\n");
+    public void listProgrammes(String outputStr) {
+        System.out.println("\nList of Programmes:");
         System.out.printf("%-4s %-75s\n" + outputStr, "Code", "Name");
     }
 
