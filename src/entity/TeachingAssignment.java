@@ -20,15 +20,18 @@ public class TeachingAssignment implements Serializable {
 
         
     public TeachingAssignment(TutorialGroup tutorialGroup, Course course) {
+        this.teachingAssignmentId = tutorialGroup.getId() + "-" + course.getCourseCode();
         this.tutorialGroup = tutorialGroup;
         this.course = course;
     }      
     
     public TeachingAssignment(TutorialGroup tutorialGroup, Course course, Tutor tutor) {
+        this.teachingAssignmentId = tutorialGroup.getId() + "-" + course.getCourseCode();
         this.tutorialGroup = tutorialGroup;
         this.course = course;
         this.tutor = tutor;
     }
+
 
     public String getTeachingAssignmentId() {
         return teachingAssignmentId;
@@ -64,7 +67,7 @@ public class TeachingAssignment implements Serializable {
 
     @Override
     public String toString() {
-        return "TeachingAssignment{" + "teachingAssignmentId=" + teachingAssignmentId + ", tutorialGroup=" + tutorialGroup + ", course=" + course + ", tutor=" + tutor + '}';
+        return "TeachingAssignment{" + "teachingAssignmentId=" + teachingAssignmentId + ", tutorialGroup=" + tutorialGroup.getId()+ ", course=" + course.getCourseCode() +'}';
     }
     
     @Override
@@ -81,18 +84,7 @@ public class TeachingAssignment implements Serializable {
         final TeachingAssignment other = (TeachingAssignment) obj;
         return Objects.equals(this.teachingAssignmentId, other.teachingAssignmentId);
     }         
-       
-
-        //stub         
-       private class TutorialGroup{ 
-           private String id;
-       }        
-                
-                
-                
-                
-                
-                
+                     
        
     
 }
