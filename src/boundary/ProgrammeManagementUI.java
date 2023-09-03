@@ -139,7 +139,7 @@ public class ProgrammeManagementUI {
         return programmeType;
     }
 
-    private int getProgrammeTypeMenuChoice() {
+    public int getProgrammeTypeMenuChoice() {
         System.out.println("\nProgramme types: ");
         System.out.println("1. Foundation");
         System.out.println("2. Diploma");
@@ -200,6 +200,47 @@ public class ProgrammeManagementUI {
             choice = scanner.nextInt();
             scanner.nextLine();
             if (choice >= 0 && choice <= 2) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getFindProgrammeMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Stop finding programmes");
+        System.out.println("1. Find by programme code");
+        System.out.println("2. Find by name");
+        System.out.println("3. Find by faculty");
+        System.out.println("4. Find by programme type");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 4) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getViewProgrammeDetailsMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. View programme details");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 1) {
                 valid = true;
             } else {
                 MessageUI.displayInvalidChoiceMessage();
@@ -287,5 +328,10 @@ public class ProgrammeManagementUI {
             }
         } while (isValid == false);
         return confirmation;
+    }
+    
+    public String inputSearchQuery() {
+        System.out.print("Enter your search query: ");
+        return scanner.nextLine().toUpperCase();
     }
 }

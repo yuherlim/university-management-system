@@ -88,10 +88,10 @@ public class ProgrammeManagement {
             System.out.println("Continue adding programmes?");
             cont = programmeManagementUI.inputConfirmation();
         } while (cont == 'Y');
-        System.out.println("Exiting programme addition...");
+        System.out.println("\nExiting programme addition...");
     }
 
-    public String getAllProgrammes() {
+    public String getAllProgrammesFromList(ListInterface<Programme> programmeList) {
         String outputStr = "";
         Iterator<Programme> it = programmeList.getIterator();
         while (it.hasNext()) {
@@ -116,10 +116,9 @@ public class ProgrammeManagement {
             return;
         }
 
-        programmeManagementUI.listProgrammes(getAllProgrammes());
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         System.out.println("\nEnter a programme code to view programme details.");
-        String code = programmeManagementUI.inputProgrammeCode();
-        Programme programmeToView = programmeList.getEntry(new Programme(code));
+        Programme programmeToView = searchByProgrammeCode(programmeList);
 
         if (programmeToView != null) {
             programmeManagementUI.printProgrammeDetails(programmeToView);
@@ -171,11 +170,10 @@ public class ProgrammeManagement {
                         System.out.println("\nThere are currently no programmes.");
                         break;
                     }
-                        
-                    programmeManagementUI.listProgrammes(getAllProgrammes());
+
+                    programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
                     System.out.println("\nEnter the programme code of the program to remove.");
-                    String code = programmeManagementUI.inputProgrammeCode();
-                    Programme programmeToRemove = programmeList.getEntry(new Programme(code));
+                    Programme programmeToRemove = searchByProgrammeCode(programmeList);
                     int removedProgrammePosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToRemove);
 
                     if (programmeToRemove != null) {
@@ -188,7 +186,7 @@ public class ProgrammeManagement {
                             programmeList.remove(programmeToRemove);
                             System.out.println("\nProgramme successfully removed.");
                             isRemoved = true;
-                            programmeManagementUI.listProgrammes(getAllProgrammes());
+                            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
                         } else {
                             System.out.println("\nRemoval of this programme cancelled.");
                         }
@@ -208,7 +206,7 @@ public class ProgrammeManagement {
                             }
                             System.out.println("Undo successful.");
                             isRemoved = false;
-                            programmeManagementUI.listProgrammes(getAllProgrammes());
+                            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
                         } else {
                             System.out.println("Undo cancelled.");
                         }
@@ -219,15 +217,83 @@ public class ProgrammeManagement {
             }
         } while (selection != 0);
 
-        System.out.println("Exiting programme removal...");
+        System.out.println("\nExiting programme removal...");
     }
 
     private void findProgramme() {
-//        if (programmeList.isEmpty()) {
-//            System.out.println("\nThere are currently no programmes.");
-//            return;
-//        }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+
+        int selection;
+        do {
+            selection = programmeManagementUI.getFindProgrammeMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("\nExiting programme searching...");
+                    break;
+                case 1:
+                    findByProgrammeCode();
+                    break;
+                case 2:
+                    findByName();
+                    break;
+                case 3:
+                    findByFaculty();
+                    break;
+                case 4:
+                    findByProgrammeType();
+                    break;
+            }
+
+        } while (selection != 0);
+    }
+
+    public void findByName() {
+        String searchQuery = programmeManagementUI.inputSearchQuery();
+        searchByStringQuery("name", searchQuery);
+    }
+
+    public void findByProgrammeCode() {
+        System.out.println("\nEnter the programme code of the program to find.");
+        Programme programmeToFind = searchByProgrammeCode(programmeList);
+        if (programmeToFind == null) {
+            System.out.println("\nThe programme code entered does not exist.");
+        } else {
+            System.out.println("\nSearch results: ");
+            programmeManagementUI.printProgrammeDetails(programmeToFind);
+        }
+    }
+
+    public void viewProgrammeDetails(ListInterface<Programme> programmeListToSearchIn) {
+        int selection;
+        do {
+            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeListToSearchIn));
+            selection = programmeManagementUI.getViewProgrammeDetailsMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("Going back...");
+                    break;
+                case 1:
+                    System.out.println("\nEnter the programme code of the program to view.");
+                    Programme programmeToView = searchByProgrammeCode(programmeListToSearchIn);
+
+                    if (programmeToView == null) {
+                        System.out.println("\nThe programme code entered does not exist.");
+                        break;
+                    }
+
+                    programmeManagementUI.printProgrammeDetails(programmeToView);
+                    break;
+            }
+        } while (selection != 0);
+    }
+
+    private Programme searchByProgrammeCode(ListInterface<Programme> programmeListToSearchIn) {
+        String code = programmeManagementUI.inputProgrammeCode();
+        Programme programmeToSearch = programmeListToSearchIn.getEntry(new Programme(code));
+        return programmeToSearch;
     }
 
     private void ammendProgramme() {
@@ -236,10 +302,9 @@ public class ProgrammeManagement {
             return;
         }
 
-        programmeManagementUI.listProgrammes(getAllProgrammes());
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         System.out.println("\nEnter a programme code to modify programme details.");
-        String code = programmeManagementUI.inputProgrammeCode();
-        Programme programmeToModify = programmeList.getEntry(new Programme(code));
+        Programme programmeToModify = searchByProgrammeCode(programmeList);
         String codeBeforeModification;
         boolean modifyCode = false;
         boolean isModified = false;
@@ -317,7 +382,7 @@ public class ProgrammeManagement {
             System.out.println("\nThe programme code entered does not exist.");
         }
 
-        System.out.println("Exiting programme ammendment...");
+        System.out.println("\nExiting programme ammendment...");
     }
 
     private void addTutorialGroupToProgramme() {
@@ -387,6 +452,52 @@ public class ProgrammeManagement {
             }
         }
         courseDAO.saveToFile(courseList);
+    }
+
+    public void findByFaculty() {
+        String searchQuery = programmeManagementUI.inputSearchQuery();
+        searchByStringQuery("faculty", searchQuery);
+    }
+
+    // performs search for the query on the column given.
+    public void searchByStringQuery(String column, String query) {
+        ListInterface<Programme> searchResults = new CircularDoublyLinkedList<>();
+
+        Iterator<Programme> it = programmeList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            switch (column) {
+                case "name":
+                    if (currentProgramme.getName().toUpperCase().contains(query)) {
+                        searchResults.add(currentProgramme);
+                    }
+                    break;
+                case "faculty":
+                    if (currentProgramme.getFaculty().toUpperCase().contains(query)) {
+                        searchResults.add(currentProgramme);
+                    }
+                    break;
+                case "programmeType":
+                    if (currentProgramme.getProgrammeType().equalsIgnoreCase(query)) {
+                        searchResults.add(currentProgramme);
+                    }
+                    break;
+            }
+
+        }
+
+        System.out.println("\nSearch results: ");
+        if (searchResults.isEmpty()) {
+            System.out.printf("\nThere are no results found for \"%s\"\n", query);
+        } else {
+            viewProgrammeDetails(searchResults);
+        }
+
+    }
+
+    private void findByProgrammeType() {
+        String searchQuery = programmeManagementUI.inputProgrammeType();
+        searchByStringQuery("programmeType", searchQuery);
     }
 }
 
