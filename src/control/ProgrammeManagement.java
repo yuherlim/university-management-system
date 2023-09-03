@@ -125,37 +125,26 @@ public class ProgrammeManagement {
             return;
         }
 
-        System.out.println("");
         ArrayStack<Integer> undoStackPosition = new ArrayStack<>();
         ArrayStack<Programme> undoStackProgramme = new ArrayStack<>();
-        boolean isRemoved = false;
         ArrayList<String> codeToRemove = new ArrayList<>(); // used to modify course list if there is changes to programme code.
-        char confirmation;
-        char removeConfirmation;
-        char undoConfirmation;
+        boolean isRemoved = false;
         int selection;
         do {
             selection = programmeManagementUI.getRemoveProgrammeMenuChoice();
             switch (selection) {
                 case 0:
-                    if (isRemoved) {
-                        programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
-                        System.out.println("\nConfirm the removal of the above programmes? (this action cannot be undone.)");
-                        confirmation = programmeManagementUI.inputConfirmation();
-                        if (confirmation == 'Y') {
-                            // clear the undo stack data.
-                            while (!(undoStackProgramme.isEmpty())) {
-                                codeToRemove.add(undoStackProgramme.pop().getCode());
-                            }
-                            undoStackPosition.clear();
-
-                            programmeDAO.saveToFile(programmeList);
-                            System.out.println("\nThe above programmes has been successfully removed.");
-                            removeProgrammeFromCourseList(codeToRemove);
-                        } else { // reset list to original.
-                            programmeList = programmeDAO.retrieveFromFile();
-                        }
+                    if (!isRemoved) {
+                        break;
                     }
+
+                    if (getRemovalConfirmation(undoStackProgramme) != 'Y') {
+                        programmeList = programmeDAO.retrieveFromFile(); // reset list to original.
+                        break;
+                    }
+
+                    getCodeFromUndoStack(undoStackProgramme, codeToRemove, undoStackPosition);
+                    updateRemovalToFile(codeToRemove);
                     break;
                 case 1:
                     if (programmeList.isEmpty()) {
@@ -163,53 +152,101 @@ public class ProgrammeManagement {
                         break;
                     }
 
-                    programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
-                    System.out.println("\nEnter the programme code of the program to remove.");
-                    Programme programmeToRemove = searchByProgrammeCode(programmeList);
-                    int removedProgrammePosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToRemove);
+                    Programme programmeToRemove = getProgrammeToRemove();
 
-                    if (programmeToRemove != null) {
-                        programmeManagementUI.printProgrammeDetails(programmeToRemove);
-                        System.out.println("\nAre you sure you want to remove the above programme?");
-                        removeConfirmation = programmeManagementUI.inputConfirmation();
-                        if (removeConfirmation == 'Y') {
-                            undoStackProgramme.push(programmeToRemove);
-                            undoStackPosition.push(removedProgrammePosition);
-                            programmeList.remove(programmeToRemove);
-                            System.out.println("\nProgramme successfully removed.");
-                            isRemoved = true;
-                            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
-                        } else {
-                            System.out.println("\nRemoval of this programme cancelled.");
-                        }
-                    } else {
+                    if (programmeToRemove == null) {
                         System.out.println("\nThe programme code entered does not exist.");
+                        break;
                     }
+
+                    if (getProgrammeRemovalConfirmation(programmeToRemove) != 'Y') {
+                        System.out.println("\nRemoval of this programme cancelled.");
+                        break;
+                    }
+
+                    isRemoved = removeProgrammeTemporarily(undoStackProgramme, programmeToRemove, undoStackPosition);
                     break;
                 case 2:
-                    if (!(undoStackProgramme.isEmpty())) {
-                        programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
-
-                        System.out.println("\nAre you sure you want to undo the removal of the above programmes?");
-                        undoConfirmation = programmeManagementUI.inputConfirmation();
-                        if (undoConfirmation == 'Y') {
-                            while (!(undoStackProgramme.isEmpty())) {
-                                programmeList.add(undoStackPosition.pop(), undoStackProgramme.pop());
-                            }
-                            System.out.println("Undo successful.");
-                            isRemoved = false;
-                            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
-                        } else {
-                            System.out.println("Undo cancelled.");
-                        }
-                    } else {
+                    if (undoStackProgramme.isEmpty()) {
                         System.out.println("\nThere is nothing to undo.");
+                        break;
                     }
+
+                    if (getUndoConfirmation(undoStackProgramme) != 'Y') {
+                        System.out.println("\nUndo cancelled.");
+                        break;
+                    }
+
+                    isRemoved = undoRemoval(undoStackProgramme, undoStackPosition);
                     break;
             }
         } while (selection != 0);
 
         System.out.println("\nExiting programme removal...");
+    }
+
+    private boolean undoRemoval(ArrayStack<Programme> undoStackProgramme, ArrayStack<Integer> undoStackPosition) {
+        while (!(undoStackProgramme.isEmpty())) {
+            programmeList.add(undoStackPosition.pop(), undoStackProgramme.pop());
+        }
+        System.out.println("\nUndo successful.");
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
+        return false;
+    }
+
+    private char getUndoConfirmation(ArrayStack<Programme> undoStackProgramme) {
+        char undoConfirmation;
+        programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
+        System.out.println("\nAre you sure you want to undo the removal of the above programmes?");
+        undoConfirmation = programmeManagementUI.inputConfirmation();
+        return undoConfirmation;
+    }
+
+    private boolean removeProgrammeTemporarily(ArrayStack<Programme> undoStackProgramme, Programme programmeToRemove, ArrayStack<Integer> undoStackPosition) {
+        int removedProgrammePosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToRemove);
+        undoStackProgramme.push(programmeToRemove);
+        undoStackPosition.push(removedProgrammePosition);
+        programmeList.remove(programmeToRemove);
+        System.out.println("\nProgramme successfully removed.");
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
+        return true;
+    }
+
+    private char getProgrammeRemovalConfirmation(Programme programmeToRemove) {
+        char removeConfirmation;
+        programmeManagementUI.printProgrammeDetails(programmeToRemove);
+        System.out.println("\nAre you sure you want to remove the above programme?");
+        removeConfirmation = programmeManagementUI.inputConfirmation();
+        return removeConfirmation;
+    }
+
+    private void getCodeFromUndoStack(ArrayStack<Programme> undoStackProgramme, ArrayList<String> codeToRemove, ArrayStack<Integer> undoStackPosition) {
+        // clear the undo stack data.
+        while (!(undoStackProgramme.isEmpty())) {
+            codeToRemove.add(undoStackProgramme.pop().getCode());
+        }
+        undoStackPosition.clear();
+    }
+
+    private char getRemovalConfirmation(ArrayStack<Programme> undoStackProgramme) {
+        char confirmation;
+        programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
+        System.out.println("\nConfirm the removal of the above programmes? (this action cannot be undone.)");
+        confirmation = programmeManagementUI.inputConfirmation();
+        return confirmation;
+    }
+
+    private void updateRemovalToFile(ArrayList<String> codeToRemove) {
+        programmeDAO.saveToFile(programmeList);
+        System.out.println("\nThe above programmes has been successfully removed.");
+        removeProgrammeFromCourseList(codeToRemove);
+    }
+
+    private Programme getProgrammeToRemove() {
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
+        System.out.println("\nEnter the programme code of the program to remove.");
+        Programme programmeToRemove = searchByProgrammeCode(programmeList);
+        return programmeToRemove;
     }
 
     private void findProgramme() {
@@ -296,7 +333,6 @@ public class ProgrammeManagement {
 
         int selection;
         do {
-            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
             selection = programmeManagementUI.getModifyProgrammeDetailsMenuChoice();
             switch (selection) {
                 case 0:
@@ -318,7 +354,7 @@ public class ProgrammeManagement {
 
     private void performProgrammeModifications(Programme programmeToModify) {
         String codeBeforeModification;
-        boolean codeIsModified=  false;
+        boolean codeIsModified = false;
         boolean isModified = false;
         int programmeToModifyPosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToModify);
         int selection;
@@ -366,6 +402,7 @@ public class ProgrammeManagement {
     }
 
     private Programme getProgrammeToModify() {
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         System.out.println("\nEnter a programme code to modify programme details.");
         Programme programmeToModify = searchByProgrammeCode(programmeList);
         return programmeToModify;
