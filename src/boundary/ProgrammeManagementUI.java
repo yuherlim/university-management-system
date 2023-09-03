@@ -206,6 +206,25 @@ public class ProgrammeManagementUI {
         return choice;
     }
     
+    public int getAddTutorialGroupMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. Add tutorial group to a programme");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 1) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
     public int getFindProgrammeMenuChoice() {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
@@ -342,5 +361,9 @@ public class ProgrammeManagementUI {
     public String inputSearchQuery() {
         System.out.print("Enter your search query: ");
         return scanner.nextLine().toUpperCase();
+    }
+    
+    public void nonexistentProductCodeMsg() {
+        System.out.println("\nThe programme code entered does not exist.");
     }
 }

@@ -156,7 +156,7 @@ public class ProgrammeManagement {
                     Programme programmeToRemove = getProgrammeToRemove();
 
                     if (programmeToRemove == null) {
-                        System.out.println("\nThe programme code entered does not exist.");
+                        programmeManagementUI.nonexistentProductCodeMsg();
                         break;
                     }
 
@@ -249,6 +249,13 @@ public class ProgrammeManagement {
         Programme programmeToRemove = searchByProgrammeCode(programmeList);
         return programmeToRemove;
     }
+    
+    private Programme getProgrammeToAddTutGroup() {
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
+        System.out.println("\nEnter the programme code of the program to remove.");
+        Programme programmeToAddTutGroup = searchByProgrammeCode(programmeList);
+        return programmeToAddTutGroup;
+    }
 
     private void findProgramme() {
         if (programmeList.isEmpty()) {
@@ -289,7 +296,7 @@ public class ProgrammeManagement {
         System.out.println("\nEnter the programme code of the program to find.");
         Programme programmeToFind = searchByProgrammeCode(programmeList);
         if (programmeToFind == null) {
-            System.out.println("\nThe programme code entered does not exist.");
+            programmeManagementUI.nonexistentProductCodeMsg();
         } else {
             System.out.println("\nSearch results: ");
             programmeManagementUI.printProgrammeDetails(programmeToFind);
@@ -310,7 +317,7 @@ public class ProgrammeManagement {
                     Programme programmeToView = searchByProgrammeCode(programmeListToSearchIn);
 
                     if (programmeToView == null) {
-                        System.out.println("\nThe programme code entered does not exist.");
+                        programmeManagementUI.nonexistentProductCodeMsg();
                         break;
                     }
 
@@ -343,7 +350,7 @@ public class ProgrammeManagement {
                     Programme programmeToModify = getProgrammeToModify();
 
                     if (programmeToModify == null) {
-                        System.out.println("\nThe programme code entered does not exist.");
+                        programmeManagementUI.nonexistentProductCodeMsg();
                         break;
                     }
 
@@ -410,12 +417,33 @@ public class ProgrammeManagement {
     }
 
     private void addTutorialGroupToProgramme() {
-//        if (programmeList.isEmpty()) {
-//            System.out.println("\nThere are currently no programmes.");
-//            return;
-//        }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+        
+        int selection;
+        do {
+            selection = programmeManagementUI.getAddTutorialGroupMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("\nExiting tutorial group addition...");
+                    break;
+                case 1:
+                    Programme programmeToAddTutGroup = getProgrammeToAddTutGroup();
+                    
+                    if (programmeToAddTutGroup == null) {
+                        programmeManagementUI.nonexistentProductCodeMsg();
+                        break;
+                    }
+                    
+                    performTutGroupAddition(programmeToAddTutGroup);
+                    break;
+            }
+        } while (selection != 0);
     }
+
+    
 
     private void removeTutorialGroupFromProgramme() {
 //        if (programmeList.isEmpty()) {
@@ -539,6 +567,11 @@ public class ProgrammeManagement {
                 programmeList = programmeDAO.retrieveFromFile();
             }
         }
+    }
+
+    private void performTutGroupAddition(Programme programmeToAddTutGroup) {
+        ArrayList<String> currentTutorialGroupList = programmeToAddTutGroup.get
+        
     }
 }
 
