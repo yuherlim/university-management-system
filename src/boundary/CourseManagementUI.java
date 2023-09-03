@@ -448,7 +448,7 @@ public class CourseManagementUI {
                 }
             }
             if (totalCreditHours == 0) {
-                System.out.printf("%-10s %25s", prog, "------------Pending for course assignment------------\n");
+                System.out.printf("%-10s %25s", prog, "-----------------------Pending for course assignment-----------------------\n");
                 System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
             } else {
                 System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);

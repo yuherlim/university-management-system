@@ -598,20 +598,22 @@ public class CourseManagement {
             for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
                 if (selection == 2) {
                     if (sorted.getEntry(i).getCourseCode().compareTo(sorted.getEntry(j).getCourseCode()) > 0) {
-                        Course temp = sorted.getEntry(i);
-                        sorted.replace(i, sorted.getEntry(j));
-                        sorted.replace(j, temp);
+                        swap(sorted, i,j);
                     }
                 } else {
                     if (sorted.getEntry(i).getCreditHR() > sorted.getEntry(j).getCreditHR()) {
-                        Course temp = sorted.getEntry(i);
-                        sorted.replace(i, sorted.getEntry(j));
-                        sorted.replace(j, temp);
+                        swap(sorted, i,j);
                     }
                 }
             }
         }
         return sorted;
+    }
+    
+    private void swap(ListInterface<Course> sorted, int i, int j){
+        Course temp = sorted.getEntry(i);
+        sorted.replace(i, sorted.getEntry(j));
+        sorted.replace(j, temp);
     }
 
     private ListInterface<Course> convertToArrayList(ListInterface<Course> courseList) {
