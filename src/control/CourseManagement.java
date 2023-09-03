@@ -22,7 +22,6 @@ public class CourseManagement {
     private ProgrammeDAO progDAO = new ProgrammeDAO();
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();    
-    private CourseInputValidator validator = new CourseInputValidator();
     private String[] programmes;
     private String[] domainKnowledges = {"Accounting","Add.Math","Biology","Chemistry","Physics"};
     Scanner scan = new Scanner(System.in);
@@ -56,7 +55,8 @@ public class CourseManagement {
         courseList.add(course);      
         courseDAO.saveToFile(courseList);      
         System.out.println(course + "successfully added.");      
-        courseUI.addCourseInProgramme(course, progList, progDAO);
+        courseUI.addCourseInProgramme(course, progList);
+        progDAO.saveToFile(progList);
      
     }
      
@@ -182,7 +182,8 @@ public class CourseManagement {
 
                     case 0:
                         MessageUI.displayExit();
-                        MessageUI.savingIntoFile();
+                        MessageUI.savingIntoFile();                  
+                        progDAO.saveToFile(progList);    
                         courseDAO.saveToFile(courseList);
                         break;
                 }
@@ -230,13 +231,13 @@ public class CourseManagement {
                     
                 case 2:
                     sortedList = courseUI.sortByCode(courseList);
-                    courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    courseUI.report((ArrayList)sortedList, programmes);
                     MessageUI.pause();
                     break;
                     
                 case 3:
                     sortedList = courseUI.sortByCreditHour(courseList);
-                    courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    courseUI.report((ArrayList)sortedList, programmes);
                     MessageUI.pause();
                     break;
            
