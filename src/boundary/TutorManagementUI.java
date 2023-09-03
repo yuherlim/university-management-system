@@ -95,7 +95,7 @@ public class TutorManagementUI {
                 sc.nextLine();
                 valid = false;
             }
-            if (searchSelection < 1 || searchSelection > 3) {
+            if (searchSelection < 0 || searchSelection > 3) {
                 System.out.println("Invalid. Please select number between 0 to 3...");
                 valid = false;
             }
