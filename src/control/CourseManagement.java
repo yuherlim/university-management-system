@@ -127,7 +127,7 @@ public class CourseManagement {
                         char confirmation = courseUI.exitConfirmationForDelete();
                         if (confirmation == 'Y') {
                             while(!undoStackCourse.isEmpty()){
-                               removeACourseFromAllProgramme(undoStackCourse.pop(), progList, progDAO);
+                               removeACourseFromProgrammes(undoStackCourse.pop(), progList, progDAO);
                             }
                             undoStackPosition.clear();
                             MessageUI.displayExit();
@@ -541,11 +541,17 @@ public class CourseManagement {
         while (it.hasNext()) {
             Programme currentProgramme = it.next();
             String currentProgrammeCode = currentProgramme.getCode();
-            for (int i = 1; i <= course.getProgrammes().getNumberOfEntries(); i++) {
-                if (course.getProgrammes().getEntry(i).equals(currentProgrammeCode) && !currentProgramme.getCourses().contains(course.getCourseCode())) {
-                    currentProgramme.getCourses().add(course.getCourseCode());
-                    System.out.println("Course " + course.getCourseCode() + " has been added into " + currentProgrammeCode + " course list.\n");
+            if (currentProgramme.getCourses() != null) {
+                for (int i = 1; i <= course.getProgrammes().getNumberOfEntries(); i++) {
+                    if (course.getProgrammes().getEntry(i).equals(currentProgrammeCode) && !currentProgramme.getCourses().contains(course.getCourseCode())) {
+                        currentProgramme.getCourses().add(course.getCourseCode());
+                        System.out.println("Course " + course.getCourseCode() + " has been added into " + currentProgrammeCode + " course list.\n");
+                    }
                 }
+            } else {
+                ArrayList<String> newList = new ArrayList<>();
+                newList.add(course.getCourseCode());
+                currentProgramme.setCourses(newList);
             }
         }
     }
@@ -555,26 +561,31 @@ public class CourseManagement {
         while (it.hasNext()) {
             Programme currentProgramme = it.next();
             ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
-            for (int i = 1; i <= courseListInProgramme.getNumberOfEntries(); i++) {
-                if (courseListInProgramme.contains(course.getCourseCode()) && !course.getProgrammes().contains(currentProgramme.getCode())) {
-                    courseListInProgramme.remove(course.getCourseCode());
-                    currentProgramme.setCourses(courseListInProgramme);
-                    System.out.println("Course " + course.getCourseCode() + " has been removed from " + currentProgramme.getCode() + " course list due to the modification.\n");
+            if(courseListInProgramme != null){
+                for (int i = 1; i <= courseListInProgramme.getNumberOfEntries(); i++) {
+                    if (courseListInProgramme.contains(course.getCourseCode()) && !course.getProgrammes().contains(currentProgramme.getCode())) {
+                        courseListInProgramme.remove(course.getCourseCode());
+                        currentProgramme.setCourses(courseListInProgramme);
+                        System.out.println("Course " + course.getCourseCode() + " has been removed from " + currentProgramme.getCode() + " course list due to the modification.\n");
 
+                    }
                 }
             }
         }   
     }
     
     //Delete course
-    private void removeACourseFromAllProgramme(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO) {
+    private void removeACourseFromProgrammes(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO) {
         Iterator<Programme> it = progList.getIterator();
         while (it.hasNext()) {
             Programme currentProgramme = it.next();
-            ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
-            if (courseListInProgramme.contains(course.getCourseCode())) {
-                courseListInProgramme.remove(course.getCourseCode());
-                currentProgramme.setCourses(courseListInProgramme);
+            if (currentProgramme == null) {
+                ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
+
+                if (courseListInProgramme.contains(course.getCourseCode())) {
+                    courseListInProgramme.remove(course.getCourseCode());
+                    currentProgramme.setCourses(courseListInProgramme);
+                }
             }
         }
 
