@@ -41,7 +41,7 @@ public class ProgrammeManagementUI {
 
     public void listProgrammes(String outputStr) {
         System.out.println("\nList of Programmes:");
-        System.out.printf("%-4s %-75s\n" + outputStr, "Code", "Name");
+        System.out.printf("%-4s %-80s %-60s %-10s %-15s\n" + outputStr, "Code", "Name", "Faculty", "Type", "Total fees (RM)");
     }
 
     public void printProgrammeDetails(Programme programme) {
@@ -53,7 +53,6 @@ public class ProgrammeManagementUI {
         System.out.println("Programme description       : " + programme.getDescription());
         System.out.println("Programme duration (years)  : " + programme.getDuration());
         System.out.printf("Programme total fees (RM)   : %.2f\n", programme.getTotalFee());
-        System.out.println("Programme total credit hours: " + programme.getTotalCreditHour());
     }
 
     public String inputProgrammeCode() {
@@ -172,14 +171,13 @@ public class ProgrammeManagementUI {
         System.out.println("5. Programme description");
         System.out.println("6. Programme duration");
         System.out.println("7. Programme total fees");
-        System.out.println("8. Programme total credit hours");
         int choice;
         boolean valid = false;
         do {
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
-            if (choice >= 0 && choice <= 8) {
+            if (choice >= 0 && choice <= 7) {
                 valid = true;
             } else {
                 MessageUI.displayInvalidChoiceMessage();
@@ -210,7 +208,7 @@ public class ProgrammeManagementUI {
     
     public int getFindProgrammeMenuChoice() {
         System.out.println("\nPlease select a choice: ");
-        System.out.println("0. Stop finding programmes");
+        System.out.println("0. Go back");
         System.out.println("1. Find by programme code");
         System.out.println("2. Find by name");
         System.out.println("3. Find by faculty");
@@ -234,6 +232,25 @@ public class ProgrammeManagementUI {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
         System.out.println("1. View programme details");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 1) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getModifyProgrammeDetailsMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. Modify programme details");
         int choice;
         boolean valid = false;
         do {
@@ -280,13 +297,6 @@ public class ProgrammeManagementUI {
         scanner.nextLine();
         return totalFee;
     }
-    
-    public int inputProgrammeTotalCreditHours() {
-        System.out.print("Enter programme total credit hours: ");
-        int totalCreditHours = scanner.nextInt();
-        scanner.nextLine();
-        return totalCreditHours;
-    }
 
     public Programme inputProgrammeDetails() {
         String code = inputUniqueProgrammeCode();
@@ -296,8 +306,7 @@ public class ProgrammeManagementUI {
         String description = inputProgrammeDescription();
         int duration = inputProgrammeDuration();
         double totalFee = inputProgrammeTotalFees();
-        int totalCreditHour = inputProgrammeTotalCreditHours();
-        return new Programme(code, name, faculty, programmeType, description, duration, totalFee, totalCreditHour);
+        return new Programme(code, name, faculty, programmeType, description, duration, totalFee);
     }
     
     public String inputUniqueProgrammeCode() {

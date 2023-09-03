@@ -66,7 +66,7 @@ public class ProgrammeManagement {
         } while (choice != 0);
     }
 
-    public void addNewProgramme() {
+    private void addNewProgramme() {
         char cont;
         char confirmation;
         do {
@@ -91,7 +91,7 @@ public class ProgrammeManagement {
         System.out.println("\nExiting programme addition...");
     }
 
-    public String getAllProgrammesFromList(ListInterface<Programme> programmeList) {
+    private String getAllProgrammesFromList(ListInterface<Programme> programmeList) {
         String outputStr = "";
         Iterator<Programme> it = programmeList.getIterator();
         while (it.hasNext()) {
@@ -110,21 +110,13 @@ public class ProgrammeManagement {
         return outputStr;
     }
 
-    public void displayProgrammes() {
+    private void displayProgrammes() {
         if (programmeList.isEmpty()) {
             System.out.println("\nThere are currently no programmes.");
             return;
         }
 
-        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
-        System.out.println("\nEnter a programme code to view programme details.");
-        Programme programmeToView = searchByProgrammeCode(programmeList);
-
-        if (programmeToView != null) {
-            programmeManagementUI.printProgrammeDetails(programmeToView);
-        } else {
-            System.out.println("\nThe programme code entered does not exist.");
-        }
+        viewProgrammeDetails(programmeList);
     }
 
     private void removeProgramme() {
@@ -250,12 +242,12 @@ public class ProgrammeManagement {
         } while (selection != 0);
     }
 
-    public void findByName() {
+    private void findByName() {
         String searchQuery = programmeManagementUI.inputSearchQuery();
         searchByStringQuery("name", searchQuery);
     }
 
-    public void findByProgrammeCode() {
+    private void findByProgrammeCode() {
         System.out.println("\nEnter the programme code of the program to find.");
         Programme programmeToFind = searchByProgrammeCode(programmeList);
         if (programmeToFind == null) {
@@ -266,7 +258,7 @@ public class ProgrammeManagement {
         }
     }
 
-    public void viewProgrammeDetails(ListInterface<Programme> programmeListToSearchIn) {
+    private void viewProgrammeDetails(ListInterface<Programme> programmeListToSearchIn) {
         int selection;
         do {
             programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeListToSearchIn));
@@ -302,87 +294,81 @@ public class ProgrammeManagement {
             return;
         }
 
-        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
-        System.out.println("\nEnter a programme code to modify programme details.");
-        Programme programmeToModify = searchByProgrammeCode(programmeList);
+        int selection;
+        do {
+            programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
+            selection = programmeManagementUI.getModifyProgrammeDetailsMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("\nExiting programme ammendment...");
+                    break;
+                case 1:
+                    Programme programmeToModify = getProgrammeToModify();
+
+                    if (programmeToModify == null) {
+                        System.out.println("\nThe programme code entered does not exist.");
+                        break;
+                    }
+
+                    performProgrammeModifications(programmeToModify);
+                    break;
+            }
+        } while (selection != 0);
+    }
+
+    private void performProgrammeModifications(Programme programmeToModify) {
         String codeBeforeModification;
-        boolean modifyCode = false;
+        boolean codeIsModified=  false;
         boolean isModified = false;
         int programmeToModifyPosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToModify);
         int selection;
-        char confirmation;
-        if (programmeToModify != null) {
-            codeBeforeModification = programmeToModify.getCode(); // used to modify course list if there is changes to programme code.
-            programmeManagementUI.printProgrammeDetails(programmeToModify);
-            System.out.println("");
-            do {
-                selection = programmeManagementUI.getModifyProgrammeMenuChoice();
-                switch (selection) {
-                    case 0:
-                        if (isModified) {
-                            System.out.println("Confirm the following modification?");
-                            confirmation = programmeManagementUI.inputConfirmation();
-                            if (confirmation == 'Y') {
-                                programmeDAO.saveToFile(programmeList);
-                                System.out.println("\nProgramme ammendment successful.");
-                                if (modifyCode) {
-                                    modifyCourseList(codeBeforeModification, programmeToModify.getCode());
-                                }
-                            } else { // reset list to original.
-                                programmeList = programmeDAO.retrieveFromFile();
-                            }
-                        }
-                        break;
-                    case 1:
-                        String newCode = programmeManagementUI.inputUniqueProgrammeCode();
-                        programmeToModify.setCode(newCode);
-                        isModified = true;
-                        modifyCode = true;
-                        break;
-                    case 2:
-                        String newName = programmeManagementUI.inputProgrammeName();
-                        programmeToModify.setName(newName);
-                        isModified = true;
-                        break;
-                    case 3:
-                        String newFaculty = programmeManagementUI.inputProgrammeFaculty();
-                        programmeToModify.setFaculty(newFaculty);
-                        isModified = true;
-                        break;
-                    case 4:
-                        String newProgrammeType = programmeManagementUI.inputProgrammeType();
-                        programmeToModify.setProgrammeType(newProgrammeType);
-                        isModified = true;
-                        break;
-                    case 5:
-                        String newDescription = programmeManagementUI.inputProgrammeDescription();
-                        programmeToModify.setDescription(newDescription);
-                        isModified = true;
-                        break;
-                    case 6:
-                        int newDuration = programmeManagementUI.inputProgrammeDuration();
-                        programmeToModify.setDuration(newDuration);
-                        isModified = true;
-                        break;
-                    case 7:
-                        double newTotalFees = programmeManagementUI.inputProgrammeTotalFees();
-                        programmeToModify.setTotalFee(newTotalFees);
-                        isModified = true;
-                        break;
-                    case 8:
-                        int newTotalCreditHours = programmeManagementUI.inputProgrammeTotalCreditHours();
-                        programmeToModify.setTotalCreditHour(newTotalCreditHours);
-                        isModified = true;
-                        break;
+        codeBeforeModification = programmeToModify.getCode(); // used to modify course list if there is changes to programme code.
+        programmeManagementUI.printProgrammeDetails(programmeToModify);
+        System.out.println("");
+        do {
+            selection = programmeManagementUI.getModifyProgrammeMenuChoice();
+            switch (selection) {
+                case 0:
+                    updateModificationsToFile(isModified, codeIsModified, codeBeforeModification, programmeToModify);
+                    break;
+                case 1:
+                    programmeToModify.setCode(programmeManagementUI.inputUniqueProgrammeCode());
+                    isModified = true;
+                    codeIsModified = true;
+                    break;
+                case 2:
+                    programmeToModify.setName(programmeManagementUI.inputProgrammeName());
+                    isModified = true;
+                    break;
+                case 3:
+                    programmeToModify.setFaculty(programmeManagementUI.inputProgrammeFaculty());
+                    isModified = true;
+                    break;
+                case 4:
+                    programmeToModify.setProgrammeType(programmeManagementUI.inputProgrammeType());
+                    isModified = true;
+                    break;
+                case 5:
+                    programmeToModify.setDescription(programmeManagementUI.inputProgrammeDescription());
+                    isModified = true;
+                    break;
+                case 6:
+                    programmeToModify.setDuration(programmeManagementUI.inputProgrammeDuration());
+                    isModified = true;
+                    break;
+                case 7:
+                    programmeToModify.setTotalFee(programmeManagementUI.inputProgrammeTotalFees());
+                    isModified = true;
+                    break;
+            }
+            programmeManagementUI.printProgrammeDetails(programmeList.getEntry(programmeToModifyPosition));
+        } while (selection != 0);
+    }
 
-                }
-                programmeManagementUI.printProgrammeDetails(programmeList.getEntry(programmeToModifyPosition));
-            } while (selection != 0);
-        } else {
-            System.out.println("\nThe programme code entered does not exist.");
-        }
-
-        System.out.println("\nExiting programme ammendment...");
+    private Programme getProgrammeToModify() {
+        System.out.println("\nEnter a programme code to modify programme details.");
+        Programme programmeToModify = searchByProgrammeCode(programmeList);
+        return programmeToModify;
     }
 
     private void addTutorialGroupToProgramme() {
@@ -422,7 +408,7 @@ public class ProgrammeManagement {
         programmeManagement.runProgrammeManagement();
     }
 
-    private void modifyCourseList(String code, String newCode) {
+    private void modifyProgrammeInCourseList(String code, String newCode) {
         CourseDAO courseDAO = new CourseDAO();
         ListInterface<Course> courseList = courseDAO.retrieveFromFile();
 
@@ -454,13 +440,13 @@ public class ProgrammeManagement {
         courseDAO.saveToFile(courseList);
     }
 
-    public void findByFaculty() {
+    private void findByFaculty() {
         String searchQuery = programmeManagementUI.inputSearchQuery();
         searchByStringQuery("faculty", searchQuery);
     }
 
     // performs search for the query on the column given.
-    public void searchByStringQuery(String column, String query) {
+    private void searchByStringQuery(String column, String query) {
         ListInterface<Programme> searchResults = new CircularDoublyLinkedList<>();
 
         Iterator<Programme> it = programmeList.getIterator();
@@ -498,6 +484,23 @@ public class ProgrammeManagement {
     private void findByProgrammeType() {
         String searchQuery = programmeManagementUI.inputProgrammeType();
         searchByStringQuery("programmeType", searchQuery);
+    }
+
+    private void updateModificationsToFile(boolean isModified, boolean codeIsModified, String codeBeforeModification, Programme programmeToModify) {
+        char confirmation;
+        if (isModified) {
+            System.out.println("Confirm the following modification?");
+            confirmation = programmeManagementUI.inputConfirmation();
+            if (confirmation == 'Y') {
+                programmeDAO.saveToFile(programmeList);
+                System.out.println("\nProgramme ammendment successful.");
+                if (codeIsModified) {
+                    modifyProgrammeInCourseList(codeBeforeModification, programmeToModify.getCode());
+                }
+            } else { // reset list to original.
+                programmeList = programmeDAO.retrieveFromFile();
+            }
+        }
     }
 }
 
