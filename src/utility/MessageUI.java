@@ -82,5 +82,12 @@ public class MessageUI {
         System.out.println("----------------------------------");
     }
     
+     public static void TeachingAssignmentTopDivider(){
+        System.out.println("\n\n\n\n---------------------------------------------------------------------------------------------");
+    }
+    
+    public static void TeachingAssignmentBtmDivider(){
+        System.out.println("---------------------------------------------------------------------------------------------");
+    }
     
 }

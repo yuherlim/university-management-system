@@ -9,7 +9,9 @@ import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import control.TutorInputValidator;
 import control.CourseInputValidator;
+import control.TeachingAssignmentManagement;
 import entity.Course;
+import entity.Programme;
 import entity.TeachingAssignment;
 import entity.Tutor;
 import entity.TutorialGroup;
@@ -31,21 +33,27 @@ public class TeachingAssignmentManagementUI {
         int selection = -1;
         while (true) {
             try {
-                System.out.println("\nMAIN MENU");
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Teaching Assignment Main Menu");
+                MessageUI.TeachingAssignmentBtmDivider();
                 System.out.println("1. Assign Tutor");
                 System.out.println("2. Modify Assigned Tutor");
                 System.out.println("3. Find Teaching Assignment");
                 System.out.println("4. List Teaching Assignent");
                 System.out.println("5. Generate Report");
                 System.out.println("0. Quit");
-                System.out.print("Enter choice: \n");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
                 if (selection >= 0 && selection <= 4) {
                     break;
                 }
                 MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+                
             } catch (Exception e) {
-                System.out.println("Please enter a valid selection in integer");
+                System.out.println("\nPlease enter a valid selection in integer");
+                MessageUI.pause();
                 scanner.nextLine();
 
             }
@@ -58,86 +66,97 @@ public class TeachingAssignmentManagementUI {
         int selection = -1;
         while (true) {
             try {
-                System.out.println("\nAssign Tutor menu");
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Assign Tutor menu");
+                MessageUI.TeachingAssignmentBtmDivider();
                 System.out.println("1. Assign Tutor by course");
                 System.out.println("2. Assign Tutor by Available slot");
                 System.out.println("0. Quit");
-                System.out.print("Enter choice: \n");
+                 MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
                 selection = scanner.nextInt();
                 if (selection >= 0 && selection <= 2) {
                     break;
                 }
                 MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
             } catch (Exception e) {
-                System.out.println("Please enter a valid selection in integer");
+                System.out.println("\nPlease enter a valid selection in integer");
                 scanner.nextLine();
+                MessageUI.pause();
             }
         }
         return selection;
     }
 
-    public void assignByCourse(ListInterface<TeachingAssignment> taList, ListInterface<Tutor> tutorList) {
-        ListInterface<TeachingAssignment> unAssignedTAList = this.getUnAssignedTeachingList(taList);
-        int assignByCourseSelection = -1;
-        Character cont = 'Y';
-        do {
-            if (!unAssignedTAList.isEmpty()) {
-                ListInterface<Course> courseCodeList = this.getUniqueCourse(unAssignedTAList);
-                Course selectedCourse = this.getCourseSelection(courseCodeList);
-                if (selectedCourse != null) {
-                    do {
-                        ListInterface<Tutor> qualifiedTutorList = this.getQualifiedTutorList(tutorList, selectedCourse.getRequiredDomainKnowledge(), taList);
-                        if (qualifiedTutorList.getNumberOfEntries() == 0) {
-                            System.out.printf("\nNo available Tutor");
-                            break;
-                        } else {
-                            Tutor selectedTutor = this.getQualifiedTutorSelection(qualifiedTutorList, taList);
-                            if (selectedTutor != null) {
-                                ListInterface<TeachingAssignment> selectedCoursetaList = this.filterByCourse(unAssignedTAList, selectedCourse);
-                                ListInterface<TutorialGroup> tutGrpList = this.getUniqueTutGrp(selectedCoursetaList);
-                                int noOfClassAssigned = this.getNoOfClassAssigned(taList, selectedTutor);
-                                do {
-                                    System.out.printf("\nSelected Tutor                        : %s", selectedTutor.getName());
-                                    System.out.printf("\nNo Of class assigned (Max 10 classes) : %02d", noOfClassAssigned);
-                                    //
+    public TeachingAssignment getTASelection(ListInterface<TeachingAssignment> taList, Course selectedCourse, Tutor selectedTutor, int noOfClassAssigned) {
+        int selection = -1;
+        int count = 1;
+        ListInterface<String> programmeList = TeachingAssignmentManagement.getUniqueProgramme(taList);
+        TeachingAssignment selectedClass = null;
+        while (true) {
+            Iterator<String> programmeIT = programmeList.getIterator();
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("Selected Course                       : %s", selectedCourse.getCourseName());
+                System.out.printf("\nSelected Tutor                        : %s", selectedTutor.getName());
+                System.out.printf("\nNo Of class assigned (Max 15 classes) : %2d\n", noOfClassAssigned);
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.printf("Class List:");
 
-                                    while (true) {
-                                        System.out.printf("\nContinue select Tutorial Group? (Y/N)\n");
-                                        cont = scanner.next().toUpperCase().charAt(0);
-                                        if (cont == 'Y' || cont == 'N') {
-                                            break;
-                                        }
-                                        System.out.printf("Please enter a valid selection");
+                while (programmeIT.hasNext()) {
+                    String programme = programmeIT.next();
+                    System.out.printf("\n%-9s %-7s %-3s %s", "Programme", "Batch", "No", "GroupNo");
+                    System.out.printf("\n%s ", programme);
+                    ListInterface selectedProgrammeTAList = TeachingAssignmentManagement.filterByProgramme(taList, programme);
+                    if (selectedProgrammeTAList.getNumberOfEntries() != 0) {
+                        ListInterface batchList = TeachingAssignmentManagement.getUniqueBatch(selectedProgrammeTAList);
+                        Iterator<String> batchIT = batchList.getIterator();
+                        while (batchIT.hasNext()) {
+                            String batch = batchIT.next();
+                            ListInterface selectedProgrammeBatchTAList = TeachingAssignmentManagement.filterByProgrammeBatch(selectedProgrammeTAList, programme, batch);
+                            if (selectedProgrammeBatchTAList.getNumberOfEntries() != 0) {
+                                System.out.printf("\n%9s %-7s", " ", batch);
+                                Iterator<TeachingAssignment> taIT = selectedProgrammeBatchTAList.getIterator();
+                                while (taIT.hasNext()) {
+                                    TeachingAssignment ta = taIT.next();
+                                    if (ta.getTutorialGroup().getProgramme().equals(programme)) {
+                                        System.out.printf("\n%9s %7s %02d. %s", " ", " ", count++, ta.getTutorialGroup().getGroup());
                                     }
-                                } while (cont == 'Y');
+                                }
                             }
+                        }
+                        System.out.println("");
+                    }
 
-                        }
-                        while (true) {
-                            System.out.printf("\nContinue select Tutor? (Y/N)");
-                            cont = scanner.next().toUpperCase().charAt(0);
-                            if (cont == 'Y' || cont == 'N') {
-                                break;
-                            }
-                            System.out.printf("Please enter a valid selection");
-                        }
-                    } while (cont == 'Y');
                 }
-
-                while (true) {
-                    System.out.printf("\nContinue select course? (Y/N)");
-                    cont = scanner.next().toUpperCase().charAt(0);
-                    if (cont == 'Y' || cont == 'N') {
+                System.out.printf(" 0. Exit\n");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
+                selection = scanner.nextInt();
+                if (selection >= 0 && selection <= taList.getNumberOfEntries()) {
+                    if (selection == 0) {
+                        MessageUI.displayExit();
+                        break;
+                    } else {
+                        selectedClass = taList.getEntry(selection);
+                        noOfClassAssigned++;
                         break;
                     }
-                    System.out.printf("Please enter a valid selection");
+                } else {
+                    count = 1;
+                    MessageUI.displayInvalidChoiceMessage();
+                    MessageUI.pause();
                 }
 
-            } else {
-                System.out.printf("\nAll course are Assigned");
-                cont = 'N';
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                count = 1;
+                MessageUI.pause();
             }
-        } while (cont == 'Y');
+        }
+        return selectedClass;
 
     }
 
@@ -149,17 +168,21 @@ public class TeachingAssignmentManagementUI {
 
         while (true) {
             try {
-                System.out.printf("\nProgramme List:");
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("Programme List:");
+                MessageUI.TeachingAssignmentBtmDivider();
                 while (programmeIT.hasNext()) {
                     String programme = programmeIT.next();
                     System.out.printf("\n%02d. %s", count++, programme);
                 }
-                System.out.printf("\n 0. Exit");
-                System.out.print("Enter choice: \n");
+                System.out.printf(" 0. Exit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
 
                 if (selection >= 0 && selection <= programmeList.getNumberOfEntries()) {
                     if (selection == 0) {
+                        MessageUI.displayExit();
                         break;
                     } else {
                         selectedProgramme = programmeList.getEntry(selection);
@@ -168,14 +191,59 @@ public class TeachingAssignmentManagementUI {
                 } else {
                     count = 1;
                     MessageUI.displayInvalidChoiceMessage();
+                    MessageUI.pause();
                 }
             } catch (Exception e) {
-                System.out.println("Please enter a valid selection in integer");
+                System.out.println("\nPlease enter a valid selection in integer");
                 scanner.nextLine();
                 count = 1;
+                MessageUI.pause();
             }
         }
         return selectedProgramme;
+    }
+
+    public String getBatchSelection(ListInterface<String> batchList) {
+        Iterator<String> batchIT = batchList.getIterator();
+        int selection = -1;
+        int count = 1;
+        String selectedBatch = null;
+
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("Batch List:");
+                MessageUI.TeachingAssignmentBtmDivider();
+                while (batchIT.hasNext()) {
+                    String batch = batchIT.next();
+                    System.out.printf("\n%02d. %s", count++, batch);
+                }
+                System.out.printf("\n 0. Exit\n");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
+                selection = scanner.nextInt();
+
+                if (selection >= 0 && selection <= batchList.getNumberOfEntries()) {
+                    if (selection == 0) {
+                        MessageUI.displayExit();
+                        break;
+                    } else {
+                        selectedBatch = batchList.getEntry(selection);
+                        break;
+                    }
+                } else {
+                    count = 1;
+                    MessageUI.displayInvalidChoiceMessage();
+                    MessageUI.pause();
+                }
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                count = 1;
+                MessageUI.pause();
+            }
+        }
+        return selectedBatch;
     }
 
     public Course getCourseSelection(ListInterface<Course> courseList) {
@@ -186,16 +254,20 @@ public class TeachingAssignmentManagementUI {
         while (true) {
             Iterator<Course> courseIT = courseList.getIterator();
             try {
-                System.out.printf("\nCourse List:");
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("Course List:\");
+                MessageUI.TeachingAssignmentBtmDivider();
                 while (courseIT.hasNext()) {
                     Course course = courseIT.next();
-                    System.out.printf("\n%02d. %s", count++, course.getCourseName());
+                    System.out.printf("%02d. %s\n", count++, course.getCourseName());
                 }
-                System.out.printf("\n 0. Exit");
-                System.out.print("\nEnter choice: \n");
+                System.out.printf(" 0. Exit\n");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
                 if (selection >= 0 && selection <= courseList.getNumberOfEntries()) {
                     if (selection == 0) {
+                        MessageUI.displayExit();
                         break;
                     } else {
                         selectedCourse = courseList.getEntry(selection);
@@ -204,51 +276,17 @@ public class TeachingAssignmentManagementUI {
                 } else {
                     count = 1;
                     MessageUI.displayInvalidChoiceMessage();
+                    MessageUI.pause();
                 }
             } catch (Exception e) {
-                System.out.println("Please enter a valid selection in integer");
+                System.out.println("\nPlease enter a valid selection in integer");
                 scanner.nextLine();
                 count = 1;
+                MessageUI.pause();
+                
             }
         }
         return selectedCourse;
-    }
-
-    public Tutor getQualifiedTutorSelection(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList) {
-        Iterator<Tutor> tutorIT = tutorList.getIterator();
-        int selection = -1;
-        int count = 1;
-        Tutor selectedTutor = null;
-        while (true) {
-            try {
-                System.out.printf("\nCourse List:");
-                System.out.printf("\n%s %s-20s %s", "No", "Name", "Number of class assigned");
-                while (tutorIT.hasNext()) {
-                    Tutor tutor = tutorIT.next();
-                    System.out.printf("\n%02d. %s-20s %02d", count++, tutor.getName(), this.getNoOfClassAssigned(taList, tutor));
-                }
-                System.out.printf("\n 0. Exit");
-                System.out.print("Enter choice: \n");
-                selection = scanner.nextInt();
-                if (selection >= 0 && selection <= tutorList.getNumberOfEntries()) {
-                    if (selection == 0) {
-                        break;
-                    } else {
-                        selectedTutor = tutorList.getEntry(selection);
-                        break;
-                    }
-                } else {
-                    count = 1;
-
-                    MessageUI.displayInvalidChoiceMessage();
-                }
-            } catch (Exception e) {
-                System.out.println("Please enter a valid selection in integer");
-                scanner.nextLine();
-                count = 1;
-            }
-        }
-        return selectedTutor;
     }
 
     public TutorialGroup getTutorialGrpSelection(ListInterface<TutorialGroup> tutGrpList) {
@@ -258,16 +296,20 @@ public class TeachingAssignmentManagementUI {
         int count = 1;
         while (true) {
             try {
-                System.out.printf("\nCourse List:");
+                 MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("Course List:");
+                MessageUI.TeachingAssignmentBtmDivider();
                 while (tutGrpIT.hasNext()) {
                     TutorialGroup tutGrp = tutGrpIT.next();
                     System.out.printf("\n%02d. %s", count++, tutGrp.getId());
                 }
-                System.out.printf("\n 0. Exit");
-                System.out.print("Enter choice: \n");
+                System.out.printf("\n 0. Exit\n");
+                 MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
                 if (selection >= 0 && selection <= tutGrpList.getNumberOfEntries()) {
                     if (selection == 0) {
+                       MessageUI.pause();
                         break;
                     } else {
                         selectedTutgrp = tutGrpList.getEntry(selection);
@@ -275,208 +317,62 @@ public class TeachingAssignmentManagementUI {
                     }
                 } else {
                     MessageUI.displayInvalidChoiceMessage();
+                    MessageUI.pause();
                     count = 1;
                 }
             } catch (Exception e) {
-                System.out.println("Please enter a valid selection in integer");
+                System.out.println("\nPlease enter a valid selection in integer");
                 scanner.nextLine();
                 count = 1;
+                MessageUI.pause();
             }
         }
         return selectedTutgrp;
     }
 
-    public ListInterface<Tutor> getQualifiedTutorList(ListInterface<Tutor> tutorList, ListInterface<String> domainList, ListInterface<TeachingAssignment> taList) {
-        Iterator tutorIT = tutorList.getIterator();
-        ListInterface<Tutor> qualifiedTutorList = new ArrayList<Tutor>();
+    public Tutor getQualifiedTutorSelection(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList, Course selectedCourse) {
 
-        while (tutorIT.hasNext()) {
-            Tutor currentTutor = (Tutor) tutorIT.next();
-            Iterator domainIT = domainList.getIterator();
-            Boolean qualifiedTutor = true;
-            if (this.getNoOfClassAssigned(taList, currentTutor) < 10) {
-                while (domainIT.hasNext()) {
-                    String domain = (String) domainIT.next();
-                    if (!currentTutor.getDomainKnowledgeList().contains(domain)) {
-                        qualifiedTutor = false;
+        int selection = -1;
+        int count = 1;
+        Tutor selectedTutor = null;
+        while (true) {
+            try {
+                Iterator<Tutor> tutorIT = tutorList.getIterator();
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("Selected Course : %s\n", selectedCourse.getCourseName());
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.printf("Tutor List      :");
+                System.out.printf("\n%-3s %-20s %s", "No", "Name", "Number of class assigned");
+                
+                while (tutorIT.hasNext()) {
+                    Tutor tutor = tutorIT.next();
+                    System.out.printf("\n%02d. %-20s %2d", count++, tutor.getName(), TeachingAssignmentManagement.getNoOfClassAssigned(taList, tutor));
+                }
+                System.out.printf("\n 0. Exit\n");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice: ");
+                selection = scanner.nextInt();
+                if (selection >= 0 && selection <= tutorList.getNumberOfEntries()) {
+                    if (selection == 0) {
+                        MessageUI.displayExit();
+                        break;
+                    } else {
+                        selectedTutor = tutorList.getEntry(selection);
                         break;
                     }
-
+                } else {
+                    count = 1;
+                    MessageUI.displayInvalidChoiceMessage();
+                    MessageUI.pause();
                 }
-            } else {
-                qualifiedTutor = false;
-            }
-
-            if (qualifiedTutor == true) {
-                qualifiedTutorList.add(currentTutor);
-            }
-
-        }
-        return qualifiedTutorList;
-
-    }
-
-    public ListInterface<TeachingAssignment> getUnAssignedTeachingList(ListInterface<TeachingAssignment> taList) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<TeachingAssignment> resultList = new ArrayList<>();
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (currentTA.getTutor().getTutorID() == null) {
-                resultList.add(currentTA);
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+                count = 1;
             }
         }
-        return resultList;
-    }
-
-    public int getNoOfClassAssigned(ListInterface<TeachingAssignment> taList, Tutor tutor) {
-        Iterator<TeachingAssignment> taListIT = taList.getIterator();
-        int numberOfClass = 0;
-
-        while (taListIT.hasNext()) {
-            TeachingAssignment ta = taListIT.next();
-            numberOfClass++;
-        }
-        return numberOfClass;
-
-    }
-
-    public ListInterface<TeachingAssignment> filterByTutor(ListInterface<TeachingAssignment> taList, Tutor tutor) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<TeachingAssignment> resultList = new ArrayList<TeachingAssignment>();
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (currentTA.getTutor().equals(tutor)) {
-                resultList.add(currentTA);
-            }
-        }
-        return resultList;
-    }
-
-    public ListInterface<TeachingAssignment> filterByProgramme(ListInterface<TeachingAssignment> taList, String programme) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<TeachingAssignment> resultList = new ArrayList<TeachingAssignment>();
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (currentTA.getTutorialGroup().getProgramme().equals(programme)) {
-                resultList.add(currentTA);
-            }
-        }
-        return resultList;
-    }
-
-    public ListInterface<TeachingAssignment> filterByTutorialGrp(ListInterface<TeachingAssignment> taList, TutorialGroup tutGrp) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<TeachingAssignment> resultList = new ArrayList<TeachingAssignment>();
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (currentTA.getTutorialGroup().equals(tutGrp)) {
-                resultList.add(currentTA);
-            }
-        }
-        return resultList;
-    }
-
-    public ListInterface<TeachingAssignment> filterByCourse(ListInterface<TeachingAssignment> taList, Course course) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<TeachingAssignment> resultList = new ArrayList<TeachingAssignment>();
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (currentTA.getCourse().equals(course)) {
-                resultList.add(currentTA);
-            }
-        }
-        return resultList;
-    }
-
-    public ListInterface<String> getUniqueProgramme(ListInterface<TeachingAssignment> taList) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<String> programmeIDList = new ArrayList<>();
-
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (!programmeIDList.contains(currentTA.getTutorialGroup().getProgramme())) {
-                programmeIDList.add(currentTA.getTutorialGroup().getProgramme());
-            }
-        }
-        return programmeIDList;
-    }
-
-    public ListInterface<Course> getUniqueCourse(ListInterface<TeachingAssignment> taList) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<Course> courseList = new ArrayList<Course>();
-
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (!courseList.contains(currentTA.getCourse())) {
-                courseList.add(currentTA.getCourse());
-            }
-        }
-        return courseList;
-    }
-
-    public ListInterface<TutorialGroup> getUniqueTutGrp(ListInterface<TeachingAssignment> taList) {
-        Iterator taIT = taList.getIterator();
-        ListInterface<TutorialGroup> tutGrpList = new ArrayList<TutorialGroup>();
-
-        while (taIT.hasNext()) {
-            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (!tutGrpList.contains(currentTA.getTutorialGroup())) {
-                tutGrpList.add(currentTA.getTutorialGroup());
-            }
-        }
-        return tutGrpList;
-    }
-
-    public ListInterface<TeachingAssignment> convertToArrayList(ListInterface<TeachingAssignment> taList) {
-        ListInterface<TeachingAssignment> presort = new ArrayList<>();
-        Iterator<TeachingAssignment> it = taList.getIterator();
-        while (it.hasNext()) {
-            TeachingAssignment ta = it.next();
-            presort.add(ta);
-        }
-        return presort;
-    }
-
-    public ListInterface<Course> sortCourseByName(ListInterface<Course> courseList) {
-        for (int i = 1; i < courseList.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= courseList.getNumberOfEntries(); j++) {
-                if (courseList.getEntry(i).getCourseName().compareTo(courseList.getEntry(j).getCourseName()) > 0) {
-                    Course temp = courseList.getEntry(i);
-                    courseList.replace(i, courseList.getEntry(j));
-                    courseList.replace(j, temp);
-                }
-            }
-        }
-        return courseList;
-
-    }
-
-    public ListInterface<Tutor> sortTutorByName(ListInterface<Tutor> tutorList) {
-        for (int i = 1; i < tutorList.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= tutorList.getNumberOfEntries(); j++) {
-                if (tutorList.getEntry(i).getName().compareTo(tutorList.getEntry(j).getName()) > 0) {
-                    Tutor temp = tutorList.getEntry(i);
-                    tutorList.replace(i, tutorList.getEntry(j));
-                    tutorList.replace(j, temp);
-                }
-            }
-        }
-        return tutorList;
-    }
-    
-    public ListInterface<TeachingAssignment> sortByProgramme (ListInterface<TeachingAssignment> taList){
-        for (int i = 1; i < taList.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= taList.getNumberOfEntries(); j++) {
-                if (taList.getEntry(i).getTutorialGroup().getProgramme().compareTo(taList.getEntry(j).getTutorialGroup().getProgramme()) > 0 || (taList.getEntry(i).getTutorialGroup().getProgramme().equals(taList.getEntry(j).getTutorialGroup().getProgramme())== true && taList.getEntry(i).getTutorialGroup().getId().compareTo(taList.getEntry(j).getTutorialGroup().getId()) > 0)) {
-                    TeachingAssignment temp = taList.getEntry(i);
-                    taList.replace(i, taList.getEntry(j));
-                    taList.replace(j, temp);
-                }
-                
-            }
-        }
-        return taList;
-    
+        return selectedTutor;
     }
 
 }
