@@ -13,6 +13,7 @@ import java.util.Iterator;
  * @author Yu
  */
 public class ProgrammeInitializer {
+
     //  Method to initialize the programme.dat with a collection of hard-coded entity values
     public void initializeProgrammes() {
         ProgrammeDAO programmeDAO = new ProgrammeDAO();
@@ -22,7 +23,26 @@ public class ProgrammeInitializer {
         ArrayList<String> courseListRDS = new ArrayList<>();
         ArrayList<String> courseListRMM = new ArrayList<>();
         ArrayList<String> courseListRSS = new ArrayList<>();
-        
+        ArrayList<String> tutGroupListRSW = new ArrayList<>();
+        ArrayList<String> tutGroupListRST = new ArrayList<>();
+        ArrayList<String> tutGroupListRDS = new ArrayList<>();
+        ArrayList<String> tutGroupListRMM = new ArrayList<>();
+
+        // Adding data to tutGroupListRSW
+        tutGroupListRSW.add("G1");
+        tutGroupListRSW.add("G2");
+        tutGroupListRSW.add("G3");
+
+        // Adding data to tutGroupListRST
+        tutGroupListRST.add("G1");
+        tutGroupListRST.add("G2");
+
+        // Adding data to tutGroupListRDS
+        tutGroupListRDS.add("G1");
+
+        // Adding data to tutGroupListRMM
+        tutGroupListRMM.add("G1");
+
         // Adding data to courseListRSW
         courseListRSW.add("AACS1234");
         courseListRSW.add("AACS2312");
@@ -98,13 +118,15 @@ public class ProgrammeInitializer {
         courseListRSS.add("BCSA1234");
         courseListRSS.add("BDAS3251");
         courseListRSS.add("BBAA3213");
-        
+
         // insert mock data here.
-        programmeList.add(new Programme("RSW", "Bachelor of Software Engineering (Honours)", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "Graduates of this programme will be able to develop, manage and maintain high-quality software in a systematic, controlled and efficient manner.", 3, 34600, 125, courseListRSW));
-        programmeList.add(new Programme("RST", "Bachelor of Computer Science (Honours) in Interactive Software Technology", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme aims to teach students the technical knowledge and skills in computer science with a further focus on the design and development of interactive software such as mobile applications, video games, simulations, virtual reality, electronic magazines, educational and training materials. ", 3, 35100, 130, courseListRST));
-        programmeList.add(new Programme("RDS", "Bachelor of Computer Science (Honours) in Data Science", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme is designed to train students in both computer science and data science, which prepares them well for data professionals or data scientist career pathway.", 3, 34300, 123, courseListRDS));
-        programmeList.add(new Programme("RMM", "Bachelor of Science (Honours) in Management Mathematics with Computing", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme is a multi-disciplinary blend with Management Mathematics as the major, Computing as the minor and Economics or Accounting Methods as the associate study.", 3, 34100, 120, courseListRMM));
-        programmeList.add(new Programme("RSS", "Bachelor of Information Technology (Honours) in Software Systems Development", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme produces and equips graduates with in-depth knowledge and skills that are essential to work as professionals in the software systems development and computer networking sectors.", 3, 34600, 124, courseListRSS));
+        programmeList.add(new Programme("RSW", "Bachelor of Software Engineering (Honours)", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "Graduates of this programme will be able to develop, manage and maintain high-quality software in a systematic, controlled and efficient manner.", 3, 34600, courseListRSW, tutGroupListRSW));
+        programmeList.add(new Programme("RST", "Bachelor of Computer Science (Honours) in Interactive Software Technology", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme aims to teach students the technical knowledge and skills in computer science with a further focus on the design and development of interactive software such as mobile applications, video games, simulations, virtual reality, electronic magazines, educational and training materials. ", 3, 35100, courseListRST, tutGroupListRST));
+        programmeList.add(new Programme("RDS", "Bachelor of Computer Science (Honours) in Data Science", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme is designed to train students in both computer science and data science, which prepares them well for data professionals or data scientist career pathway.", 3, 34300, courseListRDS, tutGroupListRDS));
+        programmeList.add(new Programme("RMM", "Bachelor of Science (Honours) in Management Mathematics with Computing", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme is a multi-disciplinary blend with Management Mathematics as the major, Computing as the minor and Economics or Accounting Methods as the associate study.", 3, 34100, courseListRMM, tutGroupListRMM));
+        programmeList.add(new Programme("RSS", "Bachelor of Information Technology (Honours) in Software Systems Development", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme produces and equips graduates with in-depth knowledge and skills that are essential to work as professionals in the software systems development and computer networking sectors.", 3, 34600, courseListRSS, null));
+        
+        programmeList.add(new Programme("RFS", "Bachelor of Science (Hons) in Food Science", "Faculty of Applied Sciences (FOAS)", "Bachelor", "This programme applies the pure science subjects, such as chemistry, biochemistry, nutrition, biology and microbiology to the study of the nature, properties and composition of foods.", 3, 30000));
         
         programmeDAO.saveToFile(programmeList);
     }
@@ -113,14 +135,13 @@ public class ProgrammeInitializer {
         // To illustrate how to use the initializeProgrammes() method
         ProgrammeDAO programmeDAO = new ProgrammeDAO();
         ProgrammeInitializer programmesInit = new ProgrammeInitializer();
-        
-        
+
         System.out.println("Initialize data to programme.dat");
         programmesInit.initializeProgrammes();
-        
+
         System.out.println("Reading data from programme.dat");
         ListInterface<Programme> programmeList = programmeDAO.retrieveFromFile();
-        
+
         System.out.println("\nRead programmes :\n" + programmeList);
 //        StackInterface<String> test = new ArrayStack<>();
 //        

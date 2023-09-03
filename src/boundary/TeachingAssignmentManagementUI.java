@@ -255,7 +255,7 @@ public class TeachingAssignmentManagementUI {
             Iterator<Course> courseIT = courseList.getIterator();
             try {
                 MessageUI.TeachingAssignmentTopDivider();
-                System.out.printf("Course List:\");
+                System.out.printf("Course List:\n");
                 MessageUI.TeachingAssignmentBtmDivider();
                 while (courseIT.hasNext()) {
                     Course course = courseIT.next();

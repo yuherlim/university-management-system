@@ -122,7 +122,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         return result;
     }
 
-    private int indexOf(T anElement) {
+    public int indexOf(T anElement) {
         for (int i = 0; i < numberOfEntries; i++) {
             if (array[i].equals(anElement)) {
                 return i; // anElement exists in the set

@@ -20,8 +20,8 @@ public class Programme implements Serializable {
     private String description;
     private int duration;
     private double totalFee;
-    private int totalCreditHour;
     private ArrayList<String> courses;
+    private ArrayList<String> tutorialGroups;
 
     public Programme() {
     }
@@ -30,7 +30,7 @@ public class Programme implements Serializable {
         this.code = code;
     }
 
-    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, int totalCreditHour) {
+    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee) {
         this.code = code;
         this.name = name;
         this.faculty = faculty;
@@ -38,11 +38,10 @@ public class Programme implements Serializable {
         this.description = description;
         this.duration = duration;
         this.totalFee = totalFee;
-        this.totalCreditHour = totalCreditHour;
     }
     
     //Used only when initializing data.
-    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, int totalCreditHour, ArrayList<String> courses) {
+    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, ArrayList<String> courses, ArrayList<String> tutorialGroups) {
         this.code = code;
         this.name = name;
         this.faculty = faculty;
@@ -50,8 +49,8 @@ public class Programme implements Serializable {
         this.description = description;
         this.duration = duration;
         this.totalFee = totalFee;
-        this.totalCreditHour = totalCreditHour;
         this.courses = courses;
+        this.tutorialGroups = tutorialGroups;
     }
 
     public String getCode() {
@@ -110,20 +109,20 @@ public class Programme implements Serializable {
         this.totalFee = totalFee;
     }
 
-    public int getTotalCreditHour() {
-        return totalCreditHour;
-    }
-
-    public void setTotalCreditHour(int totalCreditHour) {
-        this.totalCreditHour = totalCreditHour;
-    }
-
     public ArrayList<String> getCourses() {
         return courses;
     }
 
     public void setCourses(ArrayList<String> courses) {
         this.courses = courses;
+    }
+
+    public ArrayList<String> getTutorialGroups() {
+        return tutorialGroups;
+    }
+
+    public void setTutorialGroups(ArrayList<String> tutorialGroups) {
+        this.tutorialGroups = tutorialGroups;
     }
 
     @Override
@@ -150,7 +149,7 @@ public class Programme implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%-4s %-75s", code, name);
+        return String.format("%-4s %-80s %-60s %-10s %15.2f", code, name, faculty, programmeType, totalFee);
     }
 
     
