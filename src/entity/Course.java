@@ -21,9 +21,9 @@ public class Course implements Serializable{
     private double feePCH;
     private double coureseTotalFee;
     private ArrayList<String> programmes;
-
+    private String[] teachingList;
     
-    public Course(String courseCode, String courseName, ArrayList<String> requiredDomainKnowledge,int creditHR, double feePCH, ArrayList<String> programmes) {
+    public Course(String courseCode, String courseName, ArrayList<String> requiredDomainKnowledge,int creditHR, double feePCH, ArrayList<String> programmes, String[] teachingList) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.requiredDomainKnowledge = requiredDomainKnowledge;
@@ -31,6 +31,7 @@ public class Course implements Serializable{
         this.feePCH = feePCH;
         this.coureseTotalFee = creditHR * feePCH;
         this.programmes = programmes;
+        this.teachingList = teachingList;
     }
     
     public Course(String courseCode){
@@ -43,6 +44,8 @@ public class Course implements Serializable{
     public String getCourseCode() {
         return courseCode;
     }
+
+  
 
     public String getCourseName() {
         return courseName;
@@ -82,6 +85,16 @@ public class Course implements Serializable{
         this.requiredDomainKnowledge = requiredDomainKnowledge;
     }
 
+    
+
+    public String[] getTeachingList() {
+        return teachingList;
+    }
+
+    public void setTeachingList(String[] teachingList) {
+        this.teachingList = teachingList;
+    }
+
     public ArrayList<String> getProgrammes() {
         return programmes;
     }
@@ -108,8 +121,8 @@ public class Course implements Serializable{
         
         programmeList += "\b";
         
-        return "Course: " + courseCode + "\nCourse Name: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
-                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\n";
+        return "Course: " + courseCode + "\ncourseName: " + courseName + "\nDomains: "+ domains +"\nCredit Hour: " + creditHR + "\nFee Per Credit Hour: " + feePCH + 
+                "\nTotal Fee: " + coureseTotalFee + "\nTake by Programme: " + programmeList + "\nTutor assignment: " + teachingList+ "\n";
        
     }
     
