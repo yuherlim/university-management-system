@@ -18,15 +18,22 @@ import utility.MessageUI;
  */
 public class CourseManagement {
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
+    private ListInterface<Programme> progList = new CircularDoublyLinkedList<>();
+    private ProgrammeDAO progDAO = new ProgrammeDAO();
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();    
     private CourseInputValidator validator = new CourseInputValidator();
-    private String[] programmes = {"RSW", "RST", "RDS", "RMM", "RSS"};
+    private String[] programmes;
     private String[] domainKnowledges = {"Accounting","Add.Math","Biology","Chemistry","Physics"};
     Scanner scan = new Scanner(System.in);
 
     public CourseManagement() {
         courseList = courseDAO.retrieveFromFile();
+        progList = progDAO.retrieveFromFile();
+        programmes = new String[progList.getNumberOfEntries()];
+        for(int i = 0; i < programmes.length;i++){
+            programmes[i] = progList.getEntry(i+1).getCode();
+        }
     }
 
     public void addNewCourse() {
@@ -42,17 +49,15 @@ public class CourseManagement {
         creditHR = courseUI.inputCreditHour();
         feePerCH = courseUI.inputFeePerCreditHour();
         
-
-        //programme selection to be amended
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        
         ListInterface<String> inputProgList = courseUI.programmeInputList(programmes);
-           
-        String[] temp = {"temp"};
-        courseList.add(new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList, temp));       
-        courseDAO.saveToFile(courseList);
+       
+        Course course = new Course(code, name, (ArrayList<String>)inputDomains, creditHR, feePerCH, (ArrayList<String>)inputProgList);
+         //Not using annoymous object in add due to the need to display the new course added
+        courseList.add(course);      
+        courseDAO.saveToFile(courseList);      
+        System.out.println(course + "successfully added.");      
+        courseUI.addCourseInProgramme(course, progList, progDAO);
+     
     }
      
     public void removeCourse(){
@@ -60,13 +65,14 @@ public class CourseManagement {
         StackInterface<Course> undoStackCourse = new ArrayStack();
         Course course;
         int selection;
-        do{      
+        do{ 
+            System.out.println(courseList.getNumberOfEntries());
+            courseUI.displayAllCourse(courseList);
             selection = courseUI.deleteCourseMenuSelection();
             int entryAt;
             
             switch(selection){
                 case 1:
-
                     entryAt = courseUI.deleteByNo(courseList);
                     if(entryAt >= 1  && entryAt <= courseList.getNumberOfEntries()){
                         undoStackPosition.push(entryAt);
@@ -94,8 +100,6 @@ public class CourseManagement {
                         undoStackCourse.push(course);
                         courseList.remove(course);
                         MessageUI.courseDeleteMsg();
-                    }else{
-                        System.out.println("No match found");
                     }
                     break;
                 
@@ -106,7 +110,7 @@ public class CourseManagement {
                             courseList.add(undoStackPosition.pop(), undoStackCourse.pop()); 
                             MessageUI.courseUndoDeleteMsg();
                         }else{
-                            System.out.println("exiting undo");
+                            System.out.println("Exiting undo");
                         }
                     }else{
                         System.out.println("Nothing to undo");
@@ -115,10 +119,22 @@ public class CourseManagement {
                     break;
                     
                     
-                case 0:                  
-                    MessageUI.displayExit();
-                    undoStackPosition.clear();
-                    undoStackCourse.clear();
+                case 0:
+                    if (!undoStackCourse.isEmpty()) {
+                        char confirmation = courseUI.exitConfirmationForDelete();
+                        if (confirmation == 'Y') {
+                            while(!undoStackCourse.isEmpty()){
+                                courseUI.removeACourseFromAllProgramme(undoStackCourse.pop(), progList, progDAO);
+                            }
+                            undoStackPosition.clear();
+                            MessageUI.displayExit();
+                            MessageUI.savingIntoFile();
+                            courseDAO.saveToFile(courseList);
+                        }
+                        else{
+                            selection = -1;
+                        }                                             
+                    }
                     break;
                 
                     
@@ -133,15 +149,7 @@ public class CourseManagement {
             //write the update into file
     }
 
-    public void searchCourse(){
-        Course targetCourse = courseUI.searchCourseByCode(courseList);   
-        if(targetCourse!=null){
-            System.out.println(targetCourse);
-        }else{
-            System.out.println("Invalid Course Code");
-        }
-    }
-    
+  
     public void modifyCourse() {
         courseUI.displayModifyCourseMenuMsg();
         courseUI.displayAllCourse(courseList);
@@ -169,7 +177,7 @@ public class CourseManagement {
                         break;
 
                     case 5:
-                        courseList = courseUI.modifyCourseProgList(courseList, programmes, target);
+                        courseList = courseUI.modifyCourseProgList(courseList, programmes, target, progList, progDAO);
                         break;
 
                     case 0:
@@ -179,8 +187,6 @@ public class CourseManagement {
                         break;
                 }
             } while (selection != 0);
-        }else{
-            MessageUI.nonExistCourse();
         }
     }
     
@@ -219,16 +225,19 @@ public class CourseManagement {
             switch(selection){
                 case 1:
                     courseUI.report(courseList, programmes);
+                    MessageUI.pause();
                     break;
                     
                 case 2:
                     sortedList = courseUI.sortByCode(courseList);
                     courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    MessageUI.pause();
                     break;
                     
                 case 3:
                     sortedList = courseUI.sortByCreditHour(courseList);
                     courseUI.reportSortByCode((ArrayList)sortedList, programmes);
+                    MessageUI.pause();
                     break;
            
                 case 0:
@@ -249,6 +258,11 @@ public class CourseManagement {
         CourseManagementUI courseManagementUI = new CourseManagementUI();
         int selection = -1;
         do{
+//            System.out.println(courseManagement.progList.getFirst().getCourses());
+//            System.out.println(courseManagement.progList.getLast());
+//            System.out.println(courseManagement.progList.getLast().getCourses());
+         
+            
             selection = courseManagementUI.getCourseMainMenuChoice();
             switch(selection){
                 case 1:

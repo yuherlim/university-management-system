@@ -1,5 +1,7 @@
 package adt;
 
+import java.util.Iterator;
+
 /**
  * An interface for the ADT Stack.
  *
@@ -43,4 +45,6 @@ public interface StackInterface<T> {
    * Task: Removes all entries from the stack
    */
   public void clear();
+  
+  public Iterator<T> getIterator();
 } // end StackInterface
