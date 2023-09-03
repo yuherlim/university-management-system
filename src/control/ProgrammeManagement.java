@@ -584,24 +584,25 @@ public class ProgrammeManagement {
                 outputStr += "none";
             }
 
-            System.out.println(programmeToAddTutGroup.getCode() + " current tutorial groups: " + outputStr + "\n");
+            System.out.println("\n" + programmeToAddTutGroup.getCode() + " current tutorial groups: " + outputStr + "\n");
 
             confirmation = getAddTutGroupConfirmation();
 
             if (confirmation != 'Y') {
-                System.out.println("Stopped adding tutorial groups...");
+                System.out.println("\nStopped adding tutorial groups...");
                 break;
             }
 
             addTutGroupToProgramme(currentTutorialGroupList, latestGroup, programmeToAddTutGroup);
-        } while (confirmation != 'Y');
+        } while (confirmation == 'Y');
 
     }
 
     private void addTutGroupToProgramme(ArrayList<String> currentTutorialGroupList, String latestGroup, Programme programmeToAddTutGroup) {
         currentTutorialGroupList.add(latestGroup);
-        updateTutGroupFile(programmeToAddTutGroup);
-        System.out.println("");
+        programmeToAddTutGroup.setTutorialGroups(currentTutorialGroupList);
+        updateProgrammeAndTutGroupFile(programmeToAddTutGroup);
+        System.out.println("\nTutorial " + latestGroup + " addition successful.");
     }
 
     private String createTutorialGroupStr(ArrayList<String> currentTutorialGroupList) {
@@ -620,7 +621,8 @@ public class ProgrammeManagement {
         return programmeManagementUI.inputConfirmation();
     }
 
-    private void updateTutGroupFile(Programme programmeToAddTutGroup) {
+    private void updateProgrammeAndTutGroupFile(Programme programmeToAddTutGroup) {
+        programmeDAO.saveToFile(programmeList);
         TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
         ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();
         String tutGroupID = currentBatchNo + programmeToAddTutGroup.getCode() + programmeToAddTutGroup.getTutorialGroups().getLast();
