@@ -186,40 +186,6 @@ public class CourseManagementUI {
         return programmeSelection;
     }
 
-    public ListInterface<String> programmeInputList(String[] programmes) {
-        int programmeSelection;
-        ListInterface<String> result = new ArrayList<>();
-        do {
-            programmeSelection = inputProgramme(programmes, 'I');
-            boolean notDuplicated = true;
-            if (programmeSelection >= 1 && programmeSelection <= programmes.length) {
-                if (result.getNumberOfEntries() > 0) {
-                    notDuplicated = validator.checkExistInList(result, programmes[programmeSelection - 1]);
-                }
-
-            } else if (programmeSelection == 0) {
-                if (result.getNumberOfEntries() > 0) {
-                    System.out.println("Exiting programme input\n");
-                } else {
-                    System.out.println("Programme list cannot be empty.");
-                    programmeSelection = -1;
-                }
-            } else {
-                MessageUI.displayInvalidChoiceMessage();
-            }
-
-            if ((programmeSelection >= 1 && programmeSelection <= programmes.length) && notDuplicated) {
-                result.add(programmes[programmeSelection - 1]);
-                System.out.println(programmes[programmeSelection - 1] + " successfully added.");
-            } else if (!notDuplicated) {
-                System.out.println("The programme already in the list.\n");
-            }
-
-        } while (programmeSelection != 0);
-
-        return result;
-    }
-
     //modifiy
     public void displayModifyCourseMenuMsg() {
         MessageUI.courseTopDivider();
@@ -265,44 +231,8 @@ public class CourseManagementUI {
         return null;
     }
 
-    public ListInterface<Course> modifyCourseName(ListInterface<Course> courseList, Course course) {
-
-        int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
-        course.setCourseName(inputCourseName());
-        courseList.replace(targetPos, course);
-        MessageUI.courseModificationMsg();
-
-        return courseList;
-    }
-
-    public ListInterface<Course> modifyCourseCH(ListInterface<Course> courseList, Course course) {
-
-        int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
-        course.setCreditHR(inputCreditHour());
-        courseList.replace(targetPos, course);
-        MessageUI.courseModificationMsg();
-
-        return courseList;
-    }
-
-    public ListInterface<Course> modifyCourseFeePCH(ListInterface<Course> courseList, Course course) {
-
-        int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
-        course.setFeePCH(inputFeePerCreditHour());
-        courseList.replace(targetPos, course);
-        MessageUI.courseModificationMsg();
-
-        return courseList;
-    }
-
-    public ListInterface<Course> modifyCourseDomainList(ListInterface<Course> courseList, String[] domainList, Course course) {
-
-        int selection = -1;
-
-        do {
-            MessageUI.courseTopDivider();
-            System.out.println("Modifying " + course.getCourseCode() + " domain knowledge list");
-            MessageUI.courseBtmDivider();
+    public int addOrDelDLorPL(){
+            int selection;
             System.out.println("1. Add");
             System.out.println("2. Delete");
             System.out.println("0. Exit");
@@ -310,141 +240,8 @@ public class CourseManagementUI {
             System.out.println("Your choice: ");
             selection = scanner.nextInt();
             scanner.nextLine();
-            if (selection == 0) {
-                MessageUI.displayExit();
-                return courseList;
-            } else if (selection < 0 || selection > 2) {
-                MessageUI.displayInvalidChoiceMessage();
-            } else {
-                int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
-                ListInterface<String> inputDomainList = course.getRequiredDomainKnowledge();
-                int index = inputDomain() - 1; //user input will return int value to access predifined programmes list;
-                boolean notExist = true, modification = false;
-                notExist = validator.checkExistInList(inputDomainList, domainList[index]);
-                if (selection == 1) {
-                    if (notExist) {
-                        inputDomainList.add(domainList[index]);
-                        modification = true;
-                    } else {
-                        System.out.println("Existing domain");
-                    }
-
-                } else if (selection == 2) {
-                    if (!notExist) {
-                        inputDomainList.remove(domainList[index]);
-                        modification = true;
-                    } else {
-                        System.out.println("Domain not in the list");
-                    }
-                }
-                if (modification) {
-                    course.setRequiredDomainKnowledge((ArrayList<String>) inputDomainList);
-                    courseList.replace(targetPos, course);
-                    MessageUI.courseModificationMsg();
-                }
-            }
-        } while (selection != 0);
-
-        return courseList;
-    }
-
-    public ListInterface<Course> modifyCourseProgList(ListInterface<Course> courseList, String[] programmes, Course course,
-            ListInterface<Programme> progList, ProgrammeDAO progDAO) {
-
-        int selection = -1;
-
-        do {
-            MessageUI.courseTopDivider();
-            System.out.println("Modifying " + course.getCourseCode() + " programme list");
-            MessageUI.courseBtmDivider();
-            System.out.println("1. Add");
-            System.out.println("2. Delete");
-            System.out.println("0. Exit");
-            MessageUI.courseBtmDivider();
-            System.out.println("Your choice: ");
-            selection = scanner.nextInt();
-            scanner.nextLine();
-            if (selection == 0) {
-                MessageUI.displayExit();
-                return courseList;
-            } else if (selection < 0 || selection > 2) {
-                MessageUI.displayInvalidChoiceMessage();
-            } else {
-                int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
-                ListInterface<String> inputProgList = course.getProgrammes();
-
-                boolean notExist = true, modification = false;
-
-                if (selection == 1) {
-                    int index = inputProgramme(programmes, 'I') - 1; //user input will return int value to access predifined programmes list;
-                    notExist = validator.checkExistInList(inputProgList, programmes[index]);
-                    if (notExist) {
-                        inputProgList.add(programmes[index]);
-                        modification = true;
-                    } else {
-                        System.out.println("Existing programme");
-                    }
-
-                } else if (selection == 2) {
-                    int index = inputProgramme(programmes, 'D') - 1; //user input will return int value to access predifined programmes list;
-                    notExist = validator.checkExistInList(inputProgList, programmes[index]);
-                    if (!notExist) {
-                        inputProgList.remove(programmes[index]);
-                        modification = true;
-                    } else {
-                        System.out.println("Programme not in the list");
-                    }
-                }
-                if (modification) {
-                    course.setProgrammes((ArrayList<String>) inputProgList);
-                    courseList.replace(targetPos, course);
-                    modifyCourseInProgramme(course, progList, selection);
-                    MessageUI.courseModificationMsg();
-                }
-            }
-        } while (selection != 0);
-
-        return courseList;
-    }
-
-    public void modifyCourseInProgramme(Course course, ListInterface<Programme> progList, int addOrDelete) {
-        if (addOrDelete == 1) {
-            //progList = 
-            addCourseInProgramme(course, progList);
-        } else {
-            //progList = 
-            removeCourseInProgramme(course, progList);
-        }
-    }
-
-    public void addCourseInProgramme(Course course, ListInterface<Programme> progList) {
-        Iterator<Programme> it = progList.getIterator();
-        while (it.hasNext()) {
-            Programme currentProgramme = it.next();
-            String currentProgrammeCode = currentProgramme.getCode();
-            for (int i = 1; i <= course.getProgrammes().getNumberOfEntries(); i++) {
-                if (course.getProgrammes().getEntry(i).equals(currentProgrammeCode) && !currentProgramme.getCourses().contains(course.getCourseCode())) {
-                    currentProgramme.getCourses().add(course.getCourseCode());
-                    System.out.println("Course " + course.getCourseCode() + " has been added into " + currentProgrammeCode + " course list.\n");
-                }
-            }
-        }
-    }
-
-    public void removeCourseInProgramme(Course course, ListInterface<Programme> progList) {
-        Iterator<Programme> it = progList.getIterator();
-        while (it.hasNext()) {
-            Programme currentProgramme = it.next();
-            ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
-            for (int i = 1; i <= courseListInProgramme.getNumberOfEntries(); i++) {
-                if (courseListInProgramme.contains(course.getCourseCode()) && !course.getProgrammes().contains(currentProgramme.getCode())) {
-                    courseListInProgramme.remove(course.getCourseCode());
-                    currentProgramme.setCourses(courseListInProgramme);
-                    System.out.println("Course " + course.getCourseCode() + " has been removed from " + currentProgramme.getCode() + " course list due to the modification.\n");
-
-                }
-            }
-        }   
+            
+            return selection;
     }
 
     //remove
@@ -535,11 +332,13 @@ public class CourseManagementUI {
         MessageUI.courseBtmDivider();
         System.out.println("One undo deletion at a time");
         System.out.println("The latest deletion will be undo first");
-        do {
-            System.out.println("\nUndo the course deletion?(Y = yes): ");
+        try{
+            System.out.println("\nUndo the course deletion?(Y = yes, other input to exit undo): ");
             input = scanner.nextLine().charAt(0);
             input = Character.toUpperCase(input);
-        } while (input == ' ');
+        } catch(Exception e){
+            input = 'N'; //assume empty input = other input;
+        };
         return input;
     }
 
@@ -559,20 +358,6 @@ public class CourseManagementUI {
         selection = scanner.nextInt();
         scanner.nextLine();
         return selection;
-    }
-
-    public void removeACourseFromAllProgramme(Course course, ListInterface<Programme> progList, ProgrammeDAO progDAO) {
-        Iterator<Programme> it = progList.getIterator();
-        while (it.hasNext()) {
-            Programme currentProgramme = it.next();
-            ArrayList<String> courseListInProgramme = currentProgramme.getCourses();
-            if (courseListInProgramme.contains(course.getCourseCode())) {
-                courseListInProgramme.remove(course.getCourseCode());
-                currentProgramme.setCourses(courseListInProgramme);
-            }
-        }
-
-        progDAO.saveToFile(progList);
     }
 
     //view course
@@ -672,44 +457,6 @@ public class CourseManagementUI {
         }
 
         //each programme ,courses, total credit hour
-    }
-
-    public ListInterface<Course> sortByCode(ListInterface<Course> courseList) {
-        ListInterface<Course> sorted = convertToArrayList(courseList);
-        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
-                if (sorted.getEntry(i).getCourseCode().compareTo(sorted.getEntry(j).getCourseCode()) > 0) {
-                    Course temp = sorted.getEntry(i);
-                    sorted.replace(i, sorted.getEntry(j));
-                    sorted.replace(j, temp);
-                }
-            }
-        }
-        return sorted;
-    }
-
-    public ListInterface<Course> sortByCreditHour(ListInterface<Course> courseList) {
-        ListInterface<Course> sorted = convertToArrayList(courseList);
-        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
-                if (sorted.getEntry(i).getCreditHR() > sorted.getEntry(j).getCreditHR()) {
-                    Course temp = sorted.getEntry(i);
-                    sorted.replace(i, sorted.getEntry(j));
-                    sorted.replace(j, temp);
-                }
-            }
-        }
-        return sorted;
-    }
-
-    public ListInterface<Course> convertToArrayList(ListInterface<Course> courseList) {
-        ListInterface<Course> presort = new ArrayList<>();
-        Iterator<Course> it = courseList.getIterator();
-        while (it.hasNext()) {
-            Course course = it.next();
-            presort.add(course);
-        }
-        return presort;
     }
 
 }
