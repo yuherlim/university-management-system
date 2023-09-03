@@ -70,15 +70,15 @@ public class CourseInitializer {
     public static void main(String[] args) {
 
         CourseDAO courseDAO = new CourseDAO();
-//        CourseInitializer cI = new CourseInitializer();
-//        cI.initializeCourseList();
+        CourseInitializer cI = new CourseInitializer();
+        cI.initializeCourseList();
         ListInterface<Course> courseList = courseDAO.retrieveFromFile();
         
-
-        Iterator<Course> it = courseList.getIterator();
-        while(it.hasNext()) {
-            System.out.println(it.next());
-        }
+//
+//        Iterator<Course> it = courseList.getIterator();
+//        while(it.hasNext()) {
+//            System.out.println(it.next());
+//        }
         
 //        test.add("Jimmy");
 //        test.add("Timmy");

@@ -102,7 +102,7 @@ public class TeachingAssignmentManagementUI {
                                     //
 
                                     while (true) {
-                                        System.out.printf("\nContinue select Tutorial Group? (Y/N)");
+                                        System.out.printf("\nContinue select Tutorial Group? (Y/N)\n");
                                         cont = scanner.next().toUpperCase().charAt(0);
                                         if (cont == 'Y' || cont == 'N') {
                                             break;
@@ -163,12 +163,16 @@ public class TeachingAssignmentManagementUI {
                         break;
                     } else {
                         selectedProgramme = programmeList.getEntry(selection);
+                        break;
                     }
+                } else {
+                    count = 1;
+                    MessageUI.displayInvalidChoiceMessage();
                 }
-                MessageUI.displayInvalidChoiceMessage();
             } catch (Exception e) {
                 System.out.println("Please enter a valid selection in integer");
                 scanner.nextLine();
+                count = 1;
             }
         }
         return selectedProgramme;
@@ -195,12 +199,16 @@ public class TeachingAssignmentManagementUI {
                         break;
                     } else {
                         selectedCourse = courseList.getEntry(selection);
+                        break;
                     }
+                } else {
+                    count = 1;
+                    MessageUI.displayInvalidChoiceMessage();
                 }
-                MessageUI.displayInvalidChoiceMessage();
             } catch (Exception e) {
                 System.out.println("Please enter a valid selection in integer");
                 scanner.nextLine();
+                count = 1;
             }
         }
         return selectedCourse;
@@ -227,12 +235,17 @@ public class TeachingAssignmentManagementUI {
                         break;
                     } else {
                         selectedTutor = tutorList.getEntry(selection);
+                        break;
                     }
+                } else {
+                    count = 1;
+
+                    MessageUI.displayInvalidChoiceMessage();
                 }
-                MessageUI.displayInvalidChoiceMessage();
             } catch (Exception e) {
                 System.out.println("Please enter a valid selection in integer");
                 scanner.nextLine();
+                count = 1;
             }
         }
         return selectedTutor;
@@ -258,12 +271,16 @@ public class TeachingAssignmentManagementUI {
                         break;
                     } else {
                         selectedTutgrp = tutGrpList.getEntry(selection);
+                        break;
                     }
+                } else {
+                    MessageUI.displayInvalidChoiceMessage();
+                    count = 1;
                 }
-                MessageUI.displayInvalidChoiceMessage();
             } catch (Exception e) {
                 System.out.println("Please enter a valid selection in integer");
                 scanner.nextLine();
+                count = 1;
             }
         }
         return selectedTutgrp;
@@ -446,6 +463,20 @@ public class TeachingAssignmentManagementUI {
         }
         return tutorList;
     }
-
+    
+    public ListInterface<TeachingAssignment> sortByProgramme (ListInterface<TeachingAssignment> taList){
+        for (int i = 1; i < taList.getNumberOfEntries(); i++) {
+            for (int j = i + 1; j <= taList.getNumberOfEntries(); j++) {
+                if (taList.getEntry(i).getTutorialGroup().getProgramme().compareTo(taList.getEntry(j).getTutorialGroup().getProgramme()) > 0 || (taList.getEntry(i).getTutorialGroup().getProgramme().equals(taList.getEntry(j).getTutorialGroup().getProgramme())== true && taList.getEntry(i).getTutorialGroup().getId().compareTo(taList.getEntry(j).getTutorialGroup().getId()) > 0)) {
+                    TeachingAssignment temp = taList.getEntry(i);
+                    taList.replace(i, taList.getEntry(j));
+                    taList.replace(j, temp);
+                }
+                
+            }
+        }
+        return taList;
+    
+    }
 
 }

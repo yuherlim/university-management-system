@@ -131,7 +131,7 @@ public class Tutor implements Serializable {
             domainKnowledgeString.append("  "); // Add a space between elements
         }
 
-        return String.format("%-8s %-20s %-7c %-15s %-14s %-20s %-8.2f %-25s %-50s\n",
+        return String.format("%-8s %-20s %-7c %-15s %-14s %-20s %-8.2f %-25s %-50s",
                 getTutorID(), getName(), getGender(), getIc(), getPhoneNum(), getEmail(),
                 getSalary(), getEducationLevel(), domainKnowledgeString.toString());
     }
