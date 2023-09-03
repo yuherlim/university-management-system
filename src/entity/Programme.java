@@ -115,13 +115,13 @@ public class Programme implements Serializable {
         this.status = status;
     }
 
-    public ListInterface<Course> getCourseList() {
-        return courses;
-    }
+//    public ListInterface<Course> getCourseList() {
+//        return courses;
+//    }
 
-    public void setCourseList(ListInterface<Course> courseList) {
-        this.courses = courseList;
-    }
+//    public void setCourseList(ListInterface<Course> courseList) {
+//        this.courses = courseList;
+//    }
 
     @Override
     public int hashCode() {
