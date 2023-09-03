@@ -20,6 +20,7 @@ public class ProgrammeManagement {
     private ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
     private ProgrammeDAO programmeDAO = new ProgrammeDAO();
     private ProgrammeManagementUI programmeManagementUI = new ProgrammeManagementUI();
+    String currentBatchNo = "202301";
 
     public ProgrammeManagement() {
         programmeList = programmeDAO.retrieveFromFile();

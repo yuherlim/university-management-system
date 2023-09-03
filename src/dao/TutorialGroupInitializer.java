@@ -78,6 +78,22 @@ public class TutorialGroupInitializer {
         tutorialGroupList.add(new TutorialGroup("202207RDSG4", "G4", "RDS", "202207"));
         tutorialGroupList.add(new TutorialGroup("202207RDSG5", "G5", "RDS", "202207"));
         
+        //202301 batch data
+        // Software Engineering (RSW)
+        tutorialGroupList.add(new TutorialGroup("202201RSWG1", "G1", "RSW", "202301"));
+        tutorialGroupList.add(new TutorialGroup("202201RSWG2", "G2", "RSW", "202301"));
+        tutorialGroupList.add(new TutorialGroup("202201RSWG3", "G3", "RSW", "202301"));
+        
+        // Interactive Software Technology (RST)
+        tutorialGroupList.add(new TutorialGroup("202201RSTG1", "G1", "RST", "202301"));
+        tutorialGroupList.add(new TutorialGroup("202201RSTG2", "G2", "RST", "202301"));
+        
+        // Management Mathematics (RMM)
+        tutorialGroupList.add(new TutorialGroup("202201RMMG1", "G1", "RMM", "202301"));
+        
+        // Software Systems (RSS)
+        tutorialGroupList.add(new TutorialGroup("202201RSSG1", "G1", "RSS", "202301"));
+        
         tutorialGroupDAO.saveToFile(tutorialGroupList);
 //        return tutorialGroupList;
     }
