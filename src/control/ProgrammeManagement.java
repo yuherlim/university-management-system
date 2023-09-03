@@ -249,10 +249,10 @@ public class ProgrammeManagement {
         Programme programmeToRemove = searchByProgrammeCode(programmeList);
         return programmeToRemove;
     }
-    
+
     private Programme getProgrammeToAddTutGroup() {
         programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
-        System.out.println("\nEnter the programme code of the program to remove.");
+        System.out.println("\nEnter the programme code of the program to add tutorial groups.");
         Programme programmeToAddTutGroup = searchByProgrammeCode(programmeList);
         return programmeToAddTutGroup;
     }
@@ -421,7 +421,7 @@ public class ProgrammeManagement {
             System.out.println("\nThere are currently no programmes.");
             return;
         }
-        
+
         int selection;
         do {
             selection = programmeManagementUI.getAddTutorialGroupMenuChoice();
@@ -431,19 +431,17 @@ public class ProgrammeManagement {
                     break;
                 case 1:
                     Programme programmeToAddTutGroup = getProgrammeToAddTutGroup();
-                    
+
                     if (programmeToAddTutGroup == null) {
                         programmeManagementUI.nonexistentProductCodeMsg();
                         break;
                     }
-                    
+
                     performTutGroupAddition(programmeToAddTutGroup);
                     break;
             }
         } while (selection != 0);
     }
-
-    
 
     private void removeTutorialGroupFromProgramme() {
 //        if (programmeList.isEmpty()) {
@@ -570,8 +568,64 @@ public class ProgrammeManagement {
     }
 
     private void performTutGroupAddition(Programme programmeToAddTutGroup) {
-        ArrayList<String> currentTutorialGroupList = programmeToAddTutGroup.get
-        
+        ArrayList<String> currentTutorialGroupList = programmeToAddTutGroup.getTutorialGroups();
+        String outputStr = "";
+        String latestGroup = "";
+
+        char confirmation;
+        do {
+
+            if (currentTutorialGroupList != null) {
+                latestGroup = "G" + ((Integer.parseInt(currentTutorialGroupList.getLast().substring(1))) + 1);
+                outputStr = createTutorialGroupStr(currentTutorialGroupList);
+            } else {
+                currentTutorialGroupList = new ArrayList<>();
+                latestGroup = "G1";
+                outputStr += "none";
+            }
+
+            System.out.println(programmeToAddTutGroup.getCode() + " current tutorial groups: " + outputStr + "\n");
+
+            confirmation = getAddTutGroupConfirmation();
+
+            if (confirmation != 'Y') {
+                System.out.println("Stopped adding tutorial groups...");
+                break;
+            }
+
+            addTutGroupToProgramme(currentTutorialGroupList, latestGroup, programmeToAddTutGroup);
+        } while (confirmation != 'Y');
+
+    }
+
+    private void addTutGroupToProgramme(ArrayList<String> currentTutorialGroupList, String latestGroup, Programme programmeToAddTutGroup) {
+        currentTutorialGroupList.add(latestGroup);
+        updateTutGroupFile(programmeToAddTutGroup);
+        System.out.println("");
+    }
+
+    private String createTutorialGroupStr(ArrayList<String> currentTutorialGroupList) {
+        String outputStr = "";
+        for (int i = 1; i <= currentTutorialGroupList.getNumberOfEntries(); i++) {
+            outputStr += currentTutorialGroupList.getEntry(i) + ", ";
+            if (i == currentTutorialGroupList.getNumberOfEntries()) {
+                outputStr += "\b\b";
+            }
+        }
+        return outputStr;
+    }
+
+    private char getAddTutGroupConfirmation() {
+        System.out.println("Do you want to add a new tutorial group?");
+        return programmeManagementUI.inputConfirmation();
+    }
+
+    private void updateTutGroupFile(Programme programmeToAddTutGroup) {
+        TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
+        ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();
+        String tutGroupID = currentBatchNo + programmeToAddTutGroup.getCode() + programmeToAddTutGroup.getTutorialGroups().getLast();
+        tutGroupList.add(new TutorialGroup(tutGroupID, programmeToAddTutGroup.getTutorialGroups().getLast(), programmeToAddTutGroup.getCode(), currentBatchNo));
+        tutGroupDAO.saveToFile(tutGroupList);
     }
 }
 

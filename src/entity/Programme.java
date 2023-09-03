@@ -21,7 +21,7 @@ public class Programme implements Serializable {
     private int duration;
     private double totalFee;
     private ArrayList<String> courses;
-    private ArrayList<String> tutorialGroup;
+    private ArrayList<String> tutorialGroups;
 
     public Programme() {
     }
@@ -41,7 +41,7 @@ public class Programme implements Serializable {
     }
     
     //Used only when initializing data.
-    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, ArrayList<String> courses, ArrayList<String> tutorialGroup) {
+    public Programme(String code, String name, String faculty, String programmeType, String description, int duration, double totalFee, ArrayList<String> courses, ArrayList<String> tutorialGroups) {
         this.code = code;
         this.name = name;
         this.faculty = faculty;
@@ -50,7 +50,7 @@ public class Programme implements Serializable {
         this.duration = duration;
         this.totalFee = totalFee;
         this.courses = courses;
-        this.tutorialGroup = tutorialGroup;
+        this.tutorialGroups = tutorialGroups;
     }
 
     public String getCode() {
@@ -117,12 +117,12 @@ public class Programme implements Serializable {
         this.courses = courses;
     }
 
-    public ArrayList<String> getTutorialGroup() {
-        return tutorialGroup;
+    public ArrayList<String> getTutorialGroups() {
+        return tutorialGroups;
     }
 
-    public void setTutorialGroup(ArrayList<String> tutorialGroup) {
-        this.tutorialGroup = tutorialGroup;
+    public void setTutorialGroups(ArrayList<String> tutorialGroups) {
+        this.tutorialGroups = tutorialGroups;
     }
 
     @Override
