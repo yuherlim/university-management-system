@@ -329,7 +329,6 @@ public class TutorManagementUI {
         return educationLevel;
     }
 
-
     public int inputTutorDomain() {
 
         System.out.println("Input the tutor domain knowledge : ");
@@ -359,7 +358,6 @@ public class TutorManagementUI {
         } while (!valid);
         
         return tutorDomainSelection;
-
     }
     //------------------------------------------------------------
 
@@ -421,7 +419,6 @@ public class TutorManagementUI {
 
     //------------------------------------------------------------
     public int modifyTutorDomain() {
-
         boolean valid = true;
         int selection = -1;
         do {
@@ -448,7 +445,7 @@ public class TutorManagementUI {
     }
 
     public int removeDomainKnowledgeSelection(ListInterface<String> domains) {
-        
+     
         boolean valid = true;
         int selection = 0;
 
@@ -467,6 +464,7 @@ public class TutorManagementUI {
             } 
 
         } while (!valid);
+
         return selection;
     }
 
