@@ -42,15 +42,7 @@ public class TutorManagement {
             String tutorEmail = tutorUI.inputTutorEmail();
             double tutorSalary = tutorUI.inputTutorSalary();
             String educationLevel = tutorUI.inputTutorEduLevel();
-<<<<<<< HEAD
             inputDomainList(tutorDomainList);
-=======
-<<<<<<< HEAD
-            inputDomainList(tutorDomainList);
-=======
-            tutorDomainList = (ArrayList<String>) tutorUI.inputTutorDomain(tutorDomainList);
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
 
             tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, tutorSalary, educationLevel, tutorDomainList));
             tutorDAO.saveToFile(tutorList);
@@ -158,16 +150,8 @@ public class TutorManagement {
 
         do {
             Tutor targetTutor = findTutorSelection();
-<<<<<<< HEAD
             ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
 
-=======
-<<<<<<< HEAD
-            ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
-=======
-
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
             if (targetTutor != null) {
                 int selection = -1;
                 do {
@@ -187,10 +171,6 @@ public class TutorManagement {
                                 targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
                                 break;
                             case 5:
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
                                 int modifySelection = tutorUI.modifyTutorDomain();
                                 switch (modifySelection) {
                                     case 1:
@@ -205,15 +185,6 @@ public class TutorManagement {
 
                                         break;
                                 }
-<<<<<<< HEAD
-
-                                break;
-=======
-=======
-                                tutorUI.modifyTutorDomain(tutorList, targetTutor);
-                                break;
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
                         }
                     } else {
                         System.out.println("Done edit...");
@@ -224,25 +195,12 @@ public class TutorManagement {
             }
 
             System.out.print("Do you want to modify any more tutor details (Y or N) : ");
-<<<<<<< HEAD
             nextOrN = sc.nextLine().charAt(0);
             tutorDAO.saveToFile(tutorList);
 
         } while (nextOrN == 'N');
 
-=======
-
-<<<<<<< HEAD
             tutorDAO.saveToFile(tutorList);
-
-        } while (nextOrN == 'N');
-=======
-        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
-
-        tutorDAO.saveToFile(tutorList);
-
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
     }
 
     public void displayTutor() {
@@ -314,27 +272,13 @@ public class TutorManagement {
 
     public void generateTutorReport() {
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
         char nextOrN = 'E';
-
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
         do {
             ListInterface<Tutor> sorted;
             sorted = convertToArrayList(tutorList);
             int selection = tutorUI.tutorReportMenu();
             switch (selection) {
                 case 1:
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
                     for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
                         int j = i;
                         while (j > 0 && sorted.getEntry(j).getName().compareTo(sorted.getEntry(j + 1).getName()) > 0) {
@@ -342,29 +286,11 @@ public class TutorManagement {
                             sorted.replace(j, sorted.getEntry(j + 1));
                             sorted.replace(j + 1, temp);
                             j--;
-<<<<<<< HEAD
-=======
-=======
-                    sorted = convertToArrayList(tutorList);
-
-                    for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-                        for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
-                            if (sorted.getEntry(i).getName().compareTo(sorted.getEntry(j).getName()) > 0) {
-                                Tutor temp = sorted.getEntry(i);
-                                sorted.replace(i, sorted.getEntry(j));
-                                sorted.replace(j, temp);
-                            }
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
                         }
                     }
                     break;
 
                 case 2:
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
                     for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
                         int j = i;
                         while (j > 0 && sorted.getEntry(j).getSalary() > (sorted.getEntry(j + 1).getSalary())) {
@@ -372,29 +298,11 @@ public class TutorManagement {
                             sorted.replace(j, sorted.getEntry(j + 1));
                             sorted.replace(j + 1, temp);
                             j--;
-<<<<<<< HEAD
-
-=======
-=======
-                    sorted = convertToArrayList(tutorList);
-                    for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-                        for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
-                            if (sorted.getEntry(i).getSalary() > sorted.getEntry(j).getSalary()) {
-                                Tutor temp = sorted.getEntry(i);
-                                sorted.replace(i, sorted.getEntry(j));
-                                sorted.replace(j, temp);
-                            }
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
                         }
                     }
                     break;
 
             }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
             tutorUI.displayAllTutors(sorted);
 
             if (selection == 0) {
@@ -404,15 +312,7 @@ public class TutorManagement {
             nextOrN = tutorUI.nextOrExit();
 
         } while (nextOrN == 'N');
-<<<<<<< HEAD
-=======
-=======
-            System.out.print("Do you want to generate more report (Y or N) : ");
 
-        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
->>>>>>> 94e6b516edf21037a3195489364b00da7811b9bb
-
->>>>>>> 77e5c998124dd8e4871cf9252c276d1dd72a1e36
     }
 
     public Tutor findTutorSelection() {
