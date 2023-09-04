@@ -614,13 +614,46 @@ public class CourseManagement {
                 }
             }
         }
+//        ListInterface<Course> sorted = convertToArrayList(courseList);
+//
+//        if (selection == 2) {
+//            for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
+//                int j = i;
+//                String currentCourseCode = sorted.getEntry(j).getCourseCode();
+//                String nextCourseCode = sorted.getEntry(j + 1).getCourseCode();
+//                while (j > 0 && (currentCourseCode.compareTo(nextCourseCode) > 0)) {
+//                    //if current course code is greater than next course code, swap their position
+//                    swap(sorted, j);
+//                    j--;
+//                }
+//            }
+//        } else {
+//            for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
+//                int j = i;
+//                int currentCourseCH = sorted.getEntry(j).getCreditHR();
+//                int nextCourseCH = sorted.getEntry(j + 1).getCreditHR();
+//                while (j > 0 && (currentCourseCH > nextCourseCH)) {
+//                    //if current course code is greater than next course code, swap their position
+//                    swap(sorted, j);
+//                    j--;
+//                }
+//            }
+//        }
         return sorted;
     }
-
-    private void swap(ListInterface<Course> sorted, int i, int j) {
+    
+    public void insertionSort(ListInterface<Course> sortedList){
+       
+    }
+    private void swap(ListInterface<Course> sorted,int i,int j){
+    //private void swap(ListInterface<Course> sorted,int j) {
         Course temp = sorted.getEntry(i);
         sorted.replace(i, sorted.getEntry(j));
         sorted.replace(j, temp);
+//        Course temp = sorted.getEntry(j);
+//        sorted.replace(j, sorted.getEntry(j + 1));
+//        sorted.replace(j + 1, temp);
+   
     }
 
     private ListInterface<Course> convertToArrayList(ListInterface<Course> courseList) {
