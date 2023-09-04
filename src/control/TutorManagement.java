@@ -30,7 +30,6 @@ public class TutorManagement {
 
     public void addNewTutor() {
 
-        char nextOrN = 'E';
         do {
             int id = tutorList.getNumberOfEntries();
             ArrayList<String> tutorDomainList = new ArrayList<>();
@@ -48,9 +47,9 @@ public class TutorManagement {
             tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, tutorSalary, educationLevel, tutorDomainList));
             tutorDAO.saveToFile(tutorList);
 
-            nextOrN = tutorUI.nextOrExit();
+            System.out.print("Do you want to add more tutor (Y or N) : ");
 
-        } while (nextOrN == 'N');
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
 
     }
 
@@ -60,70 +59,75 @@ public class TutorManagement {
         StackInterface<Tutor> deleteTutorStack = new ArrayStack<>();
         ListInterface<TeachingAssignment> teachingAssignmentList = taDAO.retrieveFromFile();
 
-        boolean valid = true;
-        int selection;
         do {
-            selection = tutorUI.removeTutorMenu();
-            switch (selection) {
-                case 1:
-                    Tutor targetTutor = findTutorSelection();
+            boolean valid = true;
+            int selection;
+            do {
+                selection = tutorUI.removeTutorMenu();
+                switch (selection) {
+                    case 1:
+                        Tutor targetTutor = findTutorSelection();
 
-                    char confirmation = tutorUI.removeTutorConfirmation(targetTutor);
-                    if (confirmation == 'Y') {
+                        char confirmation = tutorUI.removeTutorConfirmation(targetTutor);
+                        if (confirmation == 'Y') {
 
-                        Iterator<TeachingAssignment> it = teachingAssignmentList.getIterator();
+                            Iterator<TeachingAssignment> it = teachingAssignmentList.getIterator();
 
-                        while (it.hasNext()) {
-                            TeachingAssignment teachingAssignment = it.next();
+                            while (it.hasNext()) {
+                                TeachingAssignment teachingAssignment = it.next();
 
-                            if (teachingAssignment.getTutor().equals(targetTutor)) { //check if the tutor exist in the list
-                                System.out.println("The tutor still enrolled in teaching...");
-                                System.out.println("Make sure the tutor is not teaching any class before you remove it");
-                                valid = false;
-                                break;
+                                if (teachingAssignment.getTutor().equals(targetTutor)) { //check if the tutor exist in the list
+                                    System.out.println("The tutor still enrolled in teaching...");
+                                    System.out.println("Make sure the tutor is not teaching any class before you remove it");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+
+                            if (valid) {
+                                int tutorIndex = ((CircularDoublyLinkedList) tutorList).locatePosition(targetTutor);
+                                indexStack.push(tutorIndex);
+                                deleteTutorStack.push(targetTutor);
+                                tutorList.remove(targetTutor);
+
+                                System.out.println("Deleted : " + targetTutor.getTutorID());
                             }
                         }
 
-                        if (valid) {
-                            int tutorIndex = ((CircularDoublyLinkedList) tutorList).locatePosition(targetTutor);
-                            indexStack.push(tutorIndex);
-                            deleteTutorStack.push(targetTutor);
-                            tutorList.remove(targetTutor);
+                        break;
+                    case 2:
+                        if (!deleteTutorStack.isEmpty()) {
 
-                            System.out.println("Deleted : " + targetTutor.getTutorID());
-                        }
-                    }
-                    break;
-                case 2:
-                    if (!deleteTutorStack.isEmpty()) {
+                            System.out.println(deleteTutorStack.peek());
 
-                        System.out.println(deleteTutorStack.peek());
+                            char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
+                            if (undoConfirmation == 'Y') {
+                                Tutor undoTutor = deleteTutorStack.pop();
+                                int undoIndex = indexStack.pop();
+                                tutorList.add(undoIndex, undoTutor);
+                            } else {
+                                System.out.println("Exit undo function...");
+                            }
 
-                        char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
-                        if (undoConfirmation == 'Y') {
-                            Tutor undoTutor = deleteTutorStack.pop();
-                            int undoIndex = indexStack.pop();
-                            tutorList.add(undoIndex, undoTutor);
                         } else {
-                            System.out.println("Exit undo function...");
+                            System.out.println("There is nothing can undo...");
                         }
+                        break;
 
-                    } else {
-                        System.out.println("There is nothing can undo...");
-                    }
-                    break;
+                    case 0:
+                        System.out.println("Exit remove tutor function...");
+                        tutorDAO.saveToFile(tutorList);
+                        break;
+                }
+            } while (selection != 0);
 
-                case 0:
-                    System.out.println("Exit remove tutor function...");
-                    tutorDAO.saveToFile(tutorList);
-                    break;
-            }
-        } while (selection != 0);
+            System.out.print("Do you still want to remove any tutor? (Y/N): ");
+
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
     }
 
     public void findTutor() {
 
-        char nextOrN = 'E';
         do {
             Tutor targetTutor = findTutorSelection();
 
@@ -133,20 +137,21 @@ public class TutorManagement {
                 System.out.println("This tutor is not existing in the list...");
             }
 
-            nextOrN = tutorUI.nextOrExit();
+            System.out.print("Do you want to find any more tutor details (Y or N) : ");
 
-        } while (nextOrN == 'N');
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
 
     }
 
     public void modifyTutor() {
 
-        char nextOrN = 'E';
         tutorUI.displayAllTutors(tutorList);
+        char nextOrN = 'N';
 
         do {
             Tutor targetTutor = findTutorSelection();
             ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
+
             if (targetTutor != null) {
                 int selection = -1;
                 do {
@@ -180,6 +185,8 @@ public class TutorManagement {
 
                                         break;
                                 }
+
+                                break;
                         }
                     } else {
                         System.out.println("Done edit...");
@@ -189,12 +196,12 @@ public class TutorManagement {
                 System.out.println("This tutor is not existing in the list...");
             }
 
-            System.out.println("Next or exit (N: Next, E: Exit) ： ");
-            nextOrN = sc.nextLine().toUpperCase().charAt(0);
-
+            System.out.print("Do you want to modify any more tutor details (Y or N) : ");
+            nextOrN = sc.nextLine().charAt(0);
             tutorDAO.saveToFile(tutorList);
 
         } while (nextOrN == 'N');
+
     }
 
     public void displayTutor() {
@@ -205,7 +212,6 @@ public class TutorManagement {
 
     public void filterTutor() {
 
-        char nextOrN = 'E';
         Tutor target;
         Iterator<Tutor> it;
         String domain = null;
@@ -260,20 +266,19 @@ public class TutorManagement {
                     }
                     break;
             }
-            nextOrN = tutorUI.nextOrExit();
+            System.out.print("Do you want to filter more tutor details (Y or N) : ");
 
-        } while (nextOrN == 'N');
+        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
     }
 
     public void generateTutorReport() {
 
         char nextOrN = 'E';
-        int selection;
 
         do {
-            ListInterface<Tutor> sorted = tutorDAO.retrieveFromFile();
-            convertToArrayList(sorted);
-            selection = tutorUI.tutorReportMenu();
+            ListInterface<Tutor> sorted;
+            sorted = convertToArrayList(tutorList);
+            int selection = tutorUI.tutorReportMenu();
             switch (selection) {
                 case 1:
                     for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
@@ -286,6 +291,7 @@ public class TutorManagement {
                         }
                     }
                     break;
+
                 case 2:
                     for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
                         int j = i;
@@ -294,9 +300,11 @@ public class TutorManagement {
                             sorted.replace(j, sorted.getEntry(j + 1));
                             sorted.replace(j + 1, temp);
                             j--;
+
                         }
                     }
                     break;
+
             }
             tutorUI.displayAllTutors(sorted);
 
@@ -307,7 +315,6 @@ public class TutorManagement {
             nextOrN = tutorUI.nextOrExit();
 
         } while (nextOrN == 'N');
-
     }
 
     public Tutor findTutorSelection() {
@@ -348,13 +355,14 @@ public class TutorManagement {
         return null;
     }
 
-    public void convertToArrayList(ListInterface<Tutor> tutorList) {
+    public ListInterface<Tutor> convertToArrayList(ListInterface<Tutor> tutorList) {
         ListInterface<Tutor> arrayList = new ArrayList<>();
         Iterator<Tutor> it = tutorList.getIterator();
         while (it.hasNext()) {
             Tutor tutor = it.next();
             arrayList.add(tutor);
-        };
+        }
+        return arrayList;
     }
 
     public void inputDomainList(ListInterface<String> domains) {

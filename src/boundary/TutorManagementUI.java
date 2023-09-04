@@ -19,6 +19,7 @@ public class TutorManagementUI {
 
     Scanner sc = new Scanner(System.in);
     private TutorInputValidator validator = new TutorInputValidator();
+    MessageUI messageUI = new MessageUI();
 
     String tutorName;
     char tutorGender;
@@ -41,8 +42,6 @@ public class TutorManagementUI {
 
         System.out.print("Your selection : ");
         int selection = sc.nextInt();
-
-        sc.nextLine();
         return selection;
 
     }
@@ -330,6 +329,7 @@ public class TutorManagementUI {
         return educationLevel;
     }
 
+
     public int inputTutorDomain() {
 
         System.out.println("Input the tutor domain knowledge : ");
@@ -351,7 +351,6 @@ public class TutorManagementUI {
                 System.out.println("Invalid input. Please enter a valid number.");
                 valid = false;
             }
-
             if (tutorDomainSelection < 1 || tutorDomainSelection > 5) {
                 System.out.println("Invalid. Please select a number between 1 to 5...");
                 valid = false;
@@ -360,6 +359,7 @@ public class TutorManagementUI {
         } while (!valid);
         
         return tutorDomainSelection;
+
     }
     //------------------------------------------------------------
 
@@ -395,6 +395,9 @@ public class TutorManagementUI {
             System.out.print("Please enter the tutor name you want to search: ");
             targetTutorName = sc.nextLine();
             valid = validator.checkTutorName(targetTutorName);
+            if (!valid) {
+                System.out.println("Invalid Name. Please enter again...");
+            }
         } while (!valid);
 
         return targetTutorName;
@@ -408,6 +411,9 @@ public class TutorManagementUI {
             System.out.print("Please enter the tutor email you want to search: ");
             targetTutorEmail = sc.nextLine();
             valid = validator.checkTutorEmail(targetTutorEmail);
+            if (!valid) {
+                System.out.println("Invalid Email. Please enter again...");
+            }
         } while (!valid);
 
         return targetTutorEmail;
@@ -442,7 +448,7 @@ public class TutorManagementUI {
     }
 
     public int removeDomainKnowledgeSelection(ListInterface<String> domains) {
-
+        
         boolean valid = true;
         int selection = 0;
 
@@ -461,7 +467,6 @@ public class TutorManagementUI {
             } 
 
         } while (!valid);
-
         return selection;
     }
 
@@ -476,7 +481,6 @@ public class TutorManagementUI {
 
     public char undoRemoveTutorConfirmation() {
 
-        sc.nextLine();
         System.out.print("Are you sure want to undo the deletion? ");
         return sc.nextLine().toUpperCase().charAt(0);
     }
@@ -541,10 +545,12 @@ public class TutorManagementUI {
     }
 
     //------------------------------------------------------------  
+
     public char nextOrExit() {
 
         sc.nextLine();
         System.out.println("Next or exit (N: Next, E: Exit) ： ");
         return sc.nextLine().toUpperCase().charAt(0);
     }
+
 }
