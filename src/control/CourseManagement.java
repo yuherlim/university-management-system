@@ -419,8 +419,7 @@ public class CourseManagement {
     
     private void modifyCourseDomainListSuppFunc(int selection, Course course, String[] domainList){
                 System.out.println("\nCurrent domain knowledge required for the course: ");
-                System.out.println(course.getRequiredDomainKnowledge());
-                int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
+                System.out.println(course.getRequiredDomainKnowledge());             
                 ListInterface<String> inputDomainList = course.getRequiredDomainKnowledge();
                 int index = courseUI.inputDomain() - 1; //user input will return int value to access predifined domain list;
                 boolean notExist = true, modification = false;
@@ -450,7 +449,6 @@ public class CourseManagement {
                 }
                 if (modification) {
                     course.setRequiredDomainKnowledge((ArrayList<String>) inputDomainList);
-                    courseList.replace(targetPos, course);
                     MessageUI.courseModificationMsg();
                 }
     }
@@ -487,8 +485,7 @@ public class CourseManagement {
 
     }
 
-    private void modifyCourseProgListSuppFunc(int selection, Course course) {
-        int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
+    private void modifyCourseProgListSuppFunc(int selection, Course course) {    
         ListInterface<String> inputProgList = course.getProgrammes();
         boolean notExist = true, modification = false;
         System.out.println("\nCurrent programme list: ");
@@ -529,8 +526,7 @@ public class CourseManagement {
 
         }
         if (modification) {
-            course.setProgrammes((ArrayList<String>) inputProgList);
-            courseList.replace(targetPos, course);
+            course.setProgrammes((ArrayList<String>) inputProgList);           
             modifyCourseInProgramme(course, progList, selection);
             MessageUI.courseModificationMsg();
         }
