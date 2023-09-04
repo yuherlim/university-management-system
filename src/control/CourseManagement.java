@@ -642,9 +642,6 @@ public class CourseManagement {
         return sorted;
     }
     
-    public void insertionSort(ListInterface<Course> sortedList){
-       
-    }
     private void swap(ListInterface<Course> sorted,int i,int j){
     //private void swap(ListInterface<Course> sorted,int j) {
         Course temp = sorted.getEntry(i);
