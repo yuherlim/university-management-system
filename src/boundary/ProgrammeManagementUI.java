@@ -43,6 +43,11 @@ public class ProgrammeManagementUI {
         System.out.println("\nList of Programmes:");
         System.out.printf("%-4s %-80s %-60s %-10s %-15s\n" + outputStr, "Code", "Name", "Faculty", "Type", "Total fees (RM)");
     }
+    
+    public void listTutGroupsForProgrammes(String outputStr) {
+        System.out.println("\nList of Programmes with their current tutorial groups:");
+        System.out.printf("%-4s %-35s\n" + outputStr, "Code", "Tutorial Groups");
+    }
 
     public void printProgrammeDetails(Programme programme) {
         System.out.println("\nProgramme Details:");

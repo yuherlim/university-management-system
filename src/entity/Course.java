@@ -95,7 +95,7 @@ public class Course implements Serializable{
     @Override
     public String toString() {
         String domains = "";
-        for(int i=1;i<requiredDomainKnowledge.getNumberOfEntries();i++){
+        for(int i=1;i<=requiredDomainKnowledge.getNumberOfEntries();i++){
             domains += requiredDomainKnowledge.getEntry(i) + ",";
         }
         
