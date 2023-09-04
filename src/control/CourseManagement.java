@@ -600,27 +600,58 @@ public class CourseManagement {
     }
 
     private ListInterface<Course> sortByCodeOrCH(ListInterface<Course> courseList, int selection) {
+//        ListInterface<Course> sorted = convertToArrayList(courseList);
+//        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
+//            for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
+//                if (selection == 2) {
+//                    if (sorted.getEntry(i).getCourseCode().compareTo(sorted.getEntry(j).getCourseCode()) > 0) {
+//                        swap(sorted, i, j);
+//                    }
+//                } else {
+//                    if (sorted.getEntry(i).getCreditHR() > sorted.getEntry(j).getCreditHR()) {
+//                        swap(sorted, i, j);
+//                    }
+//                }
+//            }
+//        }
         ListInterface<Course> sorted = convertToArrayList(courseList);
-        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= sorted.getNumberOfEntries(); j++) {
-                if (selection == 2) {
-                    if (sorted.getEntry(i).getCourseCode().compareTo(sorted.getEntry(j).getCourseCode()) > 0) {
-                        swap(sorted, i, j);
-                    }
-                } else {
-                    if (sorted.getEntry(i).getCreditHR() > sorted.getEntry(j).getCreditHR()) {
-                        swap(sorted, i, j);
-                    }
+
+        if (selection == 2) {
+            for (int i = 1; i <= sorted.getNumberOfEntries(); i++) {
+                int j = i;
+                String currentCourseCode = sorted.getEntry(j).getCourseCode();    
+                
+                while (j > 1 && currentCourseCode.compareTo(sorted.getEntry(j-1).getCourseCode()) < 0) {
+                    //if current course code is smaller than previous course code, swap their position
+                    swap(sorted, j);
+                    j--;
+                }
+            }
+        } else {
+            for (int i = 1; i <= sorted.getNumberOfEntries(); i++) {
+                int j = i;
+                int currentCourseCH = sorted.getEntry(j).getCreditHR();
+                
+                while (j > 1 && currentCourseCH < sorted.getEntry(j-1).getCreditHR()) {
+                    //if current course credit hour is lower than previous course code, swap their position
+                    swap(sorted, j);
+                    j--;
                 }
             }
         }
+
         return sorted;
     }
-
-    private void swap(ListInterface<Course> sorted, int i, int j) {
-        Course temp = sorted.getEntry(i);
-        sorted.replace(i, sorted.getEntry(j));
-        sorted.replace(j, temp);
+    
+//    private void swap(ListInterface<Course> sorted,int i,int j){
+//        Course temp = sorted.getEntry(i);
+//        sorted.replace(i, sorted.getEntry(j));
+//        sorted.replace(j, temp);
+    private void swap(ListInterface<Course> sorted,int j) {
+        Course temp = sorted.getEntry(j);
+        sorted.replace(j, sorted.getEntry(j - 1));
+        sorted.replace(j-1, temp);
+   
     }
 
     private ListInterface<Course> convertToArrayList(ListInterface<Course> courseList) {
