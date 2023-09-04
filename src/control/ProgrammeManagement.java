@@ -251,7 +251,7 @@ public class ProgrammeManagement {
     }
 
     private Programme getProgrammeToAddTutGroup() {
-        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupsForProgrammes(programmeList));
+        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         System.out.println("\nEnter the programme code of the program to add tutorial groups.");
         Programme programmeToAddTutGroup = searchByProgrammeCode(programmeList);
         return programmeToAddTutGroup;
@@ -452,37 +452,11 @@ public class ProgrammeManagement {
     }
 
     private void displayTutorialGroupForProgramme() {
-        if (programmeList.isEmpty()) {
-            System.out.println("\nThere are currently no programmes.");
-            return;
-        }
-        
-        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupsForProgrammes(programmeList));
-    }
-    
-    private String getAllTutGroupsForProgrammes(ListInterface<Programme> programmeList) {
-        String outputStr = "";
-        String groupStr = "";
-        ArrayList<String> currentProgrammeTutGroupList;
-        Iterator<Programme> it = programmeList.getIterator();
-        while (it.hasNext()) {
-            Programme currentProgramme = it.next();
-            outputStr += String.format("%-4s ", currentProgramme.getCode());
-            currentProgrammeTutGroupList = currentProgramme.getTutorialGroups();
-            groupStr = "";
-            if (currentProgrammeTutGroupList != null) {
-                for (int i = 1; i <= currentProgrammeTutGroupList.getNumberOfEntries(); i++) {
-                    groupStr += currentProgrammeTutGroupList.getEntry(i) + ", ";
-                    if (i == currentProgrammeTutGroupList.getNumberOfEntries()) {
-                        groupStr += "\b\b";
-                    }
-                }
-            } else {
-                groupStr += "none";
-            }
-            outputStr += String.format("%-35s\n", groupStr);
-        }
-        return outputStr;
+//        if (programmeList.isEmpty()) {
+//            System.out.println("\nThere are currently no programmes.");
+//            return;
+//        }
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void generateReports() {
