@@ -30,6 +30,7 @@ public class TutorManagement {
 
     public void addNewTutor() {
 
+        char nextOrExit = 'E';
         do {
             int id = tutorList.getNumberOfEntries();
             ArrayList<String> tutorDomainList = new ArrayList<>();
@@ -42,14 +43,14 @@ public class TutorManagement {
             String tutorEmail = tutorUI.inputTutorEmail();
             double tutorSalary = tutorUI.inputTutorSalary();
             String educationLevel = tutorUI.inputTutorEduLevel();
-            inputDomainList(tutorDomainList);
+            tutorDomainList = (ArrayList<String>) inputDomainList(tutorDomainList);
 
             tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, tutorSalary, educationLevel, tutorDomainList));
             tutorDAO.saveToFile(tutorList);
 
-            System.out.print("Do you want to add more tutor (Y or N) : ");
+            nextOrExit = tutorUI.nextOrExit2();
 
-        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+        } while (nextOrExit == 'N');
 
     }
 
@@ -59,15 +60,15 @@ public class TutorManagement {
         StackInterface<Tutor> deleteTutorStack = new ArrayStack<>();
         ListInterface<TeachingAssignment> teachingAssignmentList = taDAO.retrieveFromFile();
 
+        boolean valid = true;
+        int selection;
         do {
-            boolean valid = true;
-            int selection;
-            do {
-                selection = tutorUI.removeTutorMenu();
-                switch (selection) {
-                    case 1:
-                        Tutor targetTutor = findTutorSelection();
+            selection = tutorUI.removeTutorMenu();
+            switch (selection) {
+                case 1:
 
+                    Tutor targetTutor = findTutorSelection();
+                    if (targetTutor != null) {
                         char confirmation = tutorUI.removeTutorConfirmation(targetTutor);
                         if (confirmation == 'Y') {
 
@@ -93,41 +94,42 @@ public class TutorManagement {
                                 System.out.println("Deleted : " + targetTutor.getTutorID());
                             }
                         }
+                    } else {
+                        System.out.println("This tutor is not existing in the list...");
+                    }
 
-                        break;
-                    case 2:
-                        if (!deleteTutorStack.isEmpty()) {
+                    break;
 
-                            System.out.println(deleteTutorStack.peek());
+                case 2:
+                    if (!deleteTutorStack.isEmpty()) {
 
-                            char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
-                            if (undoConfirmation == 'Y') {
-                                Tutor undoTutor = deleteTutorStack.pop();
-                                int undoIndex = indexStack.pop();
-                                tutorList.add(undoIndex, undoTutor);
-                            } else {
-                                System.out.println("Exit undo function...");
-                            }
+                        System.out.println(deleteTutorStack.peek());
 
+                        char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
+                        if (undoConfirmation == 'Y') {
+                            Tutor undoTutor = deleteTutorStack.pop();
+                            int undoIndex = indexStack.pop();
+                            tutorList.add(undoIndex, undoTutor);
                         } else {
-                            System.out.println("There is nothing can undo...");
+                            System.out.println("Exit undo function...");
                         }
-                        break;
 
-                    case 0:
-                        System.out.println("Exit remove tutor function...");
-                        tutorDAO.saveToFile(tutorList);
-                        break;
-                }
-            } while (selection != 0);
+                    } else {
+                        System.out.println("There is nothing can undo...");
+                    }
+                    break;
 
-            System.out.print("Do you still want to remove any tutor? (Y/N): ");
-
-        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+                case 0:
+                    System.out.println("Exit remove tutor function...");
+                    tutorDAO.saveToFile(tutorList);
+                    break;
+            }
+        } while (selection != 0);
     }
 
     public void findTutor() {
 
+        char nextOrExit = 'E';
         do {
             Tutor targetTutor = findTutorSelection();
 
@@ -137,75 +139,65 @@ public class TutorManagement {
                 System.out.println("This tutor is not existing in the list...");
             }
 
-            System.out.print("Do you want to find any more tutor details (Y or N) : ");
+            nextOrExit = tutorUI.nextOrExit2();
 
-        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+        } while (nextOrExit == 'N');
 
     }
 
     public void modifyTutor() {
 
-        tutorUI.displayAllTutors(tutorList);
-        char nextOrN = 'N';
+        Tutor targetTutor = findTutorSelection();
 
-        do {
-            Tutor targetTutor = findTutorSelection();
+        if (targetTutor != null) {
             ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
+            int selection = -1;
+            do {
+                selection = tutorUI.modifyTutorSelection(targetTutor);
+                if (selection != 0) {
+                    switch (selection) {
+                        case 1:
+                            targetTutor.setName(tutorUI.inputTutorName());
+                            break;
+                        case 2:
+                            targetTutor.setPhoneNum(tutorUI.inputTutorPhoneNum());
+                            break;
+                        case 3:
+                            targetTutor.setEmail(tutorUI.inputTutorEmail());
+                            break;
+                        case 4:
+                            targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
+                            break;
+                        case 5:
+                            int modifySelection = tutorUI.modifyTutorDomain();
+                            switch (modifySelection) {
+                                case 1:
+                                    targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
+                                    break;
+                                case 2:
+                                    targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
+                                    break;
+                                default:
+                                    System.out.println("Tutor domain knowledged updated...");
 
-            if (targetTutor != null) {
-                int selection = -1;
-                do {
-                    selection = tutorUI.modifyTutorSelection(targetTutor);
-                    if (selection != 0) {
-                        switch (selection) {
-                            case 1:
-                                targetTutor.setName(tutorUI.inputTutorName());
-                                break;
-                            case 2:
-                                targetTutor.setPhoneNum(tutorUI.inputTutorPhoneNum());
-                                break;
-                            case 3:
-                                targetTutor.setEmail(tutorUI.inputTutorEmail());
-                                break;
-                            case 4:
-                                targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
-                                break;
-                            case 5:
-                                int modifySelection = tutorUI.modifyTutorDomain();
-                                switch (modifySelection) {
-                                    case 1:
-                                        inputDomainList(domains);
-                                        break;
-                                    case 2:
-                                        removeDomainKnowledge(domains);
-                                        break;
-                                    default:
-                                        System.out.println("Tutor domain knowledged updated...");
-                                        targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
-
-                                        break;
-                                }
-                        }
-                    } else {
-                        System.out.println("Done edit...");
+                                    break;
+                            }
                     }
-                } while (selection != 0);
-            } else {
-                System.out.println("This tutor is not existing in the list...");
-            }
+                } else {
+                    System.out.println("Done edit...");
+                }
+            } while (selection != 0);
 
-            System.out.print("Do you want to modify any more tutor details (Y or N) : ");
-            nextOrN = sc.nextLine().charAt(0);
-            tutorDAO.saveToFile(tutorList);
-
-        } while (nextOrN == 'N');
-
-            tutorDAO.saveToFile(tutorList);
+        } else {
+            System.out.println("This tutor is not existing in the list...");
+        }
+        tutorDAO.saveToFile(tutorList);
     }
 
     public void displayTutor() {
 
         tutorUI.displayAllTutors(tutorList);
+        System.out.println();
         MessageUI.pause();
     }
 
@@ -215,9 +207,10 @@ public class TutorManagement {
         Iterator<Tutor> it;
         String domain = null;
 
-        do {
-            int selection = tutorUI.filterTutorMenu();
+        int selection = 0;
 
+        do {
+            selection = tutorUI.filterTutorMenu();
             switch (selection) {
 
                 case 1:
@@ -231,8 +224,9 @@ public class TutorManagement {
                             System.out.println(target);
                         }
                     }
+                    System.out.println();
+                    MessageUI.pause();
                     break;
-
                 case 2:
                     String filterEducationLevel = tutorUI.inputTutorEduLevel();
                     target = null;
@@ -244,6 +238,8 @@ public class TutorManagement {
                             System.out.println(target);
                         }
                     }
+                    System.out.println();
+                    MessageUI.pause();
                     break;
                 case 3:
                     String filterDomain = tutorUI.inputOneDomain();
@@ -263,20 +259,20 @@ public class TutorManagement {
                             }
                         }
                     }
+                    System.out.println();
+                    MessageUI.pause();
                     break;
             }
-            System.out.print("Do you want to filter more tutor details (Y or N) : ");
-
-        } while (sc.nextLine().toUpperCase().charAt(0) == 'Y');
+        } while (selection != 0);
     }
 
     public void generateTutorReport() {
 
-        char nextOrN = 'E';
+        int selection;
         do {
             ListInterface<Tutor> sorted;
             sorted = convertToArrayList(tutorList);
-            int selection = tutorUI.tutorReportMenu();
+            selection = tutorUI.tutorReportMenu();
             switch (selection) {
                 case 1:
                     for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
@@ -288,6 +284,9 @@ public class TutorManagement {
                             j--;
                         }
                     }
+                    tutorUI.displayAllTutors(sorted);
+                    System.out.println();
+                    MessageUI.pause();
                     break;
 
                 case 2:
@@ -300,18 +299,14 @@ public class TutorManagement {
                             j--;
                         }
                     }
+                    tutorUI.displayAllTutors(sorted);
+                    System.out.println();
+                    MessageUI.pause();
                     break;
 
             }
-            tutorUI.displayAllTutors(sorted);
 
-            if (selection == 0) {
-                break;
-            }
-
-            nextOrN = tutorUI.nextOrExit();
-
-        } while (nextOrN == 'N');
+        } while (selection != 0);
 
     }
 
@@ -341,7 +336,7 @@ public class TutorManagement {
                     }
                 }
                 break;
-            default:
+            case 3:
                 String targetTutorEmail = tutorUI.inputTargetTutorEmail();
                 while (it.hasNext()) {
                     target = it.next();
@@ -349,6 +344,7 @@ public class TutorManagement {
                         return target;
                     }
                 }
+                break;
         }
         return null;
     }
@@ -363,12 +359,19 @@ public class TutorManagement {
         return arrayList;
     }
 
-    public void inputDomainList(ListInterface<String> domains) {
+    public ListInterface<String> inputDomainList(ListInterface<String> domains) {
+
+        ListInterface<String> copyArray = new ArrayList<>();
+
+        for (int i = 0; i < domains.getNumberOfEntries(); i++) {
+            copyArray.add(domains.getEntry(i + 1));
+        }
+
         do {
             int tutorDomainSelection = tutorUI.inputTutorDomain();
             String domain = tutorUI.getDomainName(tutorDomainSelection);
-            if (!domains.contains(domain)) {
-                domains.add(domain);
+            if (!copyArray.contains(domain)) {
+                copyArray.add(domain);
                 System.out.println("Domain added: " + domain);
             } else {
                 System.out.println("This domain is already selected.");
@@ -376,6 +379,38 @@ public class TutorManagement {
 
             System.out.print("Do you want to select more domain knowledge? (Y or N)");
         } while (sc.next().equalsIgnoreCase("Y"));
+
+        return copyArray;
+    }
+
+    public ListInterface<String> removeDomainKnowledge(ListInterface<String> domains) {
+
+        ListInterface<String> copyArray = new ArrayList<>();
+
+        for (int i = 0; i < domains.getNumberOfEntries(); i++) {
+            copyArray.add(domains.getEntry(i + 1));
+        }
+
+        int i = 1;
+        Iterator<String> it = copyArray.getIterator();
+        String domain = null;
+
+        while (it.hasNext()) {
+            domain = it.next();
+            System.out.print(i + ".");
+            System.out.println(domain);
+            i++;
+        }
+
+        int indexRemove = tutorUI.removeDomainKnowledgeSelection(copyArray);
+
+        if (copyArray.contains(domain)) {
+            copyArray.remove(indexRemove);
+        } else {
+            System.out.println("domain is not in the list...");
+        }
+
+        return copyArray;
     }
 
     public static void main(String[] args) {
@@ -417,25 +452,4 @@ public class TutorManagement {
 
     }
 
-    private void removeDomainKnowledge(ListInterface<String> domains) {
-
-        int i = 1;
-        Iterator<String> it = domains.getIterator();
-        String domain = null;
-
-        while (it.hasNext()) {
-            domain = it.next();
-            System.out.print(i + ".");
-            System.out.println(domain);
-            i++;
-        }
-
-        int indexRemove = tutorUI.removeDomainKnowledgeSelection(domains);
-
-        if (domains.contains(domain)) {
-            domains.remove(indexRemove);
-        } else {
-            System.out.println("domain is not in the list...");
-        }
-    }
 }

@@ -53,7 +53,7 @@ public class TutorManagementUI {
 
         do {
             try {
-                System.out.println("1. Delete tutor: ");
+                System.out.println("1. Delete tutor ");
                 System.out.println("2. Undo deletion(once per time)");
                 System.out.println("0. Exit");
                 System.out.print("Your selection : ");
@@ -479,6 +479,7 @@ public class TutorManagementUI {
 
     public char undoRemoveTutorConfirmation() {
 
+        sc.nextLine();
         System.out.print("Are you sure want to undo the deletion? ");
         return sc.nextLine().toUpperCase().charAt(0);
     }
@@ -544,10 +545,16 @@ public class TutorManagementUI {
 
     //------------------------------------------------------------  
 
-    public char nextOrExit() {
+    public char nextOrExit1() {
 
         sc.nextLine();
-        System.out.println("Next or exit (N: Next, E: Exit) ： ");
+        System.out.print("Next or exit (N: Next, E: Exit) ： ");
+        return sc.nextLine().toUpperCase().charAt(0);
+    }
+    
+    public char nextOrExit2() {
+
+        System.out.print("Next or exit (N: Next, E: Exit) ： ");
         return sc.nextLine().toUpperCase().charAt(0);
     }
 
