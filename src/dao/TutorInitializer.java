@@ -22,6 +22,7 @@ public class TutorInitializer {
         ArrayList<String> domainList1 = new ArrayList<>();
         ArrayList<String> domainList2 = new ArrayList<>();
         ArrayList<String> domainList3 = new ArrayList<>();
+        ArrayList<String> domainList4 = new ArrayList<>();
 
         domainList1.add("Accounting");
         domainList1.add("Add-Math");
@@ -30,12 +31,15 @@ public class TutorInitializer {
 
         domainList2.add("Biology");
         domainList2.add("Chemistry");
+        
+        domainList4.add("Biology");
+        domainList4.add("Chemistry");
 
         domainList3.add("Add-Math");
         domainList3.add("Physics");
 
         tutorList.add(new Tutor("T001", "Kate", 'F', "830221015382", "019-3456791", "kate@gmail.com", 4900.00, "phD", domainList2));
-        tutorList.add(new Tutor("T002", "Bob", 'M', "930201011387", "012-3456782", "bob@gmail.com", 2900.00, "phD", domainList2));
+        tutorList.add(new Tutor("T002", "Bob", 'M', "930201011387", "012-3456782", "bob@gmail.com", 2900.00, "phD", domainList4));
         tutorList.add(new Tutor("T003", "Charlie", 'M', "980201011383", "012-3456783", "charlie@gmail.com", 3300.00, "Bachelor's Degree", domainList2));
         tutorList.add(new Tutor("T004", "David", 'M', "880214011335", "011-3456784", "david@gmail.com", 2800.00, "phD", domainList3));
         tutorList.add(new Tutor("T005", "Sophia", 'F', "930816011234", "012-3456799", "sophia@gmail.com", 4100.00, "phD", domainList1));

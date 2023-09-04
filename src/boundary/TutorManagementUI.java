@@ -20,7 +20,6 @@ public class TutorManagementUI {
 
     Scanner sc = new Scanner(System.in);
     private TutorInputValidator validator = new TutorInputValidator();
-    MessageUI messageUI = new MessageUI();
 
     String tutorName;
     char tutorGender;
@@ -44,6 +43,8 @@ public class TutorManagementUI {
 
         System.out.print("Your selection : ");
         int selection = sc.nextInt();
+
+        sc.nextLine();
         return selection;
 
     }
@@ -332,7 +333,7 @@ public class TutorManagementUI {
         return educationLevel;
     }
 
-    public ListInterface<String> inputTutorDomain(ListInterface<String> domains) {
+    public void inputTutorDomain(ListInterface<String> domains) {
 
         do {
             System.out.println("Input the tutor domain knowledge : ");
@@ -370,11 +371,10 @@ public class TutorManagementUI {
 
                 }
             } while (!valid);
-
+            
             System.out.print("Do you want to select more domain knowledge? (Y or N)");
         } while (sc.next().equalsIgnoreCase("Y"));
 
-        return domains;
     }
     
     //------------------------------------------------------------
@@ -412,9 +412,6 @@ public class TutorManagementUI {
             System.out.print("Please enter the tutor name you want to search: ");
             targetTutorName = sc.nextLine();
             valid = validator.checkTutorName(targetTutorName);
-            if (!valid) {
-                System.out.println("Invalid Name. Please enter again...");
-            }
         } while (!valid);
 
         return targetTutorName;
@@ -428,9 +425,6 @@ public class TutorManagementUI {
             System.out.print("Please enter the tutor email you want to search: ");
             targetTutorEmail = sc.nextLine();
             valid = validator.checkTutorEmail(targetTutorEmail);
-            if (!valid) {
-                System.out.println("Invalid Email. Please enter again...");
-            }
         } while (!valid);
 
         return targetTutorEmail;
@@ -438,9 +432,9 @@ public class TutorManagementUI {
     
     //------------------------------------------------------------
 
-    public void modifyTutorDomain(ListInterface<Tutor> tutorList, Tutor tutor) {
+    public void modifyTutorDomain(ListInterface<String> domains) {
 
-        ListInterface<String> domains = tutor.getDomainKnowledgeList();
+        
         boolean valid = true;
         int selection = -1;
         do {
@@ -463,10 +457,10 @@ public class TutorManagementUI {
             } else {
                 switch (selection) {
                     case 1:
-                        domains = inputTutorDomain(domains);
+                        inputTutorDomain(domains);
                         break;
                     case 2:
-                        domains = removeDomainKnowledge(domains);
+                        removeDomainKnowledge(domains);
                         break;
                     default:
                         System.out.println("Tutor domain knowledged updated...");
@@ -476,7 +470,7 @@ public class TutorManagementUI {
 
     }
 
-    public ListInterface<String> removeDomainKnowledge(ListInterface<String> domains) {
+    public void removeDomainKnowledge(ListInterface<String> domains) {
 
         int i = 1;
         Iterator<String> it = domains.getIterator();
@@ -513,7 +507,6 @@ public class TutorManagementUI {
             }
         } while (!valid);
 
-        return domains;
     }
     
     //------------------------------------------------------------
@@ -528,7 +521,9 @@ public class TutorManagementUI {
     
     public char undoRemoveTutorConfirmation() {
 
+        sc.nextLine();
         System.out.print("Are you sure want to undo the deletion? ");
+        
         return sc.nextLine().toUpperCase().charAt(0);
     }
 
@@ -595,4 +590,10 @@ public class TutorManagementUI {
     
     //------------------------------------------------------------  
     
+    public char nextOrExit(){
+        
+        sc.nextLine();
+        System.out.println("Next or exit (N: Next, E: Exit) ： ");
+        return sc.nextLine().toUpperCase().charAt(0);
+    }
 }
