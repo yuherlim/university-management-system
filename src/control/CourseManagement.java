@@ -298,7 +298,11 @@ public class CourseManagement {
 
     }
 
-    //support control functions 
+    
+
+
+
+//support control functions 
     // add
     private ListInterface<String> inputDomainLoop(String[] domainList) {
         int domainSelection;
@@ -535,10 +539,8 @@ public class CourseManagement {
     //use to modify course list in the programme list
     private void modifyCourseInProgramme(Course course, ListInterface<Programme> progList, int addOrDelete) {
         if (addOrDelete == 1) {
-            //progList = 
             addCourseInProgramme(course, progList);
-        } else {
-            //progList = 
+        } else {           
             removeCourseInProgramme(course, progList);
         }
     }
