@@ -15,14 +15,22 @@ public class TutorInputValidator {
 
     public boolean checkTutorName(String name) {
         boolean valid = true;
-        
-        for(int i = 0; i < name.length() ; i++){
-            if(!Character.isSpaceChar(name.charAt(i))){
-                if (!Character.isAlphabetic(name.charAt(i))) {
-                    valid = false;
-                    break;
+
+        if (name.isEmpty()) {
+            valid = false;
+        } else {
+            for (int i = 0; i < name.length(); i++) {
+                if (!Character.isSpaceChar(name.charAt(i))) {
+                    if (!Character.isAlphabetic(name.charAt(i))) {
+                        valid = false;
+                        break;
+                    }
                 }
             }
+        }
+        
+        if (!valid) {
+            System.out.println("Invalid. Please enter a valid name...");
         }
 
         return valid;
@@ -42,7 +50,9 @@ public class TutorInputValidator {
     public boolean checkTutorIC(String ic, char gender) {
         boolean valid = true;
 
-        if (ic.length() == 12) {
+        if (ic.isEmpty() || ic == null) {
+            valid = false;
+        } else if (ic.length() == 12) {
             int month = Character.getNumericValue(ic.charAt(2)) * 10 + Character.getNumericValue(ic.charAt(3));
             int day = Character.getNumericValue(ic.charAt(4)) * 10 + Character.getNumericValue(ic.charAt(5));
 

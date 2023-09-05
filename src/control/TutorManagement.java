@@ -33,12 +33,12 @@ public class TutorManagement {
         char nextOrExit = 'E';
         do {
             int id;
-            if(tutorList.isEmpty()){
+            if (tutorList.isEmpty()) {
                 id = 1;
-            }else{
+            } else {
                 id = Integer.valueOf(tutorList.getLast().getTutorID().substring(1));
                 id++;
-                       
+
             }
             ArrayList<String> tutorDomainList = new ArrayList<>();
             String tutorID = "T".concat(String.format("%03d", id));
@@ -250,6 +250,7 @@ public class TutorManagement {
                     MessageUI.pause();
                     break;
                 case 3:
+                    
                     String filterDomain = tutorUI.inputOneDomain();
                     target = null;
                     it = tutorList.getIterator();
@@ -265,7 +266,8 @@ public class TutorManagement {
                                     System.out.println(target);
                                 }
                             }
-                        }
+                            
+                            }           
                     }
                     System.out.println();
                     MessageUI.pause();

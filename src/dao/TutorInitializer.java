@@ -24,14 +24,14 @@ public class TutorInitializer {
         ArrayList<String> domainList3 = new ArrayList<>();
 
         domainList1.add("Accounting");
-        domainList1.add("Add-Math");
+        domainList1.add("Add.Math");
         domainList1.add("Biology");
         domainList1.add("Chemistry");
 
         domainList2.add("Biology");
         domainList2.add("Chemistry");
 
-        domainList3.add("Add-Math");
+        domainList3.add("Add.Math");
         domainList3.add("Physics");
 
         tutorList.add(new Tutor("T001", "Kate", 'F', "830221015382", "019-3456791", "kate@gmail.com", 4900.00, "phD", domainList2));

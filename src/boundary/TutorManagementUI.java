@@ -31,10 +31,11 @@ public class TutorManagementUI {
     //------------------------------------------------------------
     public int tutorMainMenu() {
 
-        boolean valid = true;
+        boolean valid;
         int selection = 0;
 
         do {
+            valid = true;
             try {
                 System.out.println("\nMAIN MENU");
                 System.out.println("1. Add new tutor");
@@ -48,7 +49,7 @@ public class TutorManagementUI {
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
+                
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid selecton...");
                 valid = false;
@@ -65,10 +66,11 @@ public class TutorManagementUI {
 
     public int removeTutorMenu() {
 
-        boolean valid = true;
+        boolean valid;
         int selection = 0;
 
         do {
+            valid = true;
             try {
                 System.out.println("1. Delete tutor ");
                 System.out.println("2. Undo deletion(once per time)");
@@ -76,7 +78,6 @@ public class TutorManagementUI {
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid selection...");
                 valid = false;
@@ -92,9 +93,10 @@ public class TutorManagementUI {
 
     public int searchTutorMenu() {
         int searchSelection = 0;
-        boolean valid = false;
+        boolean valid;
 
         do {
+            valid = true;
             try {
                 System.out.println("Search tutor");
                 System.out.println("By: ");
@@ -105,7 +107,6 @@ public class TutorManagementUI {
                 System.out.print("Your selection : ");
                 searchSelection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid selection...");
                 valid = false;
@@ -122,10 +123,11 @@ public class TutorManagementUI {
 
     public int modifyTutorSelection(Tutor tutor) {
 
-        boolean valid = false;
+        boolean valid;
         int selection = 0;
 
         do {
+            valid = true;
             try {
                 System.out.println(tutor);
                 System.out.println("1. Modify tutor name");
@@ -137,7 +139,6 @@ public class TutorManagementUI {
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid selection...");
                 valid = false;
@@ -152,9 +153,10 @@ public class TutorManagementUI {
 
     public int filterTutorMenu() {
         int filterSelection = 0;
-        boolean valid = false;
+        boolean valid;
 
         do {
+            valid = true;
             try {
                 System.out.println("Filter tutor");
                 System.out.println("1. Filter by gender");
@@ -164,7 +166,6 @@ public class TutorManagementUI {
                 System.out.print("Your selection: ");
                 filterSelection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid selection...");
                 valid = false;
@@ -183,9 +184,10 @@ public class TutorManagementUI {
 
     public int tutorReportMenu() {
         int reportSelection = 0;
-        boolean valid = false;
+        boolean valid;
 
         do {
+            valid = true;
             try {
                 System.out.println("Tutor report");
                 System.out.println("1. Sort by tutor name");
@@ -194,7 +196,6 @@ public class TutorManagementUI {
                 System.out.print("Your selection: ");
                 reportSelection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid selection...");
                 valid = false;
@@ -247,16 +248,17 @@ public class TutorManagementUI {
             System.out.print("Enter tutor IC No (without - ) : ");
             tutorIC = sc.nextLine();
             valid = validator.checkTutorIC(tutorIC, tutorGender);
-
+            
         } while (!valid);
 
         return tutorIC;
     }
 
     public String inputTutorPhoneNum() {
-        boolean valid = true;
+        boolean valid;
 
         do {
+            valid = true;
             System.out.print("Enter tutor phone number(01x-xxxxxxx) : ");
             tutorPhoneNum = sc.nextLine();
             valid = validator.checkTutorPhoneNum(tutorPhoneNum);
@@ -266,9 +268,10 @@ public class TutorManagementUI {
     }
 
     public String inputTutorEmail() {
-        boolean valid = true;
+        boolean valid;
 
         do {
+            valid = true;
             System.out.print("Enter tutor email : ");
             tutorEmail = sc.nextLine();
             valid = validator.checkTutorEmail(tutorEmail);
@@ -281,11 +284,11 @@ public class TutorManagementUI {
         boolean valid = false;
 
         do {
+            valid = true;
             try {
                 System.out.print("Enter tutor salary : ");
                 tutorSalary = sc.nextDouble();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid salary...");
                 valid = false;
@@ -297,10 +300,12 @@ public class TutorManagementUI {
     }
 
     public String inputTutorEduLevel() {
-        boolean valid = true;
+        
+        boolean valid;
         int tutorEduLevelSelection = 0;
         String educationLevel = "";
         do {
+            valid = true;
             try {
                 System.out.println("Select tutor education level : ");
                 System.out.println("1. Diploma");
@@ -309,7 +314,6 @@ public class TutorManagementUI {
                 System.out.println("4. phD");
                 System.out.print("Your input : ");
                 tutorEduLevelSelection = sc.nextInt();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid. Please select a valid education level...");
                 sc.nextLine();
@@ -350,13 +354,13 @@ public class TutorManagementUI {
         System.out.println("5. Physics");
 
         int tutorDomainSelection = 0;
-        boolean valid = true;
+        boolean valid;
         do {
+            valid = true;
             try {
                 System.out.print("Your input: ");
                 tutorDomainSelection = sc.nextInt();
                 sc.nextLine(); // Consume the newline character
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid number.");
                 valid = false;
@@ -391,16 +395,20 @@ public class TutorManagementUI {
 
     //------------------------------------------------------------
     public String inputTargetTutorID() {
+        
         System.out.print("Please enter the tutor ID you want to search (T000): ");
         String targetTutorID = sc.nextLine();
+        
 
         return targetTutorID;
     }
 
     public String inputTargetTutorName() {
-        boolean valid = false;
+        boolean valid;
+        
         String targetTutorName;
         do {
+            valid = true;
             System.out.print("Please enter the tutor name you want to search: ");
             targetTutorName = sc.nextLine();
             valid = validator.checkTutorName(targetTutorName);
@@ -413,10 +421,11 @@ public class TutorManagementUI {
     }
 
     public String inputTargetTutorEmail() {
-        boolean valid = false;
+        boolean valid;
         String targetTutorEmail;
 
         do {
+            valid = true;
             System.out.print("Please enter the tutor email you want to search: ");
             targetTutorEmail = sc.nextLine();
             valid = validator.checkTutorEmail(targetTutorEmail);
@@ -430,9 +439,12 @@ public class TutorManagementUI {
 
     //------------------------------------------------------------
     public int modifyTutorDomain() {
-        boolean valid = true;
+        
+        boolean valid;
         int selection = -1;
+        
         do {
+            valid = true;
             try {
                 System.out.println("Tutor domain knowledge: ");
                 System.out.println("1. Add");
@@ -441,7 +453,6 @@ public class TutorManagementUI {
                 System.out.print("Your Selection : ");
                 selection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid number.");
                 valid = false;
@@ -458,15 +469,15 @@ public class TutorManagementUI {
 
     public int removeDomainKnowledgeSelection(ListInterface<String> domains) {
 
-        boolean valid = true;
+        boolean valid;
         int selection = 0;
 
         do {
+            valid = true;
             try {
                 System.out.print("Which domain you want to remove (index) : ");
                 selection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid number.");
                 valid = false;
@@ -510,13 +521,13 @@ public class TutorManagementUI {
         System.out.println("0. Exit");
 
         int tutorDomainSelection = 0;
-        boolean valid = true;
+        boolean valid;
         do {
+            valid = true;
             try {
                 System.out.println("Your input: ");
                 tutorDomainSelection = sc.nextInt();
                 sc.nextLine();
-                valid = true;
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid number.");
                 valid = false;
