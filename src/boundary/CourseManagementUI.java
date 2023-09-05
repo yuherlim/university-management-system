@@ -25,21 +25,26 @@ public class CourseManagementUI {
 
     Scanner scanner = new Scanner(System.in);
     private CourseInputValidator validator = new CourseInputValidator();
-
+    int selection = -1;
     public int getCourseMainMenuChoice() {
-        MessageUI.courseTopDivider();
-        System.out.println("Course Main Menu");
-        MessageUI.courseBtmDivider();
-        System.out.println("1. Add new course");
-        System.out.println("2. Modify a course");
-        System.out.println("3. Remove a course");
-        System.out.println("4. View courses");
-        System.out.println("5. View course report");
-        System.out.println("0. Quit");
-        MessageUI.courseBtmDivider();
-        System.out.print("Enter choice: ");
-        int selection = scanner.nextInt();
-        scanner.nextLine();
+        try{
+            MessageUI.courseTopDivider();
+            System.out.println("Course Main Menu");
+            MessageUI.courseBtmDivider();
+            System.out.println("1. Add new course");
+            System.out.println("2. Modify a course");
+            System.out.println("3. Remove a course");
+            System.out.println("4. View courses");
+            System.out.println("5. View course report");
+            System.out.println("0. Quit");
+            MessageUI.courseBtmDivider();
+            System.out.print("Enter choice: ");
+            selection = scanner.nextInt();
+            scanner.nextLine();
+        }catch(Exception e){
+            System.out.println("Expecting numeric input");
+            scanner.nextLine();
+        }
         return selection;
     }
 
@@ -231,8 +236,9 @@ public class CourseManagementUI {
         return null;
     }
 
-    public int addOrDelDLorPL(){
-            int selection;
+    public int addOrDelDLorPL() {
+        int selection = -1;
+        try {
             System.out.println("1. Add");
             System.out.println("2. Delete");
             System.out.println("0. Exit");
@@ -240,8 +246,12 @@ public class CourseManagementUI {
             System.out.println("Your choice: ");
             selection = scanner.nextInt();
             scanner.nextLine();
-            
-            return selection;
+        } catch (Exception e) {
+            System.out.println("Expecting numeric input");
+            scanner.nextLine();
+        }
+
+        return selection;
     }
 
     //remove
@@ -249,14 +259,19 @@ public class CourseManagementUI {
         // this is used by default course list
         int selection = -1;
         do {
-            displayAllCourse(courseList);
-            System.out.println("Input number to delete(0 to exit): ");
-            selection = scanner.nextInt();
-            scanner.nextLine();
-            if (selection == 0) {
-                break;
-            } else if (selection < 0 || selection > courseList.getNumberOfEntries()) {
-                MessageUI.displayInvalidChoiceMessage();
+            try {
+                displayAllCourse(courseList);
+                System.out.println("Input number to delete(0 to exit): ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection == 0) {
+                    break;
+                } else if (selection < 0 || selection > courseList.getNumberOfEntries()) {
+                    MessageUI.displayInvalidChoiceMessage();
+                }
+            } catch (Exception e) {
+                System.out.println("Expecting numeric input");
+                scanner.nextLine();
             }
         } while (selection < 0 || selection > courseList.getNumberOfEntries());
 
@@ -288,14 +303,19 @@ public class CourseManagementUI {
         // this is used by course list filtered by programme
         int selection = -1;
         do {
-            displayAllCourse(courseList);
-            System.out.println("Input number to delete(0 to exit): ");
-            selection = scanner.nextInt();
-            scanner.nextLine();
-            if (selection == 0) {
-                break;
-            } else if (selection < 0 || selection > courseList.getNumberOfEntries()) {
-                MessageUI.displayInvalidChoiceMessage();
+            try {
+                displayAllCourse(courseList);
+                System.out.println("Input number to delete(0 to exit): ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection == 0) {
+                    break;
+                } else if (selection < 0 || selection > courseList.getNumberOfEntries()) {
+                    MessageUI.displayInvalidChoiceMessage();
+                }
+            } catch (Exception e) {
+                System.out.println("Expecting numeric input");
+                scanner.nextLine();
             }
         } while (selection < 0 || selection > courseList.getNumberOfEntries());
 
@@ -343,35 +363,45 @@ public class CourseManagementUI {
     }
 
     public int deleteCourseMenuSelection() {
-        int selection;
+        int selection = -1;
 
-        MessageUI.courseTopDivider();
-        System.out.println("Removing a course");
-        MessageUI.courseBtmDivider();
-        System.out.println("1. Display all course to delete a course");
-        System.out.println("2. Search course by a PROGRAMME");
-        System.out.println("3. Delete a course by code");
-        System.out.println("4. Undo deletion(cannot be undo once exit)");
-        System.out.println("0. Exit");
-        MessageUI.courseBtmDivider();
-        System.out.println("Your selection: ");
-        selection = scanner.nextInt();
-        scanner.nextLine();
+        try {
+            MessageUI.courseTopDivider();
+            System.out.println("Removing a course");
+            MessageUI.courseBtmDivider();
+            System.out.println("1. Display all course to delete a course");
+            System.out.println("2. Search course by a PROGRAMME");
+            System.out.println("3. Delete a course by code");
+            System.out.println("4. Undo deletion(cannot be undo once exit)");
+            System.out.println("0. Exit");
+            MessageUI.courseBtmDivider();
+            System.out.println("Your selection: ");
+            selection = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Expecting numeric input");
+            scanner.nextLine();
+        }
         return selection;
     }
 
     //view course
     public int getDisplayCourseMenuSelection() {
-        MessageUI.courseTopDivider();
-        System.out.println("Display Course");
-        MessageUI.courseBtmDivider();
-        System.out.println("1. Display all courses");
-        System.out.println("2. Display course by specific programme");
-        System.out.println("3. Display a specific course");
-        System.out.println("0. Exit");
-        MessageUI.courseBtmDivider();
-        int selection = scanner.nextInt();
-        scanner.nextLine();
+        try {
+            MessageUI.courseTopDivider();
+            System.out.println("Display Course");
+            MessageUI.courseBtmDivider();
+            System.out.println("1. Display all courses");
+            System.out.println("2. Display course by specific programme");
+            System.out.println("3. Display a specific course");
+            System.out.println("0. Exit");
+            MessageUI.courseBtmDivider();
+            int selection = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Expecting numeric input");
+            scanner.nextLine();
+        }
         return selection;
     }
 
@@ -410,17 +440,23 @@ public class CourseManagementUI {
 
     //report
     public int getReportMenuChoice() {
-        MessageUI.courseTopDivider();
-        System.out.println("Report Menu");
-        MessageUI.courseBtmDivider();
-        System.out.println("1. Display report");
-        System.out.println("2. Display report sorted by course code");
-        System.out.println("3. Display report sorted by credit hour");
-        System.out.println("0. Quit");
-        MessageUI.courseBtmDivider();
-        System.out.print("Enter choice: ");
-        int selection = scanner.nextInt();
-        scanner.nextLine();
+        try {
+            MessageUI.courseTopDivider();
+            System.out.println("Report Menu");
+            MessageUI.courseBtmDivider();
+            System.out.println("1. Display report");
+            System.out.println("2. Display report sorted by course code");
+            System.out.println("3. Display report sorted by credit hour");
+            System.out.println("0. Quit");
+            MessageUI.courseBtmDivider();
+            System.out.print("Enter choice: ");
+
+            int selection = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Expecting numeric input");
+            scanner.nextLine();
+        }
         return selection;
     }
 
