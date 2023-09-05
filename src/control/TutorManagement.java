@@ -32,9 +32,15 @@ public class TutorManagement {
 
         char nextOrExit = 'E';
         do {
-            int id = tutorList.getNumberOfEntries();
+            int id;
+            if(tutorList.isEmpty()){
+                id = 1;
+            }else{
+                id = Integer.valueOf(tutorList.getLast().getTutorID().substring(1));
+                id++;
+                       
+            }
             ArrayList<String> tutorDomainList = new ArrayList<>();
-            id++;
             String tutorID = "T".concat(String.format("%03d", id));
             String tutorName = tutorUI.inputTutorName();
             char tutorGender = tutorUI.inputTutorGender();
@@ -172,9 +178,11 @@ public class TutorManagement {
                             int modifySelection = tutorUI.modifyTutorDomain();
                             switch (modifySelection) {
                                 case 1:
+                                    domains = inputDomainList(domains);
                                     targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
                                     break;
                                 case 2:
+                                    domains = inputDomainList(domains);
                                     targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
                                     break;
                                 default:
