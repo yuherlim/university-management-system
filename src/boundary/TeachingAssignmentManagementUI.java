@@ -45,12 +45,13 @@ public class TeachingAssignmentManagementUI {
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
                 if (selection >= 0 && selection <= 4) {
                     break;
                 }
                 MessageUI.displayInvalidChoiceMessage();
                 MessageUI.pause();
-                
+
             } catch (Exception e) {
                 System.out.println("\nPlease enter a valid selection in integer");
                 MessageUI.pause();
@@ -61,7 +62,7 @@ public class TeachingAssignmentManagementUI {
         return selection;
     }
 
-    public int getAssigmTutorOption() {
+    public int getAssignTutorOption() {
         boolean valid = false;
         int selection = -1;
         while (true) {
@@ -72,9 +73,10 @@ public class TeachingAssignmentManagementUI {
                 System.out.println("1. Assign Tutor by course");
                 System.out.println("2. Assign Tutor by Available slot");
                 System.out.println("0. Quit");
-                 MessageUI.TeachingAssignmentBtmDivider();
+                MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice : ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
                 if (selection >= 0 && selection <= 2) {
                     break;
                 }
@@ -89,7 +91,85 @@ public class TeachingAssignmentManagementUI {
         return selection;
     }
 
-    public TeachingAssignment getTASelection(ListInterface<TeachingAssignment> taList, Course selectedCourse, Tutor selectedTutor, int noOfClassAssigned) {
+    public int getModifyTutorAssignmentOption() {
+        boolean valid = false;
+        int selection = -1;
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Modify Tutor Assignment menu");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.println("1. Search by Tutor");
+                System.out.println("2. Search by Course");
+                System.out.println("0. Quit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection >= 0 && selection <= 2) {
+                    break;
+                }
+                MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+        }
+        return selection;
+    }
+    
+    public int getModifyTutorOption() {
+        boolean valid = false;
+        int selection = -1;
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Modify Tutor menu");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.println("1. Replace Tutor");
+                System.out.println("2. Remove Tutor");
+                System.out.println("0. Quit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection >= 0 && selection <= 2) {
+                    break;
+                }
+                MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+        }
+        return selection;
+    }
+    
+    
+
+    public Tutor getTutor(ListInterface<Tutor> tutorList) {
+        Iterator<Tutor> tutorIT = tutorList.getIterator();
+        Tutor resultTutor = null;
+        MessageUI.TeachingAssignmentTopDivider();
+        System.out.printf("Search Tutor\n");
+        MessageUI.TeachingAssignmentBtmDivider();
+        System.out.print("Enter tutor name / ID (T001) : ");
+        String input = scanner.nextLine();
+        while (tutorIT.hasNext()) {
+            Tutor tutor = tutorIT.next();
+            if (tutor.getTutorID().equals(input) || tutor.getName().equals(input)) {
+                return tutor;
+            }
+        }
+
+        return resultTutor;
+    }
+
+    public TeachingAssignment getTASelection(ListInterface<TeachingAssignment> taList, String displayString) {
         int selection = -1;
         int count = 1;
         ListInterface<String> programmeList = TeachingAssignmentManagement.getUniqueProgramme(taList);
@@ -98,11 +178,10 @@ public class TeachingAssignmentManagementUI {
             Iterator<String> programmeIT = programmeList.getIterator();
             try {
                 MessageUI.TeachingAssignmentTopDivider();
-                System.out.printf("Selected Course                       : %s", selectedCourse.getCourseName());
-                System.out.printf("\nSelected Tutor                        : %s", selectedTutor.getName());
-                System.out.printf("\nNo Of class assigned (Max 15 classes) : %2d\n", noOfClassAssigned);
+                System.out.print(displayString);
                 MessageUI.TeachingAssignmentBtmDivider();
-                System.out.printf("Class List:");
+                System.out.printf("Class List:\n");
+                MessageUI.TeachingAssignmentBtmDivider();
 
                 while (programmeIT.hasNext()) {
                     String programme = programmeIT.next();
@@ -134,13 +213,13 @@ public class TeachingAssignmentManagementUI {
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
                 if (selection >= 0 && selection <= taList.getNumberOfEntries()) {
                     if (selection == 0) {
                         MessageUI.displayExit();
                         break;
                     } else {
                         selectedClass = taList.getEntry(selection);
-                        noOfClassAssigned++;
                         break;
                     }
                 } else {
@@ -179,6 +258,7 @@ public class TeachingAssignmentManagementUI {
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
 
                 if (selection >= 0 && selection <= programmeList.getNumberOfEntries()) {
                     if (selection == 0) {
@@ -222,6 +302,7 @@ public class TeachingAssignmentManagementUI {
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
 
                 if (selection >= 0 && selection <= batchList.getNumberOfEntries()) {
                     if (selection == 0) {
@@ -246,7 +327,7 @@ public class TeachingAssignmentManagementUI {
         return selectedBatch;
     }
 
-    public Course getCourseSelection(ListInterface<Course> courseList) {
+    public Course getCourseSelection(ListInterface<Course> courseList, String displayString){
 
         int selection = -1;
         int count = 1;
@@ -255,6 +336,8 @@ public class TeachingAssignmentManagementUI {
             Iterator<Course> courseIT = courseList.getIterator();
             try {
                 MessageUI.TeachingAssignmentTopDivider();
+                System.out.print(displayString);
+                MessageUI.TeachingAssignmentBtmDivider();
                 System.out.printf("Course List:\n");
                 MessageUI.TeachingAssignmentBtmDivider();
                 while (courseIT.hasNext()) {
@@ -265,6 +348,7 @@ public class TeachingAssignmentManagementUI {
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
                 if (selection >= 0 && selection <= courseList.getNumberOfEntries()) {
                     if (selection == 0) {
                         MessageUI.displayExit();
@@ -283,7 +367,7 @@ public class TeachingAssignmentManagementUI {
                 scanner.nextLine();
                 count = 1;
                 MessageUI.pause();
-                
+
             }
         }
         return selectedCourse;
@@ -296,20 +380,21 @@ public class TeachingAssignmentManagementUI {
         int count = 1;
         while (true) {
             try {
-                 MessageUI.TeachingAssignmentTopDivider();
-                System.out.printf("Course List:");
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.printf("TutorialGroup List:");
                 MessageUI.TeachingAssignmentBtmDivider();
                 while (tutGrpIT.hasNext()) {
                     TutorialGroup tutGrp = tutGrpIT.next();
                     System.out.printf("\n%02d. %s", count++, tutGrp.getId());
                 }
                 System.out.printf("\n 0. Exit\n");
-                 MessageUI.TeachingAssignmentBtmDivider();
+                MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
                 if (selection >= 0 && selection <= tutGrpList.getNumberOfEntries()) {
                     if (selection == 0) {
-                       MessageUI.pause();
+                        MessageUI.pause();
                         break;
                     } else {
                         selectedTutgrp = tutGrpList.getEntry(selection);
@@ -330,7 +415,7 @@ public class TeachingAssignmentManagementUI {
         return selectedTutgrp;
     }
 
-    public Tutor getQualifiedTutorSelection(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList, Course selectedCourse) {
+    public Tutor getQualifiedTutorSelection(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList, String displayString) {
 
         int selection = -1;
         int count = 1;
@@ -339,19 +424,21 @@ public class TeachingAssignmentManagementUI {
             try {
                 Iterator<Tutor> tutorIT = tutorList.getIterator();
                 MessageUI.TeachingAssignmentTopDivider();
-                System.out.printf("Selected Course : %s\n", selectedCourse.getCourseName());
+                System.out.print(displayString);
                 MessageUI.TeachingAssignmentBtmDivider();
-                System.out.printf("Tutor List      :");
-                System.out.printf("\n%-3s %-20s %s", "No", "Name", "Number of class assigned");
-                
+                System.out.printf("Tutor List:\n");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.printf("%-3s %-20s %s", "No", "Name", "Number of class assigned\n");
+
                 while (tutorIT.hasNext()) {
                     Tutor tutor = tutorIT.next();
-                    System.out.printf("\n%02d. %-20s %2d", count++, tutor.getName(), TeachingAssignmentManagement.getNoOfClassAssigned(taList, tutor));
+                    System.out.printf("%02d. %-20s %2d\n", count++, tutor.getName(), TeachingAssignmentManagement.getNoOfClassAssigned(taList, tutor));
                 }
-                System.out.printf("\n 0. Exit\n");
+                System.out.printf(" 0. Exit\n");
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
+                scanner.nextLine();
                 if (selection >= 0 && selection <= tutorList.getNumberOfEntries()) {
                     if (selection == 0) {
                         MessageUI.displayExit();
