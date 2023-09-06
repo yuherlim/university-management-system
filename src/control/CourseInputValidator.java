@@ -59,6 +59,19 @@ public class CourseInputValidator {
         return true;
     }
     
+    public boolean checkCourseNameInput(String name){
+        try {
+            if (name.charAt(0) == ' ') {
+                System.out.println("Cannot be empty or space before name");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Cannot be empty");
+            return false;
+        }
+        return true;
+    }
+    
     public boolean checkCreditHourInput(int input){       
         try{
             input = scan.nextInt();

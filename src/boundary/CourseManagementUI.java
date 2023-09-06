@@ -64,15 +64,20 @@ public class CourseManagementUI {
             code = scanner.nextLine();
             code = code.toUpperCase();
             valid = validator.courseCodeCheck(code, courseList);
-        } while (valid != true);
+        } while (!valid);
 
         return code;
     }
 
     public String inputCourseName() {
-        System.out.print("Enter course name: ");
-        String name = scanner.nextLine();
-
+        boolean valid = true;
+        String name;
+        do{
+            System.out.print("Enter course name: ");
+            name = scanner.nextLine();
+            valid = validator.checkCourseNameInput(name);
+        }while(!valid);
+        
         return name;
     }
 
