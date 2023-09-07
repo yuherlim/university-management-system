@@ -110,6 +110,17 @@ public class ProgrammeManagement {
         }
         return outputStr;
     }
+    
+    private String getAllTutGroupAndProgrammesFromStack(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
+        String outputStr = "";
+        Iterator<Programme> itProgramme = undoStackProgramme.getIterator();
+        Iterator<String> itTutGroup = undoStackTutGroup.getIterator();
+        while (itProgramme.hasNext()) {
+            Programme currentProgramme = itProgramme.next();
+            outputStr += String.format("%-4s %-80s %-35s", currentProgramme.getCode(), currentProgramme.getName(), itTutGroup.next()) + "\n";
+        }
+        return outputStr;
+    }
 
     private void displayProgrammes() {
         if (programmeList.isEmpty()) {
@@ -169,12 +180,12 @@ public class ProgrammeManagement {
                     break;
                 case 2:
                     if (undoStackProgramme.isEmpty()) {
-                        System.out.println("\nThere is nothing to undo.");
+                        programmeManagementUI.nothingToUndoMsg();
                         break;
                     }
 
                     if (getUndoConfirmation(undoStackProgramme) != 'Y') {
-                        System.out.println("\nUndo cancelled.");
+                        programmeManagementUI.undoCancelledMsg();
                         break;
                     }
 
@@ -194,11 +205,28 @@ public class ProgrammeManagement {
         programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         return false;
     }
+    
+    private boolean undoTutGroupRemoval(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
+        while (!(undoStackProgramme.isEmpty())) {
+            undoStackProgramme.pop().getTutorialGroups().add(undoStackTutGroup.pop());
+        }
+        System.out.println("\nUndo successful.");
+        programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
+        return false;
+    }
 
     private char getUndoConfirmation(ArrayStack<Programme> undoStackProgramme) {
         char undoConfirmation;
         programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
         System.out.println("\nAre you sure you want to undo the removal of the above programmes?");
+        undoConfirmation = programmeManagementUI.inputConfirmation();
+        return undoConfirmation;
+    }
+    
+    private char getUndoTutGroupRemovalConfirmation(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
+        char undoConfirmation;
+        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupAndProgrammesFromStack(undoStackProgramme, undoStackTutGroup));
+        System.out.println("\nAre you sure you want to undo the removal of the above tutorial groups from their respective programmes?");
         undoConfirmation = programmeManagementUI.inputConfirmation();
         return undoConfirmation;
     }
@@ -212,11 +240,28 @@ public class ProgrammeManagement {
         programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         return true;
     }
+    
+    private boolean removeProgrammeTutGroupTemporarily(ArrayStack<Programme> undoStackProgramme, Programme programmeToRemoveTutGroup, ArrayStack<String> undoStackTutGroup) {
+        undoStackProgramme.push(programmeToRemoveTutGroup);
+        undoStackTutGroup.push(programmeToRemoveTutGroup.getTutorialGroups().getLast());
+        programmeToRemoveTutGroup.getTutorialGroups().removeLast();
+        System.out.println("\nLatest tutorial group successfully removed from programme.");
+        programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForOneProgramme(programmeToRemoveTutGroup));
+        return true;
+    }
 
     private char getProgrammeRemovalConfirmation(Programme programmeToRemove) {
         char removeConfirmation;
         programmeManagementUI.printProgrammeDetails(programmeToRemove);
         System.out.println("\nAre you sure you want to remove the above programme?");
+        removeConfirmation = programmeManagementUI.inputConfirmation();
+        return removeConfirmation;
+    }
+    
+    private char getTutGroupRemovalConfirmation(Programme programmeToRemoveTutGroup) {
+        char removeConfirmation;
+        programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForOneProgramme(programmeToRemoveTutGroup));
+        System.out.println("\nAre you sure you want to remove a tutorial group for the above programme?");
         removeConfirmation = programmeManagementUI.inputConfirmation();
         return removeConfirmation;
     }
@@ -228,11 +273,27 @@ public class ProgrammeManagement {
         }
         undoStackPosition.clear();
     }
+    
+    private void getTutGroupCodeFromUndoStack(ArrayStack<Programme> undoStackProgramme, ArrayList<String> tutGroupCodeToRemove, ArrayStack<String> undoStackTutGroup) {
+        // clear the undo stack data.
+        while (!(undoStackProgramme.isEmpty())) {
+            String currentTutGroupCode = currentBatchNo + undoStackProgramme.pop().getCode() + undoStackTutGroup.pop();
+            tutGroupCodeToRemove.add(currentTutGroupCode);
+        }
+    }
 
     private char getRemovalConfirmation(ArrayStack<Programme> undoStackProgramme) {
         char confirmation;
         programmeManagementUI.listProgrammes(getAllProgrammesFromStack(undoStackProgramme));
         System.out.println("\nConfirm the removal of the above programmes? (this action cannot be undone.)");
+        confirmation = programmeManagementUI.inputConfirmation();
+        return confirmation;
+    }
+    
+    private char getTutGroupRemovalConfirmation(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
+        char confirmation;
+        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupAndProgrammesFromStack(undoStackProgramme, undoStackTutGroup));
+        System.out.println("\nConfirm the removal of the above tutorial groups from their respective programmes? (this action cannot be undone.)");
         confirmation = programmeManagementUI.inputConfirmation();
         return confirmation;
     }
@@ -242,12 +303,25 @@ public class ProgrammeManagement {
         System.out.println("\nThe above programmes has been successfully removed.");
         removeProgrammeFromCourseList(codeToRemove);
     }
+    
+    private void updateTutGroupRemovalToFile(ArrayList<String> tutGroupCodeToRemove) {
+        programmeDAO.saveToFile(programmeList);
+        System.out.println("\nThe above tutorial groups has been successfully removed from their respective programmes.");
+        removeTutGroupFromTutGroupList(tutGroupCodeToRemove);
+    }
 
     private Programme getProgrammeToRemove() {
         programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         System.out.println("\nEnter the programme code of the program to remove.");
         Programme programmeToRemove = searchByProgrammeCode(programmeList);
         return programmeToRemove;
+    }
+    
+    private Programme getProgrammeToRemoveTutGroup() {
+        programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
+        System.out.println("\nEnter the programme code of the program to remove a tutorial group.");
+        Programme programmeToRemoveTutGroup = searchByProgrammeCode(programmeList);
+        return programmeToRemoveTutGroup;
     }
 
     private Programme getProgrammeToAddTutGroup() {
@@ -450,11 +524,71 @@ public class ProgrammeManagement {
     }
 
     private void removeTutorialGroupFromProgramme() {
-//        if (programmeList.isEmpty()) {
-//            System.out.println("\nThere are currently no programmes.");
-//            return;
-//        }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+        
+        ArrayStack<Programme> undoStackProgramme = new ArrayStack<>();
+        ArrayStack<String> undoStackTutGroup = new ArrayStack<>();
+        ArrayList<String> tutGroupCodeToRemove = new ArrayList<>(); // used to modify tutorial group list if there is removal of tut groups from programmes.
+        boolean isRemoved = false;
+        int selection;
+        do {
+            selection = programmeManagementUI.getRemoveTutGroupMenuChoice();
+            switch (selection) {
+                case 0:
+                    if (!isRemoved) {
+                        break;
+                    }
+
+                    if (getTutGroupRemovalConfirmation(undoStackProgramme, undoStackTutGroup) != 'Y') {
+                        programmeList = programmeDAO.retrieveFromFile(); // reset list to original.
+                        break;
+                    }
+
+                    getTutGroupCodeFromUndoStack(undoStackProgramme, tutGroupCodeToRemove, undoStackTutGroup);
+                    updateTutGroupRemovalToFile(tutGroupCodeToRemove);
+                    break;
+                case 1:
+                    Programme programmeToRemoveTutGroup = getProgrammeToRemoveTutGroup();
+
+                    if (programmeToRemoveTutGroup == null) {
+                        programmeManagementUI.nonexistentProductCodeMsg();
+                        break;
+                    }
+                    
+                    ArrayList<String> tutGroupList = programmeToRemoveTutGroup.getTutorialGroups();
+                    
+                    if (tutGroupList == null || tutGroupList.isEmpty()) {
+                        System.out.println("\nThere are currently no tutorial groups for this programme.");
+                        break;
+                    }
+
+                    if (getTutGroupRemovalConfirmation(programmeToRemoveTutGroup) != 'Y') {
+                        System.out.println("\nRemoval of tutorial group from this programme cancelled.");
+                        break;
+                    }
+
+                    isRemoved = removeProgrammeTutGroupTemporarily(undoStackProgramme, programmeToRemoveTutGroup, undoStackTutGroup);
+                    break;
+                case 2:
+                    if (undoStackProgramme.isEmpty()) {
+                        programmeManagementUI.nothingToUndoMsg();
+                        break;
+                    }
+
+                    if (getUndoTutGroupRemovalConfirmation(undoStackProgramme, undoStackTutGroup) != 'Y') {
+                        programmeManagementUI.undoCancelledMsg();
+                        break;
+                    }
+
+                    isRemoved = undoTutGroupRemoval(undoStackProgramme, undoStackTutGroup);
+                    break;
+            }
+        } while (selection != 0);
+
+        System.out.println("\nExiting removal of tutorial group from programme...");
     }
 
     private void displayTutorialGroupForProgramme() {
@@ -558,6 +692,17 @@ public class ProgrammeManagement {
             }
         }
         courseDAO.saveToFile(courseList);
+    }
+    
+    private void removeTutGroupFromTutGroupList(ArrayList<String> tutGroupCodeToRemove) {
+        TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
+        ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();
+
+        for (int i = 1; i <= tutGroupCodeToRemove.getNumberOfEntries(); i++) {
+            tutGroupList.remove(new TutorialGroup(tutGroupCodeToRemove.getEntry(i)));
+        }
+        
+        tutGroupDAO.saveToFile(tutGroupList);
     }
 
     private void findByFaculty() {

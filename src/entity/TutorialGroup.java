@@ -22,6 +22,10 @@ public class TutorialGroup implements Serializable {
     public TutorialGroup() {
     }
 
+    public TutorialGroup(String id) {
+        this.id = id;
+    }
+
     public TutorialGroup(String id, String group, String programme, String batch) {
         this.id = id;
         this.group = group;

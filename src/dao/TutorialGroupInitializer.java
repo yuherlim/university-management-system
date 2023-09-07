@@ -78,7 +78,7 @@ public class TutorialGroupInitializer {
         TutorialGroupDAO tutorialGroupDAO = new TutorialGroupDAO();
         TutorialGroupInitializer tG = new TutorialGroupInitializer();
         
-        
+//        
         System.out.println("Initialize data to tutorialGroup.dat");
         tG.initializeTutorialGroups();
         
