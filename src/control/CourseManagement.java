@@ -164,7 +164,7 @@ public class CourseManagement {
                         break;
 
                     case 2:
-                        modifyCourseDomainList(courseList, domainKnowledges, target);
+                        modifyCourseDomainList(domainKnowledges, target);
                         break;
 
                     case 3:
@@ -176,7 +176,7 @@ public class CourseManagement {
                         break;
 
                     case 5:
-                        modifyCourseProgList(courseList, programmes, target, progList);
+                        modifyCourseProgList(programmes, target, progList);
                         break;
 
                     case 0:
@@ -249,8 +249,7 @@ public class CourseManagement {
                     break;
             }
 
-        } while (selection != 0);
-        courseUI.report(courseList, programmes);
+        } while (selection != 0);     
     }
 
     public static void main(String[] args) {
@@ -400,7 +399,7 @@ public class CourseManagement {
         MessageUI.courseModificationMsg();
     }
 
-    private void modifyCourseDomainList(ListInterface<Course> courseList, String[] domainList, Course course) {
+    private void modifyCourseDomainList(String[] domainList, Course course) {
 
         int selection = -1;
 
@@ -467,7 +466,7 @@ public class CourseManagement {
                 }
     }
 
-    private void modifyCourseProgList(ListInterface<Course> courseList, String[] programmes, Course course,
+    private void modifyCourseProgList(String[] programmes, Course course,
             ListInterface<Programme> progList) {
 
         int selection = -1;
