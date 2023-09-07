@@ -29,7 +29,7 @@ public class TeachingAssignmentManagementUI {
     private CourseInputValidator courseInputValidator = new CourseInputValidator();
 
     public int getMenuChoice() {
-        boolean valid = false;
+        ;
         int selection = -1;
         while (true) {
             try {
@@ -63,7 +63,7 @@ public class TeachingAssignmentManagementUI {
     }
 
     public int getAssignTutorOption() {
-        boolean valid = false;
+
         int selection = -1;
         while (true) {
             try {
@@ -92,7 +92,6 @@ public class TeachingAssignmentManagementUI {
     }
 
     public int getModifyTutorAssignmentOption() {
-        boolean valid = false;
         int selection = -1;
         while (true) {
             try {
@@ -119,7 +118,35 @@ public class TeachingAssignmentManagementUI {
         }
         return selection;
     }
-    
+
+    public int getSearchTutorAssignmentOption() {
+        int selection = -1;
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Search Tutor Assignment menu");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.println("1. Search by Tutor");
+                System.out.println("2. Search by Course");
+                System.out.println("0. Quit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection >= 0 && selection <= 2) {
+                    break;
+                }
+                MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+        }
+        return selection;
+    }
+
     public int getModifyTutorOption() {
         boolean valid = false;
         int selection = -1;
@@ -148,8 +175,6 @@ public class TeachingAssignmentManagementUI {
         }
         return selection;
     }
-    
-    
 
     public Tutor getTutor(ListInterface<Tutor> tutorList) {
         Iterator<Tutor> tutorIT = tutorList.getIterator();
@@ -160,13 +185,45 @@ public class TeachingAssignmentManagementUI {
         System.out.print("Enter tutor name / ID (T001) : ");
         String input = scanner.nextLine();
         while (tutorIT.hasNext()) {
-            Tutor tutor = tutorIT.next();
-            if (tutor.getTutorID().equals(input) || tutor.getName().equals(input)) {
-                return tutor;
+            resultTutor = tutorIT.next();
+            if (resultTutor.getTutorID().equals(input) || resultTutor.getName().equals(input)) {
+                return resultTutor;
             }
         }
 
         return resultTutor;
+    }
+
+    public Course getCourse(ListInterface<Course> courseList) {
+        Iterator<Course> courseIT = courseList.getIterator();
+        Course resultCourse = null;
+        MessageUI.TeachingAssignmentTopDivider();
+        System.out.printf("Search Course\n");
+        MessageUI.TeachingAssignmentBtmDivider();
+        System.out.print("Enter course name / ID (AACS1234 / MPU-1123) : ");
+        String input = scanner.nextLine();
+        while (courseIT.hasNext()) {
+            resultCourse = courseIT.next();
+            if (resultCourse.getCourseCode().equals(input) || resultCourse.getCourseName().equals(input)) {
+                return resultCourse;
+            }
+        }
+
+        return resultCourse;
+    }
+
+    public String getDomainKnowledgeString(ListInterface<String> domainList) {
+        Iterator<String> domainIT = domainList.getIterator();
+        String domainString = "";
+        while (domainIT.hasNext()) {
+            String domain = domainIT.next();
+            domainString += domain;
+            if (domainIT.hasNext()) {
+                domainString += ", ";
+            }
+        }
+        return domainString;
+
     }
 
     public TeachingAssignment getTASelection(ListInterface<TeachingAssignment> taList, String displayString) {
@@ -327,7 +384,7 @@ public class TeachingAssignmentManagementUI {
         return selectedBatch;
     }
 
-    public Course getCourseSelection(ListInterface<Course> courseList, String displayString){
+    public Course getCourseSelection(ListInterface<Course> courseList, String displayString) {
 
         int selection = -1;
         int count = 1;
@@ -415,7 +472,7 @@ public class TeachingAssignmentManagementUI {
         return selectedTutgrp;
     }
 
-    public Tutor getQualifiedTutorSelection(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList, String displayString) {
+    public Tutor getTutorSelection(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList, String displayString) {
 
         int selection = -1;
         int count = 1;
@@ -462,4 +519,25 @@ public class TeachingAssignmentManagementUI {
         return selectedTutor;
     }
 
+    public void displayCourseDetail(Course course, int numOfClassAssigned) {
+        MessageUI.TeachingAssignmentBtmDivider();
+        System.out.printf("Course ID                : %s\n", course.getCourseCode());
+        System.out.printf("Course Name              : %s\n", course.getCourseName());
+        System.out.printf("Required Domain Knowledge : %s\n", getDomainKnowledgeString(course.getRequiredDomainKnowledge()));
+        System.out.printf("No of class assigned     : %2d\n", numOfClassAssigned);
+        MessageUI.TeachingAssignmentBtmDivider();
+        MessageUI.pause();
+    }
+    
+    public void displayTutorDetail(Tutor tutor, int numOfClassAssigned) {
+        MessageUI.TeachingAssignmentBtmDivider();
+        System.out.printf("Tutor ID                 : %s\n", tutor.getTutorID());
+        System.out.printf("Tutor Name               : %s\n", tutor.getName());
+        System.out.printf("Tutor Education level    : %s\n", tutor.getEducationLevel());
+        System.out.printf("Tutor Domain Knowledge   : %s\n", getDomainKnowledgeString(tutor.getDomainKnowledgeList()));
+        System.out.printf("No of class assigned     : %2d\n", numOfClassAssigned);
+        MessageUI.TeachingAssignmentBtmDivider();
+        MessageUI.pause();
+    }
+    
 }
