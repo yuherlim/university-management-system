@@ -14,11 +14,15 @@ import java.util.Scanner;
 
 /**
  *
- * @author ASUS
+ * @author Kho Ka Jie
  */
 public class TutorManagement {
 
+    StackInterface<Integer> indexStack = new ArrayStack<>();
+    StackInterface<Tutor> deleteTutorStack = new ArrayStack<>();
+
     private ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
+
     private TutorDAO tutorDAO = new TutorDAO();
     private TutorManagementUI tutorUI = new TutorManagementUI();
     private TeachingAssignmentDAO taDAO = new TeachingAssignmentDAO();
@@ -28,8 +32,10 @@ public class TutorManagement {
         tutorList = tutorDAO.retrieveFromFile();
     }
 
-    public void addNewTutor() {
+    public void addNewTutor(){
 
+        tutorUI.addTutorHeader();
+        
         char nextOrExit = 'E';
         do {
             int id;
@@ -54,7 +60,7 @@ public class TutorManagement {
             tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, tutorSalary, educationLevel, tutorDomainList));
             tutorDAO.saveToFile(tutorList);
 
-            nextOrExit = tutorUI.nextOrExit2();
+            nextOrExit = tutorUI.nextOrExit();
 
         } while (nextOrExit == 'N');
 
@@ -62,8 +68,8 @@ public class TutorManagement {
 
     public void removeTutor() {
 
-        StackInterface<Integer> indexStack = new ArrayStack<>();
-        StackInterface<Tutor> deleteTutorStack = new ArrayStack<>();
+        tutorUI.removeTutorHeader();
+        
         ListInterface<TeachingAssignment> teachingAssignmentList = taDAO.retrieveFromFile();
 
         boolean valid = true;
@@ -98,6 +104,7 @@ public class TutorManagement {
                                 tutorList.remove(targetTutor);
 
                                 System.out.println("Deleted : " + targetTutor.getTutorID());
+                                System.out.println();
                             }
                         }
                     } else {
@@ -109,7 +116,9 @@ public class TutorManagement {
                 case 2:
                     if (!deleteTutorStack.isEmpty()) {
 
+                        tutorUI.displayListDivider();
                         System.out.println(deleteTutorStack.peek());
+                        tutorUI.displayListDivider();
 
                         char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
                         if (undoConfirmation == 'Y') {
@@ -135,17 +144,21 @@ public class TutorManagement {
 
     public void findTutor() {
 
+        tutorUI.findTutorHeader();
+        
         char nextOrExit = 'E';
         do {
             Tutor targetTutor = findTutorSelection();
 
             if (targetTutor != null) {
+                tutorUI.displayListDivider();
                 System.out.println(targetTutor);
-            } else {
-                System.out.println("This tutor is not existing in the list...");
+                tutorUI.displayListDivider();
+                System.out.println();
+                MessageUI.pause();
             }
 
-            nextOrExit = tutorUI.nextOrExit2();
+            nextOrExit = tutorUI.nextOrExit();
 
         } while (nextOrExit == 'N');
 
@@ -153,12 +166,17 @@ public class TutorManagement {
 
     public void modifyTutor() {
 
+        tutorUI.modifyTutorHeader();
+        
         Tutor targetTutor = findTutorSelection();
 
         if (targetTutor != null) {
             ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
             int selection = -1;
             do {
+                tutorUI.displayListDivider();
+                System.out.println(targetTutor);
+                tutorUI.displayListDivider();
                 selection = tutorUI.modifyTutorSelection(targetTutor);
                 if (selection != 0) {
                     switch (selection) {
@@ -182,7 +200,7 @@ public class TutorManagement {
                                     targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
                                     break;
                                 case 2:
-                                    domains = inputDomainList(domains);
+                                    domains = removeDomainKnowledge(domains);
                                     targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
                                     break;
                                 default:
@@ -196,21 +214,27 @@ public class TutorManagement {
                 }
             } while (selection != 0);
 
-        } else {
-            System.out.println("This tutor is not existing in the list...");
-        }
+        } 
         tutorDAO.saveToFile(tutorList);
     }
 
     public void displayTutor() {
 
+        tutorUI.displayTutorHeader();
+        System.out.println();
+        
+        tutorUI.displayListDivider();
         tutorUI.displayAllTutors(tutorList);
+        tutorUI.displayListDivider();
+        
         System.out.println();
         MessageUI.pause();
     }
 
     public void filterTutor() {
 
+        tutorUI.filterTutorHeader();
+        
         Tutor target;
         Iterator<Tutor> it;
         String domain = null;
@@ -223,6 +247,7 @@ public class TutorManagement {
 
                 case 1:
                     char filterGender = tutorUI.inputTutorGender();
+                    tutorUI.displayListDivider();
                     target = null;
                     it = tutorList.getIterator();
 
@@ -232,11 +257,13 @@ public class TutorManagement {
                             System.out.println(target);
                         }
                     }
+                    tutorUI.displayListDivider();
                     System.out.println();
                     MessageUI.pause();
                     break;
                 case 2:
                     String filterEducationLevel = tutorUI.inputTutorEduLevel();
+                    tutorUI.displayListDivider();
                     target = null;
                     it = tutorList.getIterator();
 
@@ -246,12 +273,14 @@ public class TutorManagement {
                             System.out.println(target);
                         }
                     }
+                    tutorUI.displayListDivider();
                     System.out.println();
                     MessageUI.pause();
                     break;
                 case 3:
-                    
+
                     String filterDomain = tutorUI.inputOneDomain();
+                    tutorUI.displayListDivider();
                     target = null;
                     it = tutorList.getIterator();
 
@@ -266,9 +295,10 @@ public class TutorManagement {
                                     System.out.println(target);
                                 }
                             }
-                            
-                            }           
+
+                        }
                     }
+                    tutorUI.displayListDivider();
                     System.out.println();
                     MessageUI.pause();
                     break;
@@ -278,6 +308,8 @@ public class TutorManagement {
 
     public void generateTutorReport() {
 
+        tutorUI.reportTutorHeader();
+        
         int selection;
         do {
             ListInterface<Tutor> sorted;
@@ -294,7 +326,9 @@ public class TutorManagement {
                             j--;
                         }
                     }
+                    tutorUI.displayListDivider();
                     tutorUI.displayAllTutors(sorted);
+                    tutorUI.displayListDivider();
                     System.out.println();
                     MessageUI.pause();
                     break;
@@ -309,7 +343,9 @@ public class TutorManagement {
                             j--;
                         }
                     }
+                    tutorUI.displayListDivider();
                     tutorUI.displayAllTutors(sorted);
+                    tutorUI.displayListDivider();
                     System.out.println();
                     MessageUI.pause();
                     break;
@@ -325,7 +361,7 @@ public class TutorManagement {
         int findSelection = tutorUI.searchTutorMenu();
         Iterator<Tutor> it = tutorList.getIterator();
 
-        Tutor target;
+        Tutor target = null;
 
         switch (findSelection) {
             case 1:
@@ -355,6 +391,11 @@ public class TutorManagement {
                     }
                 }
                 break;
+            case 0:
+                System.out.println("Exit...");
+        }
+        if(target == null && findSelection != 0){
+            System.out.println("This tutor is not existing in the list...");
         }
         return null;
     }
@@ -426,6 +467,7 @@ public class TutorManagement {
     public static void main(String[] args) {
         TutorManagement tutorManagement = new TutorManagement();
         TutorManagementUI tutorManagementUI = new TutorManagementUI();
+        char confirmation = ' ';
 
         int selection = -1;
         do {
@@ -453,12 +495,17 @@ public class TutorManagement {
                     tutorManagement.generateTutorReport();
                     break;
                 case 0:
-                    System.out.println("Exit tutor management...");
+                    confirmation = tutorManagementUI.confirmationForUndo();
+                    if (confirmation == 'Y') {
+                        System.out.println("Exit tutor management...");
+                        //back to the main menu;
+                    } else {
+                        System.out.println("Reenter tutor management...");
+                    }
+
                     break;
-                default:
-                    System.out.println("Invalid selection...");
             }
-        } while (selection != 0);
+        } while (selection != 0 || confirmation == 'N');
 
     }
 

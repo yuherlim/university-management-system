@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author Yu
+ * @author Yu, Sia Yeong Sheng
  */
 public class MessageUI {
 
@@ -72,6 +72,7 @@ public class MessageUI {
     
     public static void courseBtmDivider(){
         System.out.println("---------------------------------------------------------------------------------------------");
+
     }
     
     public static void tutorTopDivider(){
@@ -89,5 +90,8 @@ public class MessageUI {
     public static void TeachingAssignmentBtmDivider(){
         System.out.println("---------------------------------------------------------------------------------------------");
     }
+
+    } 
+
     
-}
+

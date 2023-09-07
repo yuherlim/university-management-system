@@ -15,7 +15,7 @@ import utility.MessageUI;
 
 /**
  *
- * @author syshe
+ * @author Sia Yeong Sheng
  */
 public class CourseManagement {
 
@@ -69,8 +69,7 @@ public class CourseManagement {
         StackInterface<Course> undoStackCourse = new ArrayStack();
         Course course;
         int selection;
-        do {
-            System.out.println(courseList.getNumberOfEntries());
+        do {          
             courseUI.displayAllCourse(courseList);
             selection = courseUI.deleteCourseMenuSelection();
             int entryAt;
@@ -369,26 +368,35 @@ public class CourseManagement {
 
     //modify
     private void modifyCourseName(ListInterface<Course> courseList, Course course) {
-
+        
         int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
+        String beforeName = course.getCourseName();
         course.setCourseName(courseUI.inputCourseName());
+        String afterName = course.getCourseName();
         courseList.replace(targetPos, course);
+        System.out.println("\nThe course name has been changed from \"" +beforeName+ "\" to \"" + afterName+"\".");
         MessageUI.courseModificationMsg();
     }
 
     private void modifyCourseCH(ListInterface<Course> courseList, Course course) {
 
         int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
+        int beforeCH = course.getCreditHR();
         course.setCreditHR(courseUI.inputCreditHour());
+        int afterCH = course.getCreditHR();
         courseList.replace(targetPos, course);
+        System.out.println("\nThe course credit hour has been changed from " +beforeCH+ " to " + afterCH);
         MessageUI.courseModificationMsg();
     }
 
     private void modifyCourseFeePCH(ListInterface<Course> courseList, Course course) {
 
         int targetPos = ((CircularDoublyLinkedList) courseList).locatePosition(course);
+        double beforeCourseFeePCH = course.getFeePCH();
         course.setFeePCH(courseUI.inputFeePerCreditHour());
+        double afterCourseFeePCH = course.getFeePCH();
         courseList.replace(targetPos, course);
+        System.out.println("\nThe course fee per credit hour has been changed from " +beforeCourseFeePCH+ " to " + afterCourseFeePCH);
         MessageUI.courseModificationMsg();
     }
 
@@ -433,6 +441,7 @@ public class CourseManagement {
                     if (selection == 1) {
                         if (notExist) {
                             inputDomainList.add(domainList[index]);
+                            System.out.println(domainList[index] + " has been added.");
                             modification = true;
                         } else {
                             System.out.println("Existing domain");
@@ -441,6 +450,7 @@ public class CourseManagement {
                     } else if (selection == 2) {
                         if (!notExist) {
                             inputDomainList.remove(domainList[index]);
+                            System.out.println(domainList[index] + " has been removed.");
                             modification = true;
                         } else {
                             System.out.println("Domain not in the list");
@@ -501,6 +511,7 @@ public class CourseManagement {
                 notExist = validator.checkExistInList(inputProgList, programmes[index]);
                 if (notExist) {
                     inputProgList.add(programmes[index]);
+                    System.out.println(programmes[index] + " has been added.");
                     modification = true;
                 } else {
                     System.out.println("Existing programme");
@@ -517,6 +528,7 @@ public class CourseManagement {
                 notExist = validator.checkExistInList(inputProgList, programmes[index]);
                 if (!notExist) {
                     inputProgList.remove(programmes[index]);
+                    System.out.println(programmes[index] + " has been removed.");
                     modification = true;
                 } else {
                     System.out.println("Programme not in the list");
@@ -573,10 +585,11 @@ public class CourseManagement {
             if (courseListInProgramme != null) {
                 for (int i = 1; i <= courseListInProgramme.getNumberOfEntries(); i++) {
                     if (courseListInProgramme.contains(course.getCourseCode()) && !course.getProgrammes().contains(currentProgramme.getCode())) {
+                        //if the couselist in the curernt programme does cotains the course code and
+                        //if the current course doesn;t cotains the current programme code in programme list
                         courseListInProgramme.remove(course.getCourseCode());
                         currentProgramme.setCourses(courseListInProgramme);
-                        System.out.println("Course " + course.getCourseCode() + " has been removed from " + currentProgramme.getCode() + " course list due to the modification.\n");
-
+                        System.out.println("Course " + course.getCourseCode() + " has been removed from " + currentProgramme.getCode() + " course list due to the modification.\n");                        
                     }
                 }
             }

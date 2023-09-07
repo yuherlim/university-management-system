@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author syshe
+ * @author Sia Yeong Sheng
  */
 public class CourseInputValidator {
     Scanner scan = new Scanner(System.in);
@@ -56,6 +56,19 @@ public class CourseInputValidator {
             }
         
         
+        return true;
+    }
+    
+    public boolean checkCourseNameInput(String name){
+        try {
+            if (name.charAt(0) == ' ') {
+                System.out.println("Cannot be empty or space before name");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Cannot be empty");
+            return false;
+        }
         return true;
     }
     

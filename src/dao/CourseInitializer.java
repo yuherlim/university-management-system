@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author syshe
+ * @author Sia Yeong Sheng
  */
 public class CourseInitializer {
 
@@ -79,24 +79,5 @@ public class CourseInitializer {
         while(it.hasNext()) {
             System.out.println(it.next());
         }
-        
-//        test.add("Jimmy");
-//        test.add("Timmy");
-//        test.add("Jimmin");
-//        test.add("Adam");
-//        test.add("George");
-//        
-//        System.out.println("List: ");
-//        System.out.println(test);
-//        
-//        String removed = test.removeFirst();
-
-
-//        System.out.println("after remove List: ");
-//        System.out.println(test);
-     
-//        test.addToStart(removed);
-//        System.out.println("List: ");
-//        System.out.println(test);
-    }
+      }
 }
