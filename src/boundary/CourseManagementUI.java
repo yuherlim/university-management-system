@@ -409,6 +409,7 @@ public class CourseManagementUI {
             System.out.println("3. Display a specific course");
             System.out.println("0. Exit");
             MessageUI.courseBtmDivider();
+            System.out.println("Your selection: ");
             selection = scanner.nextInt();
             scanner.nextLine();
         } catch (Exception e) {
