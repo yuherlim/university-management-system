@@ -72,6 +72,26 @@ public class MessageUI {
     
     public static void courseBtmDivider(){
         System.out.println("---------------------------------------------------------------------------------------------");
-    } 
+
+    }
     
-}
+    public static void tutorTopDivider(){
+        System.out.println("\n\n\n----------------------------------");
+    }
+    
+    public static void tutorBtmDivider(){
+        System.out.println("----------------------------------");
+    }
+    
+     public static void TeachingAssignmentTopDivider(){
+        System.out.println("\n\n\n\n---------------------------------------------------------------------------------------------");
+    }
+    
+    public static void TeachingAssignmentBtmDivider(){
+        System.out.println("---------------------------------------------------------------------------------------------");
+    }
+
+    } 
+
+    
+
