@@ -29,42 +29,49 @@ public class TutorManagementUI {
     //------------------------------------------------------------
     
     public void addTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|           Add Tutor            |");
         System.out.println("----------------------------------");
     }
     
     public void removeTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Remove Tutor          |");
         System.out.println("----------------------------------");
     }
     
     public void findTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|           Find Tutor           |");
         System.out.println("----------------------------------");
     }
     
     public void modifyTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Modify Tutor          |");
         System.out.println("----------------------------------");
     }
     
     public void displayTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Display Tutor         |");
         System.out.println("----------------------------------");
     }
     
     public void filterTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Filter Tutor          |");
         System.out.println("----------------------------------");
     }
     
     public void reportTutorHeader(){
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Tutor Report          |");
         System.out.println("----------------------------------");
@@ -83,7 +90,9 @@ public class TutorManagementUI {
         do {
             valid = true;
             try {
-                System.out.println("\nMAIN MENU");
+                System.out.println("----------------------------------");
+                System.out.println("Tutor Main Menu");
+                System.out.println("----------------------------------");
                 System.out.println("1. Add new tutor");
                 System.out.println("2. Remove tutor");
                 System.out.println("3. Find tutor");
@@ -92,6 +101,7 @@ public class TutorManagementUI {
                 System.out.println("6. Filter tutors");
                 System.out.println("7. Generate report");
                 System.out.println("0. Exit");
+                System.out.println("----------------------------------");
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
                 sc.nextLine();

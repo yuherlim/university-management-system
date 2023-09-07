@@ -89,7 +89,7 @@ public class TutorManagement {
                             while (it.hasNext()) {
                                 TeachingAssignment teachingAssignment = it.next();
 
-                                if (teachingAssignment.getTutor().equals(targetTutor)) { //check if the tutor exist in the list
+                                if (teachingAssignment.getTutor().equals(targetTutor) && teachingAssignment.getTutorialGroup().getBatch().equals("202301")) { //check if the tutor exist in the list
                                     System.out.println("The tutor still enrolled in teaching...");
                                     System.out.println("Make sure the tutor is not teaching any class before you remove it");
                                     valid = false;
