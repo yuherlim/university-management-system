@@ -251,7 +251,7 @@ public class ProgrammeManagement {
     }
 
     private Programme getProgrammeToAddTutGroup() {
-        programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
+        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupsForProgrammes(programmeList));
         System.out.println("\nEnter the programme code of the program to add tutorial groups.");
         Programme programmeToAddTutGroup = searchByProgrammeCode(programmeList);
         return programmeToAddTutGroup;
@@ -452,11 +452,37 @@ public class ProgrammeManagement {
     }
 
     private void displayTutorialGroupForProgramme() {
-//        if (programmeList.isEmpty()) {
-//            System.out.println("\nThere are currently no programmes.");
-//            return;
-//        }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+        
+        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupsForProgrammes(programmeList));
+    }
+    
+    private String getAllTutGroupsForProgrammes(ListInterface<Programme> programmeList) {
+        String outputStr = "";
+        String groupStr = "";
+        ArrayList<String> currentProgrammeTutGroupList;
+        Iterator<Programme> it = programmeList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            outputStr += String.format("%-4s %-80s", currentProgramme.getCode(), currentProgramme.getName());
+            currentProgrammeTutGroupList = currentProgramme.getTutorialGroups();
+            groupStr = "";
+            if (currentProgrammeTutGroupList != null) {
+                for (int i = 1; i <= currentProgrammeTutGroupList.getNumberOfEntries(); i++) {
+                    groupStr += currentProgrammeTutGroupList.getEntry(i) + ", ";
+                    if (i == currentProgrammeTutGroupList.getNumberOfEntries()) {
+                        groupStr += "\b\b";
+                    }
+                }
+            } else {
+                groupStr += "none";
+            }
+            outputStr += String.format(" %-35s\n", groupStr);
+        }
+        return outputStr;
     }
 
     private void generateReports() {
@@ -593,12 +619,12 @@ public class ProgrammeManagement {
                 break;
             }
 
-            addTutGroupToProgramme(currentTutorialGroupList, latestGroup, programmeToAddTutGroup);
+            addTutGroupToProgrammeList(currentTutorialGroupList, latestGroup, programmeToAddTutGroup);
         } while (confirmation == 'Y');
 
     }
 
-    private void addTutGroupToProgramme(ArrayList<String> currentTutorialGroupList, String latestGroup, Programme programmeToAddTutGroup) {
+    private void addTutGroupToProgrammeList(ArrayList<String> currentTutorialGroupList, String latestGroup, Programme programmeToAddTutGroup) {
         currentTutorialGroupList.add(latestGroup);
         programmeToAddTutGroup.setTutorialGroups(currentTutorialGroupList);
         updateProgrammeAndTutGroupFile(programmeToAddTutGroup);
