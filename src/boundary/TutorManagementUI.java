@@ -304,6 +304,14 @@ public class TutorManagementUI {
                 }
             }
         } while (!valid);
+        
+        Character.toUpperCase(tutorName.charAt(0));
+        for(int i = 0; i < tutorName.length(); i++){
+            if(Character.isSpaceChar(tutorName.charAt(0))){
+                Character.toUpperCase(tutorName.charAt(i+1));
+            }
+        }
+        
 
         return tutorName;
     }
