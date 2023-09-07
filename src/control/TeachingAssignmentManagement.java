@@ -116,7 +116,7 @@ public class TeachingAssignmentManagement {
             if (!unAssignedTAList.isEmpty()) {
                 ListInterface<Course> courseCodeList = this.getUniqueCourse(unAssignedTAList);
                 String displayStringForCourseSelection = String.format(""
-                        + "Assign Tutor                       : %s \n");
+                        + "Assign Tutor                       : \n");
                 Course selectedCourse = teachingAssignmentUI.getCourseSelection(courseCodeList, displayStringForCourseSelection);
                 if (selectedCourse != null) {
                     do {
