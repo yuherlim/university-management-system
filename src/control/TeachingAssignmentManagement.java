@@ -59,35 +59,45 @@ public class TeachingAssignmentManagement {
         int selection = teachingAssignmentUI.getSearchTutorAssignmentOption();
         switch (selection) {
             case 1:
+                searchByTutor(currentBatch, teachingAssignmentList, tutorList);
                 break;
             case 2:
+                searchByCourse(currentBatch, teachingAssignmentList, courseList);
                 break;
             default:
         }
     }
 
-    public void findTeachingAssignment() {
-        int selection = -1;
-        do {
-            selection = teachingAssignmentUI.getMenuChoice();
-            switch (selection) {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                default:
-            }
-        } while (selection != 0);
+    public void filterTeachingAssignment(String currentBatch) {
+        ProgrammeDAO programmeDAO = new ProgrammeDAO();
+        ListInterface<Programme> programmeList = programmeDAO.retrieveFromFile();
+
+        int selection = teachingAssignmentUI.getFilterTutorAssignmentOption();
+        switch (selection) {
+            case 1:
+                tutorsFilterByNumOfClassAssigned(currentBatch, teachingAssignmentList);
+                break;
+            case 2:
+                tutorsFilterByProgramme(currentBatch, teachingAssignmentList, programmeList);
+                break;
+            default:
+        }
     }
 
-    public void listTeachingAssignment() {
+    public void listTeachingAssignment(String currentBatch) {
+        TutorDAO tutorDAO = new TutorDAO();
+        CourseDAO courseDAO = new CourseDAO();
+        ListInterface tutorList = tutorDAO.retrieveFromFile();
+        ListInterface courseList = courseDAO.retrieveFromFile();
         int selection = -1;
         do {
-            selection = teachingAssignmentUI.getMenuChoice();
+            selection = teachingAssignmentUI.getListTutorAssignmentOption();
             switch (selection) {
                 case 1:
+                    listTutors(currentBatch, teachingAssignmentList, courseList);
                     break;
                 case 2:
+                    listCourses(currentBatch, teachingAssignmentList, tutorList);
                     break;
                 default:
             }
@@ -358,32 +368,53 @@ public class TeachingAssignmentManagement {
                     do {
                         ListInterface<TeachingAssignment> assignedTAListFilterByTutor = sortTAByProgramme(TeachingAssignmentManagement.filterByTutor(assignedTAList, tutor));
                         ListInterface<Course> courseList = TeachingAssignmentManagement.getUniqueCourse(assignedTAListFilterByTutor);
-
                         String displayStringForCourseSelection = String.format(""
                                 + "Tutor ID                              : %s"
                                 + "\nTutor Name                            : %s"
-                                + "\nTutor Gender                          : $s"
+                                + "\nTutor Gender                          : %s"
                                 + "\nTutor Education Level                 : %s"
-                                + "\nTutor Domain Knowledge                : $s"
+                                + "\nTutor Domain Knowledge                : %s"
                                 + "\nNo Of class assigned (Max 15 classes) : %2d\n", tutor.getTutorID(), tutor.getName(), tutor.getGender(), tutor.getEducationLevel(), teachingAssignmentUI.getDomainKnowledgeString(tutor.getDomainKnowledgeList()), assignedTAListFilterByTutor.getNumberOfEntries());
 
-                        Course selectedCourse = teachingAssignmentUI.getCourseSelection(courseList, displayStringForCourseSelection);
-                        if (selectedCourse != null) {
-                            
-                            
-                            
-                            
-                        }
-                       
-                       while (true) {
-                            System.out.printf("\nContinue select course? (Y/N) : ");
-                            cont = scanner.next().toUpperCase().charAt(0);
-                            if (cont == 'Y' || cont == 'N') {
-                                break;
+                        if (assignedTAListFilterByTutor.getNumberOfEntries() != 0) {
+
+                            Course selectedCourse = teachingAssignmentUI.getCourseSelection(courseList, displayStringForCourseSelection);
+                            if (selectedCourse != null) {
+                                ListInterface<TeachingAssignment> assignedTAListFilterByCourse = TeachingAssignmentManagement.filterByCourse(assignedTAListFilterByTutor, selectedCourse);
+                                String displayStringForCourseDetail = String.format(""
+                                        + "Course ID                 : %s"
+                                        + "\nCourse Name               : %s"
+                                        + "\nRequired Domain Knowledge : %s"
+                                        + "\nNo of class assigned      : %2d\n", selectedCourse.getCourseCode(), selectedCourse.getCourseName(), teachingAssignmentUI.getDomainKnowledgeString(selectedCourse.getRequiredDomainKnowledge()), assignedTAListFilterByCourse.getNumberOfEntries());
+                                while (true) {
+                                    TeachingAssignment ta = teachingAssignmentUI.getTASelection(assignedTAListFilterByCourse, displayStringForCourseDetail);
+                                    if (ta == null) {
+                                        break;
+                                    }
+                                    MessageUI.displayInvalidChoiceMessage();
+                                    MessageUI.pause();
+                                }
+
                             }
-                            System.out.printf("\nPlease enter a valid selection\n");
-                            MessageUI.pause();
+
+                            while (true) {
+                                System.out.printf("\nContinue select course? (Y/N) : ");
+                                cont = scanner.next().toUpperCase().charAt(0);
+                                if (cont == 'Y' || cont == 'N') {
+                                    break;
+                                }
+                                System.out.printf("\nPlease enter a valid selection\n");
+                                MessageUI.pause();
+                            }
+
+                        } else {
+                            MessageUI.TeachingAssignmentTopDivider();
+                            System.out.print(displayStringForCourseSelection);
+                            MessageUI.TeachingAssignmentBtmDivider();
+                            System.out.println("\nNo class assigned to this tutor");
+                            cont = 'N';
                         }
+
                     } while (cont == 'Y');
 
                 } else {
@@ -406,7 +437,366 @@ public class TeachingAssignmentManagement {
                 cont = 'N';
             }
 
-        } while (cont != 'Y');
+        } while (cont == 'Y');
+
+    }
+
+    public void searchByCourse(String currentBatch, ListInterface<TeachingAssignment> taList, ListInterface<Course> courseList) {
+        Character cont = 'Y';
+        ListInterface<TeachingAssignment> currentBatchTAList = getCurrentBatchTeachingList(currentBatch, taList);
+        ListInterface<TeachingAssignment> assignedTAList = getAssignedTeachingList(currentBatchTAList);
+        do {
+            if (assignedTAList.getNumberOfEntries() != 0) {
+                Course course = teachingAssignmentUI.getCourse(courseList);
+                if (course != null) {
+                    do {
+                        ListInterface<TeachingAssignment> assignedTAListFilterByCourse = TeachingAssignmentManagement.filterByCourse(assignedTAList, course);
+                        ListInterface<Tutor> tutorList = TeachingAssignmentManagement.getUniqueTutor(assignedTAListFilterByCourse);
+                        String displayStringForTutorSelection = String.format(""
+                                + "Course ID                 : %s"
+                                + "\nCourse Name               : %s"
+                                + "\nRequired Domain Knowledge : %s"
+                                + "\nNo of class assigned      : %2d\n", course.getCourseCode(), course.getCourseName(), teachingAssignmentUI.getDomainKnowledgeString(course.getRequiredDomainKnowledge()), assignedTAListFilterByCourse.getNumberOfEntries());
+
+                        if (assignedTAListFilterByCourse.getNumberOfEntries() != 0) {
+                            Tutor selectedTutor = teachingAssignmentUI.getTutorSelection(tutorList, assignedTAListFilterByCourse, displayStringForTutorSelection);
+                            if (selectedTutor != null) {
+                                ListInterface<TeachingAssignment> assignedTAListFilterByTutor = TeachingAssignmentManagement.filterByTutor(assignedTAListFilterByCourse, selectedTutor);
+                                String displayStringForTutorDetail = String.format(""
+                                        + "Tutor ID                              : %s"
+                                        + "\nTutor Name                            : %s"
+                                        + "\nTutor Gender                          : %s"
+                                        + "\nTutor Education Level                 : %s"
+                                        + "\nTutor Domain Knowledge                : %s"
+                                        + "\nNo Of class assigned (Max 15 classes) : %2d\n", selectedTutor.getTutorID(), selectedTutor.getName(), selectedTutor.getGender(), selectedTutor.getEducationLevel(), teachingAssignmentUI.getDomainKnowledgeString(selectedTutor.getDomainKnowledgeList()), assignedTAListFilterByTutor.getNumberOfEntries());
+
+                                while (true) {
+                                    TeachingAssignment ta = teachingAssignmentUI.getTASelection(assignedTAListFilterByTutor, displayStringForTutorDetail);
+                                    if (ta == null) {
+                                        break;
+                                    }
+                                    MessageUI.displayInvalidChoiceMessage();
+                                    MessageUI.pause();
+                                }
+
+                            }
+
+                            while (true) {
+                                System.out.printf("\nContinue select Tutor? (Y/N) : ");
+                                cont = scanner.next().toUpperCase().charAt(0);
+                                if (cont == 'Y' || cont == 'N') {
+                                    break;
+                                }
+                                System.out.printf("\nPlease enter a valid selection\n");
+                                MessageUI.pause();
+                            }
+                        } else {
+                            MessageUI.TeachingAssignmentTopDivider();
+                            System.out.print(displayStringForTutorSelection);
+                            MessageUI.TeachingAssignmentBtmDivider();
+                            System.out.println("\nThis course didnt has any class assigned");
+                            cont = 'N';
+                        }
+
+                    } while (cont == 'Y');
+
+                } else {
+                    System.out.print("\nCourse not found\n");
+                }
+
+                while (true) {
+                    System.out.printf("\nContinue search course? (Y/N) : ");
+                    cont = scanner.next().toUpperCase().charAt(0);
+                    if (cont == 'Y' || cont == 'N') {
+                        break;
+                    }
+                    System.out.printf("\nPlease enter a valid selection\n");
+                    MessageUI.pause();
+                }
+
+            } else {
+                System.out.printf("\nNo course in batch %s are Assigned\n", currentBatch);
+                MessageUI.pause();
+                cont = 'N';
+            }
+
+        } while (cont == 'Y');
+
+    }
+
+    public void listTutors(String currentBatch, ListInterface<TeachingAssignment> taList, ListInterface<Course> courseList) {
+        Character cont = 'Y';
+        ListInterface<TeachingAssignment> currentBatchTAList = getCurrentBatchTeachingList(currentBatch, taList);
+        ListInterface<TeachingAssignment> assignedTAList = getAssignedTeachingList(currentBatchTAList);
+        do {
+            if (assignedTAList.getNumberOfEntries() != 0) {
+                Course course = teachingAssignmentUI.getCourse(courseList);
+                if (course != null) {
+                    ListInterface<TeachingAssignment> assignedTAListFilterByCourse = TeachingAssignmentManagement.filterByCourse(assignedTAList, course);
+                    ListInterface<Tutor> tutorList = TeachingAssignmentManagement.getUniqueTutor(assignedTAListFilterByCourse);
+                    String displayStringForTutorSelection = String.format(""
+                            + "Course ID                 : %s"
+                            + "\nCourse Name               : %s"
+                            + "\nRequired Domain Knowledge : %s"
+                            + "\nNo of class assigned      : %2d\n", course.getCourseCode(), course.getCourseName(), teachingAssignmentUI.getDomainKnowledgeString(course.getRequiredDomainKnowledge()), assignedTAListFilterByCourse.getNumberOfEntries());
+
+                    if (assignedTAListFilterByCourse.getNumberOfEntries() != 0) {
+
+                        while (true) {
+                            Tutor selectedTutor = teachingAssignmentUI.getTutorSelection(tutorList, assignedTAListFilterByCourse, displayStringForTutorSelection);
+                            if (selectedTutor == null) {
+                                break;
+                            }
+                            MessageUI.displayInvalidChoiceMessage();
+                            MessageUI.pause();
+                        }
+
+                    } else {
+                        MessageUI.TeachingAssignmentTopDivider();
+                        System.out.print(displayStringForTutorSelection);
+                        MessageUI.TeachingAssignmentBtmDivider();
+                        System.out.println("\nThis course didnt has any class assigned");
+                        cont = 'N';
+                    }
+
+                } else {
+                    System.out.print("\nCourse not found\n");
+                }
+
+                while (true) {
+                    System.out.printf("\nContinue search course? (Y/N) : ");
+                    cont = scanner.next().toUpperCase().charAt(0);
+                    if (cont == 'Y' || cont == 'N') {
+                        break;
+                    }
+                    System.out.printf("\nPlease enter a valid selection\n");
+                    MessageUI.pause();
+                }
+
+            } else {
+                System.out.printf("\nNo course in batch %s are Assigned\n", currentBatch);
+                MessageUI.pause();
+                cont = 'N';
+            }
+
+        } while (cont == 'Y');
+
+    }
+
+    public void listCourses(String currentBatch, ListInterface<TeachingAssignment> taList, ListInterface<Tutor> tutorList) {
+        Character cont = 'Y';
+        ListInterface<TeachingAssignment> currentBatchTAList = getCurrentBatchTeachingList(currentBatch, taList);
+        ListInterface<TeachingAssignment> assignedTAList = getAssignedTeachingList(currentBatchTAList);
+        do {
+            if (assignedTAList.getNumberOfEntries() != 0) {
+                Tutor tutor = teachingAssignmentUI.getTutor(tutorList);
+                if (tutor != null) {
+                    ListInterface<TeachingAssignment> assignedTAListFilterByTutor = sortTAByProgramme(TeachingAssignmentManagement.filterByTutor(assignedTAList, tutor));
+                    ListInterface<Course> courseList = TeachingAssignmentManagement.getUniqueCourse(assignedTAListFilterByTutor);
+                    String displayStringForCourseSelection = String.format(""
+                            + "Tutor ID                              : %s"
+                            + "\nTutor Name                            : %s"
+                            + "\nTutor Gender                          : %s"
+                            + "\nTutor Education Level                 : %s"
+                            + "\nTutor Domain Knowledge                : %s"
+                            + "\nNo Of class assigned (Max 15 classes) : %2d\n", tutor.getTutorID(), tutor.getName(), tutor.getGender(), tutor.getEducationLevel(), teachingAssignmentUI.getDomainKnowledgeString(tutor.getDomainKnowledgeList()), assignedTAListFilterByTutor.getNumberOfEntries());
+
+                    if (assignedTAListFilterByTutor.getNumberOfEntries() != 0) {
+
+                        while (true) {
+                            Course selectedCourse = teachingAssignmentUI.getCourseSelection(courseList, displayStringForCourseSelection);
+                            if (selectedCourse == null) {
+                                break;
+                            }
+                            MessageUI.displayInvalidChoiceMessage();
+                            MessageUI.pause();
+                        }
+
+                    } else {
+                        MessageUI.TeachingAssignmentTopDivider();
+                        System.out.print(displayStringForCourseSelection);
+                        MessageUI.TeachingAssignmentBtmDivider();
+                        System.out.println("\nNo class assigned to this tutor");
+                        cont = 'N';
+                    }
+
+                } else {
+                    System.out.print("\nTutor not found\n");
+                }
+
+                while (true) {
+                    System.out.printf("\nContinue search tutor? (Y/N) : ");
+                    cont = scanner.next().toUpperCase().charAt(0);
+                    if (cont == 'Y' || cont == 'N') {
+                        break;
+                    }
+                    System.out.printf("\nPlease enter a valid selection\n");
+                    MessageUI.pause();
+                }
+
+            } else {
+                System.out.printf("\nNo course in batch %s are Assigned\n", currentBatch);
+                MessageUI.pause();
+                cont = 'N';
+            }
+
+        } while (cont == 'Y');
+
+    }
+
+    public void tutorsFilterByProgramme(String currentBatch, ListInterface<TeachingAssignment> taList, ListInterface<Programme> programmeList) {
+        Character cont = 'Y';
+        ListInterface<TeachingAssignment> currentBatchTAList = getCurrentBatchTeachingList(currentBatch, taList);
+        ListInterface<TeachingAssignment> assignedTAList = getAssignedTeachingList(currentBatchTAList);
+        ListInterface<Programme> sortedProgrammeList = TeachingAssignmentManagement.sortProgrammeByName(programmeList);
+        do {
+            if (assignedTAList.getNumberOfEntries() != 0) {
+                Programme programme = teachingAssignmentUI.getProgrammeSelection(sortedProgrammeList);
+                if (programme != null) {
+                    ListInterface<TeachingAssignment> assignedTAListFilterByProgramme = sortTAByProgramme(TeachingAssignmentManagement.filterByProgramme(assignedTAList, programme.getCode()));
+                    ListInterface<Tutor> tutorList = TeachingAssignmentManagement.getUniqueTutor(assignedTAListFilterByProgramme);
+                    String displayStringForCourseSelection = String.format(""
+                            + "Programme ID                          : %s"
+                            + "\nProgramme Name                        : %s"
+                            + "\nProgramme Faculty                     : %s"
+                            + "\nProgramme Duration (year)             : %2d"
+                            + "\nNo Of class assigned                  : %2d\n", programme.getCode(), programme.getName(), programme.getFaculty(), programme.getDuration(), assignedTAListFilterByProgramme.getNumberOfEntries());
+
+                    if (assignedTAListFilterByProgramme.getNumberOfEntries() != 0) {
+
+                        while (true) {
+                            Tutor selectedTutor = teachingAssignmentUI.getTutorSelection(tutorList, assignedTAListFilterByProgramme, displayStringForCourseSelection);
+                            if (selectedTutor == null) {
+                                break;
+                            }
+                            MessageUI.displayInvalidChoiceMessage();
+                            MessageUI.pause();
+                        }
+
+                    } else {
+                        MessageUI.TeachingAssignmentTopDivider();
+                        System.out.print(displayStringForCourseSelection);
+                        MessageUI.TeachingAssignmentBtmDivider();
+                        System.out.println("\nThis programme didnt has any class assigned");
+                        cont = 'N';
+                    }
+
+                }
+                while (true) {
+                    System.out.printf("\nContinue select programme? (Y/N) : ");
+                    cont = scanner.next().toUpperCase().charAt(0);
+                    if (cont == 'Y' || cont == 'N') {
+                        break;
+                    }
+                    System.out.printf("\nPlease enter a valid selection\n");
+                    MessageUI.pause();
+                }
+
+            } else {
+                System.out.printf("\nNo course in batch %s are Assigned\n", currentBatch);
+                MessageUI.pause();
+                cont = 'N';
+            }
+
+        } while (cont == 'Y');
+
+    }
+
+    public void tutorsFilterByNumOfClassAssigned(String currentBatch, ListInterface<TeachingAssignment> taList) {
+        Character cont = 'Y';
+        ListInterface<TeachingAssignment> currentBatchTAList = getCurrentBatchTeachingList(currentBatch, taList);
+        ListInterface<TeachingAssignment> assignedTAList = getAssignedTeachingList(currentBatchTAList);
+
+        do {
+            ListInterface<Tutor> tutorList = TeachingAssignmentManagement.getUniqueTutor(assignedTAList);
+            tutorList = sortTutorByNoOfClassAssigned(tutorList, assignedTAList);
+            Iterator<Tutor> tutorIT = tutorList.getIterator();
+            ListInterface<Tutor> filteredTutorList = new ArrayList<>();
+            if (assignedTAList.getNumberOfEntries() != 0) {
+                int selection = teachingAssignmentUI.getFilterrTutorOption();
+                if (selection != 0) {
+                    String displayStringForCourseSelection = "";
+                    int filterInput = -1;
+                    switch (selection) {
+                        case 1:
+                            filterInput = teachingAssignmentUI.getFilterInput(1);
+                            while (tutorIT.hasNext()) {
+                                Tutor tutor = tutorIT.next();
+                                if (TeachingAssignmentManagement.getNoOfClassAssigned(assignedTAList, tutor) > filterInput) {
+                                    filteredTutorList.add(tutor);
+                                }
+                            }
+                            if (filteredTutorList.getNumberOfEntries() == 0) {
+                                System.out.printf("There is no tutor has been assigned more than %d classes\n", filterInput);
+
+                            }else{
+                            displayStringForCourseSelection = String.format("Tutors who have been assigned more than %d classes\n", filterInput);}
+                            break;
+                        case 2:
+                            filterInput = teachingAssignmentUI.getFilterInput(2);
+                            while (tutorIT.hasNext()) {
+                                Tutor tutor = tutorIT.next();
+                                if ((TeachingAssignmentManagement.getNoOfClassAssigned(assignedTAList, tutor) == filterInput)) {
+                                    filteredTutorList.add(tutor);
+                                }
+                            }
+                            if (filteredTutorList.getNumberOfEntries() == 0) {
+                                System.out.printf("There is no tutor has been assigned %d classes\n", filterInput);
+
+                            } else {
+                                displayStringForCourseSelection = String.format("Tutors who have been assigned %d classes\n", filterInput);
+                            }
+                            break;
+                        case 3:
+                            filterInput = teachingAssignmentUI.getFilterInput(3);
+                            while (tutorIT.hasNext()) {
+                                Tutor tutor = tutorIT.next();
+                                if (TeachingAssignmentManagement.getNoOfClassAssigned(assignedTAList, tutor) < filterInput) {
+                                    filteredTutorList.add(tutor);
+                                }
+                            }
+                            if (filteredTutorList.getNumberOfEntries() == 0) {
+                                System.out.printf("There is no tutor has been assigned more than %d classes\n", filterInput);
+
+                            }else{
+                            displayStringForCourseSelection = String.format("Tutors who have been assigned less than %d classes\n", filterInput);
+                            }
+                            break;
+                        default:
+
+                    }
+
+                    if (filteredTutorList.getNumberOfEntries() != 0) {
+
+                        while (true) {
+                            Tutor selectedTutor = teachingAssignmentUI.getTutorSelection(filteredTutorList, assignedTAList, displayStringForCourseSelection);
+                            if (selectedTutor == null) {
+                                break;
+                            }
+                            MessageUI.displayInvalidChoiceMessage();
+                            MessageUI.pause();
+                        }
+
+                    } 
+
+                }
+                while (true) {
+                    System.out.printf("\nContinue select programme? (Y/N) : ");
+                    cont = scanner.next().toUpperCase().charAt(0);
+                    if (cont == 'Y' || cont == 'N') {
+                        break;
+                    }
+                    System.out.printf("\nPlease enter a valid selection\n");
+                    MessageUI.pause();
+                }
+
+            } else {
+                System.out.printf("\nNo course in batch %s are Assigned\n", currentBatch);
+                MessageUI.pause();
+                cont = 'N';
+            }
+
+        } while (cont == 'Y');
 
     }
 
@@ -547,7 +937,7 @@ public class TeachingAssignmentManagement {
         ListInterface<TeachingAssignment> resultList = new ArrayList<TeachingAssignment>();
         while (taIT.hasNext()) {
             TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
-            if (currentTA.getCourse().equals(course)) {
+            if (currentTA.getCourse().getCourseCode().equals(course.getCourseCode())) {
                 resultList.add(currentTA);
             }
         }
@@ -564,6 +954,20 @@ public class TeachingAssignmentManagement {
             }
         }
         return resultList;
+    }
+
+    public static ListInterface<Tutor> getUniqueTutor(ListInterface<TeachingAssignment> taList) {
+        Iterator taIT = taList.getIterator();
+        ListInterface<Tutor> tutorList = new ArrayList<>();
+
+        while (taIT.hasNext()) {
+            TeachingAssignment currentTA = (TeachingAssignment) taIT.next();
+            if (!tutorList.contains(currentTA.getTutor())) {
+                tutorList.add(currentTA.getTutor());
+            }
+        }
+
+        return sortTutorByName(tutorList);
     }
 
     public static ListInterface<String> getUniqueProgramme(ListInterface<TeachingAssignment> taList) {
@@ -631,42 +1035,69 @@ public class TeachingAssignmentManagement {
 
     public static ListInterface<Course> sortCourseByName(ListInterface<Course> courseList) {
         for (int i = 1; i < courseList.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= courseList.getNumberOfEntries(); j++) {
-                if (courseList.getEntry(i).getCourseName().compareTo(courseList.getEntry(j).getCourseName()) > 0) {
-                    Course temp = courseList.getEntry(i);
-                    courseList.replace(i, courseList.getEntry(j));
-                    courseList.replace(j, temp);
-                }
+            int j = i;
+            while (j > 0 && courseList.getEntry(j).getCourseName().compareTo(courseList.getEntry(j + 1).getCourseName()) > 0) {
+                Course temp = courseList.getEntry(j);
+                courseList.replace(j, courseList.getEntry(j + 1));
+                courseList.replace(j + 1, temp);
+                j--;
             }
         }
+
         return courseList;
 
     }
 
     public static ListInterface<Tutor> sortTutorByName(ListInterface<Tutor> tutorList) {
         for (int i = 1; i < tutorList.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= tutorList.getNumberOfEntries(); j++) {
-                if (tutorList.getEntry(i).getName().compareTo(tutorList.getEntry(j).getName()) > 0) {
-                    Tutor temp = tutorList.getEntry(i);
-                    tutorList.replace(i, tutorList.getEntry(j));
-                    tutorList.replace(j, temp);
-                }
+            int j = i;
+            while (j > 0 && tutorList.getEntry(j).getName().compareTo(tutorList.getEntry(j + 1).getName()) > 0) {
+                Tutor temp = tutorList.getEntry(j);
+                tutorList.replace(j, tutorList.getEntry(j + 1));
+                tutorList.replace(j + 1, temp);
+                j--;
             }
         }
         return tutorList;
     }
 
-    public static ListInterface<TeachingAssignment> sortTAByProgramme(ListInterface<TeachingAssignment> taList) {
-        for (int i = 1; i < taList.getNumberOfEntries(); i++) {
-            for (int j = i + 1; j <= taList.getNumberOfEntries(); j++) {
-                if (taList.getEntry(i).getTutorialGroup().getProgramme().compareTo(taList.getEntry(j).getTutorialGroup().getProgramme()) > 0 || (taList.getEntry(i).getTutorialGroup().getProgramme().equals(taList.getEntry(j).getTutorialGroup().getProgramme()) == true && taList.getEntry(i).getTutorialGroup().getId().compareTo(taList.getEntry(j).getTutorialGroup().getId()) > 0)) {
-                    TeachingAssignment temp = taList.getEntry(i);
-                    taList.replace(i, taList.getEntry(j));
-                    taList.replace(j, temp);
-                }
-
+    public static ListInterface<Tutor> sortTutorByNoOfClassAssigned(ListInterface<Tutor> tutorList, ListInterface<TeachingAssignment> taList) {
+        for (int i = 1; i < tutorList.getNumberOfEntries(); i++) {
+            int j = i;
+            while (j > 0 && getNoOfClassAssigned(taList, tutorList.getEntry(j)) < getNoOfClassAssigned(taList, tutorList.getEntry(j + 1))) {
+                Tutor temp = tutorList.getEntry(j);
+                tutorList.replace(j, tutorList.getEntry(j + 1));
+                tutorList.replace(j + 1, temp);
+                j--;
             }
         }
+        return tutorList;
+    }
+
+    public static ListInterface<Programme> sortProgrammeByName(ListInterface<Programme> programmeList) {
+        for (int i = 1; i < programmeList.getNumberOfEntries(); i++) {
+            int j = i;
+            while (j > 0 && programmeList.getEntry(j).getName().compareTo(programmeList.getEntry(j + 1).getName()) > 0) {
+                Programme temp = programmeList.getEntry(j);
+                programmeList.replace(j, programmeList.getEntry(j + 1));
+                programmeList.replace(j + 1, temp);
+                j--;
+            }
+        }
+        return programmeList;
+    }
+
+    public static ListInterface<TeachingAssignment> sortTAByProgramme(ListInterface<TeachingAssignment> taList) {
+        for (int i = 1; i < taList.getNumberOfEntries(); i++) {
+            int j = i;
+            while (j > 0 && taList.getEntry(j).getTutorialGroup().getProgramme().compareTo(taList.getEntry(j + 1).getTutorialGroup().getProgramme()) > 0) {
+                TeachingAssignment temp = taList.getEntry(j);
+                taList.replace(j, taList.getEntry(j + 1));
+                taList.replace(j + 1, temp);
+                j--;
+            }
+        }
+
         return taList;
     }
 
@@ -681,6 +1112,16 @@ public class TeachingAssignmentManagement {
 
             }
         }
+        for (int i = 1; i < tutGrpList.getNumberOfEntries(); i++) {
+            int j = i;
+            while (j > 0 && tutGrpList.getEntry(j).getId().compareTo(tutGrpList.getEntry(j + 1).getId()) > 0) {
+                TutorialGroup temp = tutGrpList.getEntry(j);
+                tutGrpList.replace(j, tutGrpList.getEntry(j + 1));
+                tutGrpList.replace(j + 1, temp);
+                j--;
+            }
+        }
+
         return tutGrpList;
 
     }
@@ -789,13 +1230,13 @@ public class TeachingAssignmentManagement {
                     teachingAssignmentList.modifyTutorAssignment(currentBatch);
                     break;
                 case 3:
-                    teachingAssignmentList.findTeachingAssignment();
+                    teachingAssignmentList.searchTutorAssignment(currentBatch);
                     break;
                 case 4:
-                    teachingAssignmentList.listTeachingAssignment();
+                    teachingAssignmentList.listTeachingAssignment(currentBatch);
                     break;
                 case 5:
-                    teachingAssignmentList.generateReport();
+                    teachingAssignmentList.filterTeachingAssignment(currentBatch);
                     break;
                 default:
             }

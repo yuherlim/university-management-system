@@ -25,8 +25,6 @@ import utility.MessageUI;
 public class TeachingAssignmentManagementUI {
 
     Scanner scanner = new Scanner(System.in);
-    private TutorInputValidator tutorInputValidator = new TutorInputValidator();
-    private CourseInputValidator courseInputValidator = new CourseInputValidator();
 
     public int getMenuChoice() {
         ;
@@ -38,15 +36,17 @@ public class TeachingAssignmentManagementUI {
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.println("1. Assign Tutor");
                 System.out.println("2. Modify Assigned Tutor");
-                System.out.println("3. Find Teaching Assignment");
-                System.out.println("4. List Teaching Assignent");
-                System.out.println("5. Generate Report");
+                System.out.println("3. Find Tutor Assignment");
+                System.out.println("4. List Tutor Assignent");
+                System.out.println("5. Filter Teaching Assignent");
+                System.out.println("6. Generate Report");
+                System.out.println("7. Undo Modify Changes");
                 System.out.println("0. Quit");
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
                 scanner.nextLine();
-                if (selection >= 0 && selection <= 4) {
+                if (selection >= 0 && selection <= 7) {
                     break;
                 }
                 MessageUI.displayInvalidChoiceMessage();
@@ -147,6 +147,62 @@ public class TeachingAssignmentManagementUI {
         return selection;
     }
 
+    public int getListTutorAssignmentOption() {
+        int selection = -1;
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("List Tutor Assignment menu");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.println("1. List tutors under a course");
+                System.out.println("2. List courses under a tutor");
+                System.out.println("0. Quit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection >= 0 && selection <= 2) {
+                    break;
+                }
+                MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+        }
+        return selection;
+    }
+
+    public int getFilterTutorAssignmentOption() {
+        int selection = -1;
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Filter Tutor Assignment menu");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.println("1. Filter by number of classes assigned");
+                System.out.println("2. Filter by program");
+                System.out.println("0. Quit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection >= 0 && selection <= 2) {
+                    break;
+                }
+                MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+        }
+        return selection;
+    }
+
     public int getModifyTutorOption() {
         boolean valid = false;
         int selection = -1;
@@ -176,6 +232,37 @@ public class TeachingAssignmentManagementUI {
         return selection;
     }
 
+    public int getFilterrTutorOption() {
+        boolean valid = false;
+        int selection = -1;
+        while (true) {
+            try {
+                MessageUI.TeachingAssignmentTopDivider();
+                System.out.println("Filter Tutor By No Of Class Assigned menu");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.println("1. Greater than");
+                System.out.println("2. Equal");
+                System.out.println("3. Lesser than");
+                System.out.println("0. Quit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.print("Enter choice : ");
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                if (selection >= 0 && selection <= 3) {
+                    break;
+                }
+                MessageUI.displayInvalidChoiceMessage();
+                MessageUI.pause();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+        }
+        return selection;
+
+    }
+
     public Tutor getTutor(ListInterface<Tutor> tutorList) {
         Iterator<Tutor> tutorIT = tutorList.getIterator();
         Tutor resultTutor = null;
@@ -185,9 +272,9 @@ public class TeachingAssignmentManagementUI {
         System.out.print("Enter tutor name / ID (T001) : ");
         String input = scanner.nextLine();
         while (tutorIT.hasNext()) {
-            resultTutor = tutorIT.next();
-            if (resultTutor.getTutorID().equals(input) || resultTutor.getName().equals(input)) {
-                return resultTutor;
+            Tutor tutor = tutorIT.next();
+            if (tutor.getTutorID().equals(input) || tutor.getName().equals(input)) {
+                return tutor;
             }
         }
 
@@ -203,13 +290,70 @@ public class TeachingAssignmentManagementUI {
         System.out.print("Enter course name / ID (AACS1234 / MPU-1123) : ");
         String input = scanner.nextLine();
         while (courseIT.hasNext()) {
-            resultCourse = courseIT.next();
-            if (resultCourse.getCourseCode().equals(input) || resultCourse.getCourseName().equals(input)) {
-                return resultCourse;
+            Course course = courseIT.next();
+            if (course.getCourseCode().equals(input) || course.getCourseName().equals(input)) {
+                return course;
             }
         }
 
         return resultCourse;
+    }
+
+    public int getFilterInput(int selection) {
+        int numberOfClasses = 0;
+        while (true) {
+            boolean valid = true;
+
+            try {
+                switch (selection) {
+                    case 1:
+                        MessageUI.TeachingAssignmentTopDivider();
+                        System.out.printf("List Tutors who have assigned more than \n");
+                        MessageUI.TeachingAssignmentBtmDivider();
+                        System.out.print("Enter number of class (0-14) ");
+                        numberOfClasses = scanner.nextInt();
+                        if (!(numberOfClasses >= 0 && numberOfClasses <= 14)) {
+                            System.out.println("Please enter the number of class in (0-14)");
+                            valid = false;
+                        }
+                        break;
+                    case 2:
+                        MessageUI.TeachingAssignmentTopDivider();
+                        System.out.printf("List Tutors who have assigned equal \n");
+                        MessageUI.TeachingAssignmentBtmDivider();
+                        System.out.print("Enter number of class (0-15) ");
+                        numberOfClasses = scanner.nextInt();
+                        if (!(numberOfClasses >= 0 && numberOfClasses <= 15)) {
+                            System.out.println("Please enter the number of class in (0-15)");
+                            valid = false;
+                        }
+                        break;
+                    case 3:
+                        MessageUI.TeachingAssignmentTopDivider();
+                        System.out.printf("List Tutors who have assigned less than \n");
+                        MessageUI.TeachingAssignmentBtmDivider();
+                        System.out.print("Enter number of class (1-15) ");
+                        numberOfClasses = scanner.nextInt();
+                        if (!(numberOfClasses >= 1 && numberOfClasses <= 15)) {
+                            System.out.println("Please enter the number of class in (1-15)");
+                            valid = false;
+                        }
+                        break;
+                    default:
+                }
+                scanner.nextLine();
+            } catch (Exception e) {
+                System.out.println("\nPlease enter a valid selection in integer");
+                scanner.nextLine();
+                MessageUI.pause();
+            }
+            if (valid) {
+                break;
+            }
+
+        }
+
+        return numberOfClasses;
     }
 
     public String getDomainKnowledgeString(ListInterface<String> domainList) {
@@ -266,6 +410,7 @@ public class TeachingAssignmentManagementUI {
                     }
 
                 }
+                MessageUI.TeachingAssignmentBtmDivider();
                 System.out.printf(" 0. Exit\n");
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
@@ -296,22 +441,23 @@ public class TeachingAssignmentManagementUI {
 
     }
 
-    public String getProgrammeSelection(ListInterface<String> programmeList) {
-        Iterator<String> programmeIT = programmeList.getIterator();
+    public Programme getProgrammeSelection(ListInterface<Programme> programmeList) {
+        Iterator<Programme> programmeIT = programmeList.getIterator();
         int selection = -1;
         int count = 1;
-        String selectedProgramme = null;
+        Programme selectedProgramme = null;
 
         while (true) {
             try {
                 MessageUI.TeachingAssignmentTopDivider();
-                System.out.printf("Programme List:");
+                System.out.printf("Programme List:\n");
                 MessageUI.TeachingAssignmentBtmDivider();
                 while (programmeIT.hasNext()) {
-                    String programme = programmeIT.next();
-                    System.out.printf("\n%02d. %s", count++, programme);
+                    Programme programme = programmeIT.next();
+                    System.out.printf("%02d. %s\n", count++, programme.getName());
                 }
-                System.out.printf(" 0. Exit");
+                MessageUI.TeachingAssignmentBtmDivider();
+                System.out.printf(" 0. Exit\n");
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.print("Enter choice: ");
                 selection = scanner.nextInt();
@@ -319,6 +465,7 @@ public class TeachingAssignmentManagementUI {
 
                 if (selection >= 0 && selection <= programmeList.getNumberOfEntries()) {
                     if (selection == 0) {
+                        selectedProgramme = null;
                         MessageUI.displayExit();
                         break;
                     } else {
@@ -408,6 +555,7 @@ public class TeachingAssignmentManagementUI {
                 scanner.nextLine();
                 if (selection >= 0 && selection <= courseList.getNumberOfEntries()) {
                     if (selection == 0) {
+                        selectedCourse = null;
                         MessageUI.displayExit();
                         break;
                     } else {
@@ -498,6 +646,7 @@ public class TeachingAssignmentManagementUI {
                 scanner.nextLine();
                 if (selection >= 0 && selection <= tutorList.getNumberOfEntries()) {
                     if (selection == 0) {
+                        selectedTutor = null;
                         MessageUI.displayExit();
                         break;
                     } else {
@@ -521,14 +670,14 @@ public class TeachingAssignmentManagementUI {
 
     public void displayCourseDetail(Course course, int numOfClassAssigned) {
         MessageUI.TeachingAssignmentBtmDivider();
-        System.out.printf("Course ID                : %s\n", course.getCourseCode());
-        System.out.printf("Course Name              : %s\n", course.getCourseName());
+        System.out.printf("Course ID                 : %s\n", course.getCourseCode());
+        System.out.printf("Course Name               : %s\n", course.getCourseName());
         System.out.printf("Required Domain Knowledge : %s\n", getDomainKnowledgeString(course.getRequiredDomainKnowledge()));
-        System.out.printf("No of class assigned     : %2d\n", numOfClassAssigned);
+        System.out.printf("No of class assigned      : %2d\n", numOfClassAssigned);
         MessageUI.TeachingAssignmentBtmDivider();
         MessageUI.pause();
     }
-    
+
     public void displayTutorDetail(Tutor tutor, int numOfClassAssigned) {
         MessageUI.TeachingAssignmentBtmDivider();
         System.out.printf("Tutor ID                 : %s\n", tutor.getTutorID());
@@ -539,5 +688,5 @@ public class TeachingAssignmentManagementUI {
         MessageUI.TeachingAssignmentBtmDivider();
         MessageUI.pause();
     }
-    
+
 }
