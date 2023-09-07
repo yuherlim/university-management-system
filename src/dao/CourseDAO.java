@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 
 /**
  *
- * @author syshe
+ * @author Sia Yeong Sheng
  */
 public class CourseDAO {
 
