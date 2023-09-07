@@ -15,7 +15,7 @@ import utility.MessageUI;
 
 /**
  *
- * @author syshe
+ * @author Sia Yeong Sheng
  */
 public class CourseManagement {
 

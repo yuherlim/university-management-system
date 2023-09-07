@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author Yu
+ * @author Yu, Sia Yeong Sheng
  */
 public class MessageUI {
 

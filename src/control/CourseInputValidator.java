@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author syshe
+ * @author Sia Yeong Sheng
  */
 public class CourseInputValidator {
     Scanner scan = new Scanner(System.in);
