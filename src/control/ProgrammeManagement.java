@@ -251,10 +251,16 @@ public class ProgrammeManagement {
     }
 
     private Programme getProgrammeToAddTutGroup() {
-        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupsForProgrammes(programmeList));
+        programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
         System.out.println("\nEnter the programme code of the program to add tutorial groups.");
         Programme programmeToAddTutGroup = searchByProgrammeCode(programmeList);
         return programmeToAddTutGroup;
+    }
+    
+    private Programme getProgrammeToViewTutGroup() {
+        System.out.println("\nEnter the programme code of the program that you want to view all tutorial groups.");
+        Programme programmeToViewTutGroup = searchByProgrammeCode(programmeList);
+        return programmeToViewTutGroup;
     }
 
     private void findProgramme() {
@@ -457,31 +463,55 @@ public class ProgrammeManagement {
             return;
         }
         
-        programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupsForProgrammes(programmeList));
+        int selection;
+        do {
+            selection = programmeManagementUI.getDisplayTutorialGroupMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("\nExiting tutorial group display...");
+                    break;
+                case 1:
+                    Programme programmeToViewTutGroup = getProgrammeToViewTutGroup();
+
+                    if (programmeToViewTutGroup == null) {
+                        programmeManagementUI.nonexistentProductCodeMsg();
+                        break;
+                    }
+
+                    programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForOneProgramme(programmeToViewTutGroup));
+                    break;
+                case 2:
+                    programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
+                    break;
+            }
+        } while (selection != 0);
+        
+        programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
     }
     
-    private String getAllTutGroupsForProgrammes(ListInterface<Programme> programmeList) {
+    private String getTutGroupsForAllProgrammes(ListInterface<Programme> programmeList) {
         String outputStr = "";
-        String groupStr = "";
-        ArrayList<String> currentProgrammeTutGroupList;
         Iterator<Programme> it = programmeList.getIterator();
         while (it.hasNext()) {
             Programme currentProgramme = it.next();
-            outputStr += String.format("%-4s %-80s", currentProgramme.getCode(), currentProgramme.getName());
-            currentProgrammeTutGroupList = currentProgramme.getTutorialGroups();
-            groupStr = "";
-            if (currentProgrammeTutGroupList != null) {
-                for (int i = 1; i <= currentProgrammeTutGroupList.getNumberOfEntries(); i++) {
-                    groupStr += currentProgrammeTutGroupList.getEntry(i) + ", ";
-                    if (i == currentProgrammeTutGroupList.getNumberOfEntries()) {
-                        groupStr += "\b\b";
-                    }
-                }
-            } else {
-                groupStr += "none";
-            }
-            outputStr += String.format(" %-35s\n", groupStr);
+            outputStr += getTutGroupsForOneProgramme(currentProgramme);
         }
+        return outputStr;
+    }
+    
+    private String getTutGroupsForOneProgramme(Programme programmeToViewTutGroup) {
+        String outputStr = "";
+        String groupStr = "";
+        ArrayList<String> currentProgrammeTutGroupList = programmeToViewTutGroup.getTutorialGroups();
+        
+        if (currentProgrammeTutGroupList != null && !currentProgrammeTutGroupList.isEmpty()) {
+            groupStr += createTutorialGroupStr(currentProgrammeTutGroupList);
+        } else {
+            groupStr += "none";
+        }
+        
+        outputStr += String.format("%-4s %-80s %-35s\n", programmeToViewTutGroup.getCode(), programmeToViewTutGroup.getName(), groupStr);
+        
         return outputStr;
     }
 
@@ -596,18 +626,18 @@ public class ProgrammeManagement {
     private void performTutGroupAddition(Programme programmeToAddTutGroup) {
         ArrayList<String> currentTutorialGroupList = programmeToAddTutGroup.getTutorialGroups();
         String outputStr = "";
-        String latestGroup = "";
+        String latestGroup;
 
         char confirmation;
         do {
 
-            if (currentTutorialGroupList != null) {
+            if (currentTutorialGroupList != null && !currentTutorialGroupList.isEmpty()) {
                 latestGroup = "G" + ((Integer.parseInt(currentTutorialGroupList.getLast().substring(1))) + 1);
                 outputStr = createTutorialGroupStr(currentTutorialGroupList);
             } else {
                 currentTutorialGroupList = new ArrayList<>();
                 latestGroup = "G1";
-                outputStr += "none";
+                outputStr = "none";
             }
 
             System.out.println("\n" + programmeToAddTutGroup.getCode() + " current tutorial groups: " + outputStr + "\n");
@@ -655,6 +685,8 @@ public class ProgrammeManagement {
         tutGroupList.add(new TutorialGroup(tutGroupID, programmeToAddTutGroup.getTutorialGroups().getLast(), programmeToAddTutGroup.getCode(), currentBatchNo));
         tutGroupDAO.saveToFile(tutGroupList);
     }
+
+    
 }
 
 /*
