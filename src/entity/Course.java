@@ -7,6 +7,7 @@ package entity;
 
 import adt.ArrayList;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -89,6 +90,21 @@ public class Course implements Serializable{
     public void setProgrammes(ArrayList<String> programmes) {
         this.programmes = programmes;
     }
+
+   @Override
+    public boolean equals(Object obj) {
+       if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Course other = (Course) obj;
+        return Objects.equals(this.courseCode, other.courseCode);
+    }   
     
     
     

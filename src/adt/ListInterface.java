@@ -7,7 +7,8 @@ package adt;
 import java.util.Iterator;
 
 /**
- * @author Frank M. Carrano
+ * Adapted from Frank M. Carrano
+ * @author Kho Ka Jie, Lim Yu Her, Ong Cheng Leong, Sia Yeong Sheng
  * @version 2.0
  */
 public interface ListInterface<T> {

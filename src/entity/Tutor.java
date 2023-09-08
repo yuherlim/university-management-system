@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  *
- * @author ASUS
+ * @author KHO KA JIE
  */
 public class Tutor implements Serializable {
 
@@ -121,9 +121,8 @@ public class Tutor implements Serializable {
         StringBuilder domainKnowledgeString = new StringBuilder();
 
         Iterator<String> it = getDomainKnowledgeList().getIterator();
-        int size = domainKnowledgeList.getNumberOfEntries();
 
-        String domain = null;
+        String domain;
 
         while (it.hasNext()) {
             domain = it.next();

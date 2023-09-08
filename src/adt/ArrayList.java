@@ -1,8 +1,8 @@
 package adt;
 
 /**
- * @author Frank M. Carrano
- * @version 2.0
+ * Adapted from Frank M. Carrano
+ * @author Kho Ka Jie, Lim Yu Her, Ong Cheng Leong, Sia Yeong Sheng
  */
 import java.io.Serializable;
 import java.util.Iterator;

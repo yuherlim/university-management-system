@@ -170,7 +170,7 @@ public class CourseManagementUI {
         return feePerCH;
     }
 
-    public int inputProgramme(String[] programmes, char addOrDelete) {
+    public int inputProgramme(ListInterface<String> programmes, char addOrDelete) {
         int programmeSelection = 0;
         boolean valid = true;
         do {
@@ -180,8 +180,8 @@ public class CourseManagementUI {
                 } else {
                     System.out.println("\nRemove the programme from taking the course");
                 }
-                for (int i = 0; i < programmes.length; i++) {
-                    System.out.println(i + 1 + ". " + programmes[i]);
+                for (int i = 1; i <= programmes.getNumberOfEntries(); i++) {
+                    System.out.println(i + ". " + programmes.getEntry(i));
                 }
                 System.out.println("0. Quit");
                 System.out.println("Your input: ");
@@ -448,7 +448,8 @@ public class CourseManagementUI {
 
     public void displayACourse(ListInterface<Course> courseList) {
         Course target = searchCourseByCode(courseList);
-        System.out.println(target);
+        if(target != null)
+            System.out.println(target);
         MessageUI.pause();
     }
 
@@ -475,20 +476,25 @@ public class CourseManagementUI {
         return selection;
     }
 
-    public void report(ListInterface<Course> courseList, String[] programme) {
-        for (String prog : programme) {
+    public void report(ListInterface<Course> courseList, ListInterface<String> programme) {
+        int totalCreditHours = 0;
+        String progCode = "";
+
+        for (int i = 1; i <= programme.getNumberOfEntries(); i++) {
+            totalCreditHours = 0;
+            progCode = programme.getEntry(i);
             MessageUI.courseTopDivider();
             Iterator<Course> it = courseList.getIterator();
             System.out.printf("%-10s %-20s %-50s %10s\n", "Programme", "Course Code", "Course Name", "Credit Hour");
-            int totalCreditHours = 0;
+
             boolean firstLine = true;
 
             while (it.hasNext()) {
                 Course course = it.next();
                 for (int j = 1; j <= course.getProgrammes().getNumberOfEntries(); j++) {
-                    if (course.getProgrammes().getEntry(j).equals(prog)) {
+                    if (course.getProgrammes().getEntry(j).equals(progCode)) {
                         if (firstLine) {
-                            System.out.printf("%-10s %-20s %-50s %10d\n", prog, course.getCourseCode(), course.getCourseName(), course.getCreditHR());
+                            System.out.printf("%-10s %-20s %-50s %10d\n", progCode, course.getCourseCode(), course.getCourseName(), course.getCreditHR());
                             totalCreditHours += course.getCreditHR();
                             firstLine = false;
                         } else {
@@ -498,16 +504,15 @@ public class CourseManagementUI {
                     }
                 }
             }
+
             if (totalCreditHours == 0) {
-                System.out.printf("%-10s %25s", prog, "-----------------------Pending for course assignment-----------------------\n");
+                System.out.printf("%-10s %25s", progCode, "-----------------------Pending for course assignment-----------------------\n");
                 System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
             } else {
                 System.out.printf("Total Credit Hour: %74d\n", totalCreditHours);
             }
             MessageUI.courseBtmDivider();
         }
-
-        //each programme ,courses, total credit hour
     }
-
+    //each programme ,courses, total credit hour
 }

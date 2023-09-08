@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 
 /**
  *
- * @author ong58
+ * @author Ong Cheng Leong
  */
 public class TeachingAssignmentDAO {
      private String fileName = "teachingAssignment.dat";
