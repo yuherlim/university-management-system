@@ -20,7 +20,7 @@ public class UniversityManagementSystemUI {
         while (true) {
             try {
                 MessageUI.TeachingAssignmentTopDivider();
-                System.out.println("TAR Univeristy");
+                System.out.println("TAR University");
                 MessageUI.TeachingAssignmentBtmDivider();
                 System.out.println("University Management System Main Menu");
                 MessageUI.TeachingAssignmentBtmDivider();
