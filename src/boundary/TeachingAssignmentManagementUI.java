@@ -725,8 +725,9 @@ public class TeachingAssignmentManagementUI {
                 Iterator<TutorialGroup> tutGroupIT = tutorialGroupList.getIterator();
                 while (tutGroupIT.hasNext()) {
                     TutorialGroup tutGroup = tutGroupIT.next();
-                    ListInterface selectedTutGrpTAList = TeachingAssignmentManagement.sortTAByCourseName(TeachingAssignmentManagement.filterByTutorialGrp(selectedProgrammeTAList, tutGroup));
+                    ListInterface selectedTutGrpTAList = TeachingAssignmentManagement.filterByTutorialGrp(selectedProgrammeTAList, tutGroup);
                     if (selectedTutGrpTAList.getNumberOfEntries() != 0) {
+                        selectedTutGrpTAList= TeachingAssignmentManagement.sortTAByCourseName(selectedTutGrpTAList);
                         System.out.printf("\n%9s %-7s", " ", tutGroup.getGroup());
                         Iterator<TeachingAssignment> taIT = selectedTutGrpTAList.getIterator();
                         while (taIT.hasNext()) {

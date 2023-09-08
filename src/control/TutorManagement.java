@@ -539,7 +539,7 @@ public class TutorManagement {
         return copyArray;
     }
 
-    public void TutorManagementMain() {
+    public static void main(String[] args) {
         TutorManagement tutorManagement = new TutorManagement();
         TutorManagementUI tutorManagementUI = new TutorManagementUI();
         char confirmation = ' ';

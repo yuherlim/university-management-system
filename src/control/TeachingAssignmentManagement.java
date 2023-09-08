@@ -11,7 +11,6 @@ import adt.ListInterface;
 import adt.StackInterface;
 import boundary.TeachingAssignmentManagementUI;
 import dao.CourseDAO;
-import dao.CourseInitializer;
 import dao.ProgrammeDAO;
 import dao.TeachingAssignmentDAO;
 import dao.TutorDAO;
@@ -60,8 +59,9 @@ public class TeachingAssignmentManagement {
         CourseDAO courseDAO = new CourseDAO();
         ListInterface tutorList = tutorDAO.retrieveFromFile();
         ListInterface courseList = courseDAO.retrieveFromFile();
-        int selection = teachingAssignmentUI.getSearchTutorAssignmentOption();
+        int selection = -1;
         do {
+            selection = teachingAssignmentUI.getSearchTutorAssignmentOption();
             switch (selection) {
                 case 1:
                     searchByTutor(currentBatch, teachingAssignmentList, tutorList);
@@ -80,9 +80,10 @@ public class TeachingAssignmentManagement {
     public void filterTeachingAssignment(String currentBatch) {
         ProgrammeDAO programmeDAO = new ProgrammeDAO();
         ListInterface<Programme> programmeList = programmeDAO.retrieveFromFile();
+        int selection = -1;
 
-        int selection = teachingAssignmentUI.getFilterTutorAssignmentOption();
         do {
+            selection = teachingAssignmentUI.getFilterTutorAssignmentOption();
             switch (selection) {
                 case 1:
                     tutorsFilterByNumOfClassAssigned(currentBatch, teachingAssignmentList);
@@ -104,8 +105,9 @@ public class TeachingAssignmentManagement {
         ListInterface tutorList = tutorDAO.retrieveFromFile();
         ListInterface courseList = courseDAO.retrieveFromFile();
         int selection = -1;
-        selection = teachingAssignmentUI.getListTutorAssignmentOption();
+
         do {
+            selection = teachingAssignmentUI.getListTutorAssignmentOption();
             switch (selection) {
                 case 1:
                     listTutors(currentBatch, teachingAssignmentList, courseList);
@@ -131,56 +133,54 @@ public class TeachingAssignmentManagement {
         do {
             if (!this.afterChangesStack.isEmpty()) {
 
-                   cont = 'N';
-                    teachingAssignmentUI.displayChanges(beforeChangesStack, afterChangesStack);
+                cont = 'N';
+                teachingAssignmentUI.displayChanges(beforeChangesStack, afterChangesStack);
 
-                    int selection = -1;
-                    selection = teachingAssignmentUI.getUndoOption();
-                    switch (selection) {
-                        case 1:
-                            TeachingAssignment tempBefore = beforeChangesStack.pop();
-                            TeachingAssignment tempAfter = afterChangesStack.pop();
-                            this.teachingAssignmentList.replace(tempAfter, tempBefore);
-                            cont = 'Y';
-                            System.out.printf("\nUndo sucessfully\n");
+                int selection = teachingAssignmentUI.getUndoOption();
+                switch (selection) {
+                    case 1:
+                        TeachingAssignment tempBefore = beforeChangesStack.pop();
+                        TeachingAssignment tempAfter = afterChangesStack.pop();
+                        this.teachingAssignmentList.replace(tempAfter, tempBefore);
+                        cont = 'Y';
+                        System.out.printf("\nUndo sucessfully\n");
+                        MessageUI.pause();
+                        break;
+                    case 2:
+                        char delete = 'N';
+                        while (true) {
+                            System.out.printf("\nDo you want to confirm the modified changes made, the changes cant be undo once it confimed (Y/N) : ");
+                            delete = scanner.next().toUpperCase().charAt(0);
+                            if (delete == 'Y' || delete == 'N') {
+                                break;
+                            }
+                            System.out.printf("\nPlease enter a valid selection\n");
                             MessageUI.pause();
-                            break;
-                        case 2:
-                            char delete = 'N';
-                            while (true) {
-                                System.out.printf("\nDo you want to confirm the modified changes made, the changes cant be undo once it confimed (Y/N) : ");
-                                delete = scanner.next().toUpperCase().charAt(0);
-                                if (delete == 'Y' || delete == 'N') {
-                                    break;
-                                }
-                                System.out.printf("\nPlease enter a valid selection\n");
-                                MessageUI.pause();
-                            }
-                            if (delete == 'Y') {
-                                beforeChangesStack.clear();
-                                afterChangesStack.clear();
-                                System.out.printf("\nModify changes made confirmed \n");
-                                cont = 'N';
-                                MessageUI.pause();
-
-                            }else{
-                            cont = 'Y';
-                            }
-                            break;
-                        default:
+                        }
+                        if (delete == 'Y') {
+                            beforeChangesStack.clear();
+                            afterChangesStack.clear();
+                            System.out.printf("\nModify changes made confirmed \n");
                             cont = 'N';
-                    }
+                            MessageUI.pause();
 
-           
+                        } else {
+                            cont = 'Y';
+                        }
+                        break;
+                    default:
+                        cont = 'N';
+                }
+
             } else {
                 System.out.println("\nThere is no modify made");
                 MessageUI.pause();
                 cont = 'N';
             }
         } while (cont == 'Y');
-        
+
         MessageUI.displayExit();
-                    MessageUI.pause();
+        MessageUI.pause();
         teachingAssignmentDAO.saveToFile(teachingAssignmentList);
 
     }
@@ -797,7 +797,7 @@ public class TeachingAssignmentManagement {
                                 }
                             }
                             if (filteredTutorList.getNumberOfEntries() == 0) {
-                                System.out.printf("There is no tutor has been assigned more than %d classes\n", filterInput);
+                                System.out.printf("\nThere is no tutor has been assigned more than %d classes\n", filterInput);
 
                             } else {
                                 displayStringForCourseSelection = String.format("Tutors who have been assigned more than %d classes\n", filterInput);
@@ -812,7 +812,7 @@ public class TeachingAssignmentManagement {
                                 }
                             }
                             if (filteredTutorList.getNumberOfEntries() == 0) {
-                                System.out.printf("There is no tutor has been assigned %d classes\n", filterInput);
+                                System.out.printf("\nThere is no tutor has been assigned %d classes\n", filterInput);
 
                             } else {
                                 displayStringForCourseSelection = String.format("Tutors who have been assigned %d classes\n", filterInput);
@@ -827,7 +827,7 @@ public class TeachingAssignmentManagement {
                                 }
                             }
                             if (filteredTutorList.getNumberOfEntries() == 0) {
-                                System.out.printf("There is no tutor has been assigned more than %d classes\n", filterInput);
+                                System.out.printf("\nThere is no tutor has been assigned more than %d classes\n", filterInput);
 
                             } else {
                                 displayStringForCourseSelection = String.format("Tutors who have been assigned less than %d classes\n", filterInput);
@@ -877,11 +877,10 @@ public class TeachingAssignmentManagement {
         ListInterface<String> reportBatchList = new ArrayList<>();
 
         do {
-            int selection = teachingAssignmentUI.getReportOption();
+             int selection = teachingAssignmentUI.getReportOption();
             String batchSelection = null;
             String displayStringForBatchSelection = "";
             String displayStringforReport = "";
-            int filterInput = -1;
             switch (selection) {
                 case 1:
                     reportTAList = getAssignedTeachingList(taList);
@@ -1314,7 +1313,7 @@ public class TeachingAssignmentManagement {
         ListInterface<TeachingAssignment> ta2List = TeachingAssignmentManagement.convertToArrayList(taList);
         if (this.teachingAssignmentList.isEmpty()) {
             ListInterface<String> batchList = TeachingAssignmentManagement.getUniqueBatch(taList);
-            Iterator<String> batchIT = batchList.getIterator();
+             Iterator<String> batchIT = batchList.getIterator();
             while (batchIT.hasNext()) {
                 String batch = batchIT.next();
                 ListInterface<TeachingAssignment> taListFilterbyBatch = TeachingAssignmentManagement.getCurrentBatchTeachingList(batch, taList);
@@ -1349,7 +1348,7 @@ public class TeachingAssignmentManagement {
 
         } else {
             Iterator<TeachingAssignment> taListIT = taList.getIterator();
-            Iterator<TeachingAssignment> teachingAssignmentListIT = taList.getIterator();
+            Iterator<TeachingAssignment> teachingAssignmentListIT = teachingAssignmentList.getIterator();
             while (taListIT.hasNext()) {
                 TeachingAssignment ta = taListIT.next();
                 if (!teachingAssignmentList.contains(ta)) {
