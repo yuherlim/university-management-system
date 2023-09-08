@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class TutorialGroup implements Serializable {
 

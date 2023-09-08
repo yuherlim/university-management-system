@@ -10,7 +10,7 @@ import java.io.*;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class ProgrammeDAO {
     private final String fileName = "programme.dat"; // For security and maintainability, should not have filename hardcoded here.

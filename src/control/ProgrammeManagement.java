@@ -13,7 +13,7 @@ import utility.MessageUI;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class ProgrammeManagement {
 
