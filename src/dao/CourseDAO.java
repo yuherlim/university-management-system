@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
  */
 public class CourseDAO {
 
-    private String fileName = "Course.dat";
+    private String fileName = "course.dat";
 
     public void saveToFile(ListInterface<Course> courseList) {
         File file = new File(fileName);

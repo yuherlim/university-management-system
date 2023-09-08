@@ -24,18 +24,27 @@ public class CourseManagement {
     private ProgrammeDAO progDAO = new ProgrammeDAO();
     private CourseDAO courseDAO = new CourseDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();
-    private String[] programmes;
-    private String[] domainKnowledges = {"Accounting", "Add.Math", "Biology", "Chemistry", "Physics"};
+    private ListInterface<String> programmes = new ArrayList<>();
+    private ListInterface<String> domainKnowledges = new ArrayList<>();
     private CourseInputValidator validator = new CourseInputValidator();
     Scanner scan = new Scanner(System.in);
 
     public CourseManagement() {
         courseList = courseDAO.retrieveFromFile();
         progList = progDAO.retrieveFromFile();
-        programmes = new String[progList.getNumberOfEntries()];
-        for (int i = 0; i < programmes.length; i++) {
-            programmes[i] = progList.getEntry(i + 1).getCode();
+        //set the programmes string array based on the number of programme available in programme class 
+        for (int i = 1; i <= progList.getNumberOfEntries(); i++) {
+         
+            programmes.add(progList.getEntry(i).getCode());
         }
+        
+        //assume that it will be only 5, and is fixed domain knowledge requirements
+        domainKnowledges.add("Accounting");
+        domainKnowledges.add("Add.Math");
+        domainKnowledges.add("Biology");
+        domainKnowledges.add("Chemistry");
+        domainKnowledges.add("Physics");
+        
     }
 
     //main functions
@@ -58,7 +67,7 @@ public class CourseManagement {
         //Not using annoymous object in add due to the need to display the new course added
         courseList.add(course);
         courseDAO.saveToFile(courseList);
-        System.out.println(course + "successfully added.");
+        System.out.println(course + "successfully added.\n");
         addCourseInProgramme(course, progList);
         progDAO.saveToFile(progList);
 
@@ -176,7 +185,7 @@ public class CourseManagement {
                         break;
 
                     case 5:
-                        modifyCourseProgList(programmes, target, progList);
+                        modifyCourseProgList(target);
                         break;
 
                     case 0:
@@ -302,15 +311,15 @@ public class CourseManagement {
 
 //support control functions 
     // add
-    private ListInterface<String> inputDomainLoop(String[] domainList) {
+    private ListInterface<String> inputDomainLoop(ListInterface<String> domainList) {
         int domainSelection;
         ListInterface<String> domains = new ArrayList<>();
         do {
             domainSelection = courseUI.inputDomain();
             boolean notDuplicated = true;
-            if (domainSelection >= 1 && domainSelection <= domainList.length) {
+            if (domainSelection >= 1 && domainSelection <= domainList.getNumberOfEntries()) {
                 if (domains.getNumberOfEntries() > 0) {
-                    notDuplicated = validator.checkExistInList(domains, domainList[domainSelection - 1]);
+                    notDuplicated = validator.checkExistInList(domains, domainList.getEntry(domainSelection));
                 }
 
             } else if (domainSelection == 0) {
@@ -319,9 +328,9 @@ public class CourseManagement {
                 MessageUI.displayInvalidChoiceMessage();
             }
 
-            if ((domainSelection >= 1 && domainSelection <= domainList.length) && notDuplicated) {
-                domains.add(domainList[domainSelection - 1]);
-                System.out.println(domainList[domainSelection - 1] + " successfully added.\n");
+            if ((domainSelection >= 1 && domainSelection <= domainList.getNumberOfEntries()) && notDuplicated) {
+                domains.add(domainList.getEntry(domainSelection));
+                System.out.println(domainList.getEntry(domainSelection) + " successfully added.\n");
             } else if (!notDuplicated) {
                 System.out.println("The domain already in the list.\n");
             }
@@ -331,15 +340,15 @@ public class CourseManagement {
         return domains;
     }
 
-    private ListInterface<String> programmeInputList(String[] programmes) {
+    private ListInterface<String> programmeInputList(ListInterface<String> programmes) {
         int programmeSelection;
         ListInterface<String> result = new ArrayList<>();
         do {
             programmeSelection = courseUI.inputProgramme(programmes, 'I');
             boolean notDuplicated = true;
-            if (programmeSelection >= 1 && programmeSelection <= programmes.length) {
+            if (programmeSelection >= 1 && programmeSelection <= programmes.getNumberOfEntries()) {
                 if (result.getNumberOfEntries() > 0) {
-                    notDuplicated = validator.checkExistInList(result, programmes[programmeSelection - 1]);
+                    notDuplicated = validator.checkExistInList(result, programmes.getEntry(programmeSelection));
                 }
 
             } else if (programmeSelection == 0) {
@@ -353,9 +362,9 @@ public class CourseManagement {
                 MessageUI.displayInvalidChoiceMessage();
             }
 
-            if ((programmeSelection >= 1 && programmeSelection <= programmes.length) && notDuplicated) {
-                result.add(programmes[programmeSelection - 1]);
-                System.out.println(programmes[programmeSelection - 1] + " successfully added.");
+            if ((programmeSelection >= 1 && programmeSelection <= programmes.getNumberOfEntries()) && notDuplicated) {
+                result.add(programmes.getEntry(programmeSelection));
+                System.out.println(programmes.getEntry(programmeSelection) + " successfully added.");
             } else if (!notDuplicated) {
                 System.out.println("The programme already in the list.\n");
             }
@@ -399,7 +408,7 @@ public class CourseManagement {
         MessageUI.courseModificationMsg();
     }
 
-    private void modifyCourseDomainList(String[] domainList, Course course) {
+    private void modifyCourseDomainList(ListInterface<String> domainList, Course course) {
 
         int selection = -1;
 
@@ -428,46 +437,46 @@ public class CourseManagement {
         } while (selection != 0);
     }
     
-    private void modifyCourseDomainListSuppFunc(int selection, Course course, String[] domainList){
+    private void modifyCourseDomainListSuppFunc(int selection, Course course, ListInterface<String> domainList){
                 System.out.println("\nCurrent domain knowledge required for the course: ");
                 System.out.println(course.getRequiredDomainKnowledge());             
                 ListInterface<String> inputDomainList = course.getRequiredDomainKnowledge();
-                int index = courseUI.inputDomain() - 1; //user input will return int value to access predifined domain list;
+                ListInterface<String> updateDomainList = listForModfication(inputDomainList);
+                int noOfEntry = courseUI.inputDomain(); //user input will return int value to access predifined domain list;
                 boolean notExist = true, modification = false;
-                if (index >= 0 && index <= domainList.length - 1) {
-                    notExist = validator.checkExistInList(inputDomainList, domainList[index]);
+                if (noOfEntry >= 1 && noOfEntry <= domainList.getNumberOfEntries()) {
+                    notExist = validator.checkExistInList(inputDomainList, domainList.getEntry(noOfEntry));
 
                     if (selection == 1) {
                         if (notExist) {
-                            inputDomainList.add(domainList[index]);
-                            System.out.println(domainList[index] + " has been added.");
-                            modification = true;
+                            updateDomainList.add(domainList.getEntry(noOfEntry));
+                            System.out.println(domainList.getEntry(noOfEntry) + " has been added.");
+                            modification = true;                              
                         } else {
                             System.out.println("Existing domain");
                         }
 
                     } else if (selection == 2) {
                         if (!notExist) {
-                            inputDomainList.remove(domainList[index]);
-                            System.out.println(domainList[index] + " has been removed.");
+                            updateDomainList.remove(domainList.getEntry(noOfEntry));
+                            System.out.println(domainList.getEntry(noOfEntry) + " has been removed.");
                             modification = true;
                         } else {
                             System.out.println("Domain not in the list");
                         }
                     }
-                } else if (index == -1) {
+                } else if (noOfEntry == 0) {
                     System.out.println("\nExiting domain list modification.");
                 } else {
                     System.out.println("\nInvalid selection.");
                 }
                 if (modification) {
-                    course.setRequiredDomainKnowledge((ArrayList<String>) inputDomainList);
+                    course.setRequiredDomainKnowledge((ArrayList<String>) updateDomainList);                 
                     MessageUI.courseModificationMsg();
                 }
     }
 
-    private void modifyCourseProgList(String[] programmes, Course course,
-            ListInterface<Programme> progList) {
+    private void modifyCourseProgList(Course course) {
 
         int selection = -1;
 
@@ -500,53 +509,66 @@ public class CourseManagement {
 
     private void modifyCourseProgListSuppFunc(int selection, Course course) {    
         ListInterface<String> inputProgList = course.getProgrammes();
+        ListInterface<String> updateProgList = listForModfication(inputProgList);
         boolean notExist = true, modification = false;
         System.out.println("\nCurrent programme list: ");
         System.out.println(inputProgList);
               
         if (selection == 1) {
-            int index = courseUI.inputProgramme(programmes, 'I') - 1; //user input will return int value to access predifined programmes list;
-            if (index >= 0 && index < programmes.length) {
-                notExist = validator.checkExistInList(inputProgList, programmes[index]);
-                if (notExist) {
-                    inputProgList.add(programmes[index]);
-                    System.out.println(programmes[index] + " has been added.");
+            int noOfEntry = courseUI.inputProgramme(programmes, 'I'); 
+            if (noOfEntry >= 1 && noOfEntry <= programmes.getNumberOfEntries()) {
+                notExist = validator.checkExistInList(inputProgList, programmes.getEntry(noOfEntry));
+                if (notExist) {               
+                    updateProgList.add(programmes.getEntry(noOfEntry));           
+                    System.out.println(programmes.getEntry(noOfEntry) + " has been added.");
                     modification = true;
                 } else {
                     System.out.println("Existing programme");
                 }
-            } else if (index == -1) {
-                System.out.println("\nExiting domain list modification.");
+            } else if (noOfEntry == 0) {
+                System.out.println("\nExiting programme list modification.");
             } else {
                 System.out.println("\nInvalid selection.");
             }
 
         } else {
-            int index = courseUI.inputProgramme(programmes, 'D') - 1; //user input will return int value to access predifined programmes list;
-            if (index >= 0 && index < programmes.length) {
-                notExist = validator.checkExistInList(inputProgList, programmes[index]);
+            int noOfEntry = courseUI.inputProgramme(programmes, 'D'); //user input will return int value to access predifined programmes list;
+            if (noOfEntry >= 1 && noOfEntry < programmes.getNumberOfEntries()) {
+                notExist = validator.checkExistInList(inputProgList, programmes.getEntry(noOfEntry));
                 if (!notExist) {
-                    inputProgList.remove(programmes[index]);
-                    System.out.println(programmes[index] + " has been removed.");
+                    updateProgList.remove(programmes.getEntry(noOfEntry));
+                    System.out.println(programmes.getEntry(noOfEntry) + " has been removed.");
                     modification = true;
                 } else {
                     System.out.println("Programme not in the list");
 
                 }
-            } else if (index == -1) {
-                System.out.println("\nExiting domain list modification.");
+            } else if (noOfEntry == 0) {
+                System.out.println("\nExiting programme list modification.");
             } else {
                 System.out.println("\nInvalid selection.");
             }
 
         }
         if (modification) {
-            course.setProgrammes((ArrayList<String>) inputProgList);           
+            course.setProgrammes((ArrayList<String>) updateProgList);           
             modifyCourseInProgramme(course, progList, selection);
             MessageUI.courseModificationMsg();
         }
     }
 
+    private ListInterface<String> listForModfication(ListInterface<String> originalList){
+        //need to create a new list otherwise the reference address of list will cause the entire
+        //course who share the same list to be changed. NECSSARY BECAUSE OF THE PREDEFINED DATA IN THE
+        //CourseInitializer class.
+        ArrayList<String> modifyingList = new ArrayList<>();
+        for(int i=1;i<=originalList.getNumberOfEntries();i++){
+            modifyingList.add(originalList.getEntry(i));
+        }
+        
+        return modifyingList;
+    }
+    
     //use to modify course list in the programme list
     private void modifyCourseInProgramme(Course course, ListInterface<Programme> progList, int addOrDelete) {
         if (addOrDelete == 1) {
@@ -565,7 +587,7 @@ public class CourseManagement {
                 for (int i = 1; i <= course.getProgrammes().getNumberOfEntries(); i++) {
                     if (course.getProgrammes().getEntry(i).equals(currentProgrammeCode) && !currentProgramme.getCourses().contains(course.getCourseCode())) {
                         currentProgramme.getCourses().add(course.getCourseCode());
-                        System.out.println("Course " + course.getCourseCode() + " has been added into " + currentProgrammeCode + " course list.\n");
+                        System.out.println("Course " + course.getCourseCode() + " has been added into " + currentProgrammeCode + " course list.");
                     }
                 }
             } else {
@@ -647,7 +669,7 @@ public class CourseManagement {
                 int currentCourseCH = sorted.getEntry(j).getCreditHR();
                 
                 while (j > 1 && currentCourseCH < sorted.getEntry(j-1).getCreditHR()) {
-                    //if current course credit hour is lower than previous course code, swap their position
+                    //if current course credit hour is lower than previous course hour, swap their position
                     swap(sorted, j);
                     j--;
                 }

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Kho Ka Jie
+ * @author KHO KA JIE
  */
 public class TutorManagementUI {
 
@@ -27,53 +27,59 @@ public class TutorManagementUI {
     double tutorSalary;
 
     //------------------------------------------------------------
-    
-    public void addTutorHeader(){
+    public void addTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|           Add Tutor            |");
         System.out.println("----------------------------------");
     }
-    
-    public void removeTutorHeader(){
+
+    public void removeTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Remove Tutor          |");
         System.out.println("----------------------------------");
     }
-    
-    public void findTutorHeader(){
+
+    public void findTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|           Find Tutor           |");
         System.out.println("----------------------------------");
     }
-    
-    public void modifyTutorHeader(){
+
+    public void modifyTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Modify Tutor          |");
         System.out.println("----------------------------------");
     }
-    
-    public void displayTutorHeader(){
+
+    public void displayTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Display Tutor         |");
         System.out.println("----------------------------------");
     }
-    
-    public void filterTutorHeader(){
+
+    public void filterTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Filter Tutor          |");
         System.out.println("----------------------------------");
     }
-    
-    public void reportTutorHeader(){
+
+    public void reportTutorHeader() {
+        System.out.println();
         System.out.println("----------------------------------");
         System.out.println("|          Tutor Report          |");
         System.out.println("----------------------------------");
     }
-    
-    public void displayListDivider(){
+
+    public void displayListDivider() {
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
-    
+
     //------------------------------------------------------------
     public int tutorMainMenu() {
 
@@ -83,7 +89,9 @@ public class TutorManagementUI {
         do {
             valid = true;
             try {
-                System.out.println("\nMAIN MENU");
+                System.out.println("----------------------------------");
+                System.out.println("Tutor Main Menu");
+                System.out.println("----------------------------------");
                 System.out.println("1. Add new tutor");
                 System.out.println("2. Remove tutor");
                 System.out.println("3. Find tutor");
@@ -92,6 +100,7 @@ public class TutorManagementUI {
                 System.out.println("6. Filter tutors");
                 System.out.println("7. Generate report");
                 System.out.println("0. Exit");
+                System.out.println("----------------------------------");
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
                 sc.nextLine();
@@ -179,12 +188,13 @@ public class TutorManagementUI {
         do {
             valid = true;
             try {
-                
+
                 System.out.println("1. Modify tutor name");
                 System.out.println("2. Modify tutor phone number");
                 System.out.println("3. Modify tutor email");
-                System.out.println("4. Modify tutor education level");
-                System.out.println("5. Modify tutor domain knowledge");
+                System.out.println("4. Modify tutor salary");
+                System.out.println("5. Modify tutor education level");
+                System.out.println("6. Modify tutor domain knowledge");
                 System.out.println("0. Exit");
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
@@ -193,7 +203,7 @@ public class TutorManagementUI {
                 sc.nextLine();
                 valid = false;
             }
-            if (selection < 0 || selection > 5) {
+            if (selection < 0 || selection > 6) {
                 valid = false;
             }
             if (!valid) {
@@ -295,7 +305,23 @@ public class TutorManagementUI {
             }
         } while (!valid);
 
-        return tutorName;
+        StringBuilder capitalizedTutorName = new StringBuilder();
+        capitalizedTutorName.append(Character.toUpperCase(tutorName.charAt(0)));
+
+        for (int i = 1; i < tutorName.length(); i++) {
+            char currentChar = tutorName.charAt(i);
+            char previousChar = tutorName.charAt(i - 1);
+
+            if (Character.isSpaceChar(previousChar)) {
+                capitalizedTutorName.append(Character.toUpperCase(currentChar));
+            } else {
+                capitalizedTutorName.append(currentChar);
+            }
+        }
+
+        String result = capitalizedTutorName.toString();
+
+        return result;
     }
 
     public char inputTutorGender() {
@@ -489,7 +515,7 @@ public class TutorManagementUI {
 
         System.out.println("Input the tutor domain knowledge : ");
         System.out.println("1. Accounting");
-        System.out.println("2. Add.Math");
+        System.out.println("2. Add-Math");
         System.out.println("3. Biology");
         System.out.println("4. Chemistry");
         System.out.println("5. Physics");
@@ -525,7 +551,7 @@ public class TutorManagementUI {
             case 1:
                 return "Accounting";
             case 2:
-                return "Add.Math";
+                return "Add-Math";
             case 3:
                 return "Biology";
             case 4:
@@ -589,8 +615,24 @@ public class TutorManagementUI {
             }
 
         } while (!valid);
+        
+        StringBuilder capitalizedTutorName = new StringBuilder();
+        capitalizedTutorName.append(Character.toUpperCase(targetTutorName.charAt(0)));
 
-        return targetTutorName;
+        for (int i = 1; i < targetTutorName.length(); i++) {
+            char currentChar = targetTutorName.charAt(i);
+            char previousChar = targetTutorName.charAt(i - 1);
+
+            if (Character.isSpaceChar(previousChar)) {
+                capitalizedTutorName.append(Character.toUpperCase(currentChar));
+            } else {
+                capitalizedTutorName.append(currentChar);
+            }
+        }
+
+        String result = capitalizedTutorName.toString();
+
+        return result;
     }
 
     public String inputTargetTutorEmail() {
@@ -680,7 +722,9 @@ public class TutorManagementUI {
 
         boolean valid;
 
+        displayListDivider();
         System.out.println(tutor);
+        displayListDivider();
         char yOrN = 'N';
 
         do {
@@ -735,7 +779,7 @@ public class TutorManagementUI {
         String domain = null;
         System.out.println("Input the tutor domain knowledge : ");
         System.out.println("1. Accounting");
-        System.out.println("2. Add.Math");
+        System.out.println("2. Add-Math");
         System.out.println("3. Biology");
         System.out.println("4. Chemistry");
         System.out.println("5. Physics");
@@ -746,7 +790,7 @@ public class TutorManagementUI {
         do {
             valid = true;
             try {
-                System.out.println("Your input: ");
+                System.out.print("Your input: ");
                 tutorDomainSelection = sc.nextInt();
                 sc.nextLine();
             } catch (Exception e) {
@@ -775,21 +819,20 @@ public class TutorManagementUI {
     //------------------------------------------------------------
     public void displayAllTutors(ListInterface<Tutor> tutorList) {
 
-        if (tutorList.isEmpty()) {
+        displayRecordHeader();
+        Iterator<Tutor> it = tutorList.getIterator();
 
-            System.out.println("There are no tutor in the list.");
-
-        } else {
-
-            System.out.printf("%-8s %-20s %-7s %-15s %-14s %-20s %-8s %-25s %-50s\n", "Tutor ID", "Name", "Gender", "IC", "Phone Number", "Email", "Salary", "Education Level", "Domain Knowledge");
-            displayListDivider();
-            Iterator<Tutor> it = tutorList.getIterator();
-
-            while (it.hasNext()) {
-                Tutor tutor = it.next();
-                System.out.println(tutor);
-            }
+        while (it.hasNext()) {
+            Tutor tutor = it.next();
+            System.out.println(tutor);
         }
+
+    }
+
+    public void displayRecordHeader() {
+
+        System.out.printf("%-8s %-20s %-7s %-15s %-14s %-20s %-8s %-25s %-50s\n", "Tutor ID", "Name", "Gender", "IC", "Phone Number", "Email", "Salary", "Education Level", "Domain Knowledge");
+        displayListDivider();
     }
 
     //------------------------------------------------------------  
@@ -820,7 +863,7 @@ public class TutorManagementUI {
     }
 
     public char confirmationForUndo() {
-        
+
         boolean valid;
         char yOrN = 'N';
 
@@ -841,9 +884,28 @@ public class TutorManagementUI {
             }
 
         } while (!valid);
-        
+
         return yOrN;
-        
+
+    }
+
+    public void removeFunctionMessage() {
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println("              The tutor still enrolled in teaching...");
+        System.out.println("  Make sure the tutor is not teaching any class before you remove it  ");
+        System.out.println("----------------------------------------------------------------------");
+    }
+
+    public void tutorNotExisting() {
+        System.out.println("-----------------------------------------");
+        System.out.println("This tutor is not existing in the list...");
+        System.out.println("-----------------------------------------");
+    }
+
+    public void displayEmptyList() {
+        System.out.println("-----------------------------------------");
+        System.out.println("There is no tutor in the list...");
+        System.out.println("-----------------------------------------");
     }
 
 }
