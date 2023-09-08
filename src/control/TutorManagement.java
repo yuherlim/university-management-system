@@ -32,10 +32,11 @@ public class TutorManagement {
         tutorList = tutorDAO.retrieveFromFile();
     }
 
-    public void addNewTutor(){
+    public void addNewTutor() {
 
         tutorUI.addTutorHeader();
-        
+        System.out.println();
+
         char nextOrExit = 'E';
         do {
             int id;
@@ -62,171 +63,215 @@ public class TutorManagement {
 
             nextOrExit = tutorUI.nextOrExit();
 
+            System.out.println("------------------------------------------");
+            System.out.println("Tutor added : " + tutorList.getLast().getTutorID());
+            System.out.println("------------------------------------------");
+
         } while (nextOrExit == 'N');
+
+        System.out.println("------------------------------------------");
+        System.out.println("Exit addd tutor function...");
+        System.out.println("------------------------------------------");
 
     }
 
     public void removeTutor() {
 
         tutorUI.removeTutorHeader();
-        
-        ListInterface<TeachingAssignment> teachingAssignmentList = taDAO.retrieveFromFile();
+        System.out.println();
 
-        boolean valid = true;
-        int selection;
-        do {
-            selection = tutorUI.removeTutorMenu();
-            switch (selection) {
-                case 1:
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            ListInterface<TeachingAssignment> teachingAssignmentList = taDAO.retrieveFromFile();
 
-                    Tutor targetTutor = findTutorSelection();
-                    if (targetTutor != null) {
-                        char confirmation = tutorUI.removeTutorConfirmation(targetTutor);
-                        if (confirmation == 'Y') {
+            boolean valid = true;
+            int selection;
+            do {
+                selection = tutorUI.removeTutorMenu();
+                switch (selection) {
+                    case 1:
 
-                            Iterator<TeachingAssignment> it = teachingAssignmentList.getIterator();
+                        Tutor targetTutor = findTutorSelection();
+                        if (targetTutor != null) {
+                            char confirmation = tutorUI.removeTutorConfirmation(targetTutor);
+                            if (confirmation == 'Y') {
 
-                            while (it.hasNext()) {
-                                TeachingAssignment teachingAssignment = it.next();
+                                Iterator<TeachingAssignment> it = teachingAssignmentList.getIterator();
 
-                                if (teachingAssignment.getTutor().equals(targetTutor)) { //check if the tutor exist in the list
-                                    System.out.println("The tutor still enrolled in teaching...");
-                                    System.out.println("Make sure the tutor is not teaching any class before you remove it");
-                                    valid = false;
-                                    break;
+                                while (it.hasNext()) {
+                                    TeachingAssignment teachingAssignment = it.next();
+
+                                    if (teachingAssignment.getTutor().equals(targetTutor) && teachingAssignment.getTutorialGroup().getBatch().equals("202301")) { //check if the tutor exist in the list
+                                        tutorUI.removeFunctionMessage();
+                                        valid = false;
+                                        break;
+                                    }
+                                }
+
+                                if (valid) {
+                                    int tutorIndex = ((CircularDoublyLinkedList) tutorList).locatePosition(targetTutor);
+                                    indexStack.push(tutorIndex);
+                                    deleteTutorStack.push(targetTutor);
+                                    tutorList.remove(targetTutor);
+
+                                    System.out.println("-----------------------------------------");
+                                    System.out.println("Deleted : " + targetTutor.getTutorID());
+                                    System.out.println("-----------------------------------------");
+                                    System.out.println();
                                 }
                             }
-
-                            if (valid) {
-                                int tutorIndex = ((CircularDoublyLinkedList) tutorList).locatePosition(targetTutor);
-                                indexStack.push(tutorIndex);
-                                deleteTutorStack.push(targetTutor);
-                                tutorList.remove(targetTutor);
-
-                                System.out.println("Deleted : " + targetTutor.getTutorID());
-                                System.out.println();
-                            }
-                        }
-                    } else {
-                        System.out.println("This tutor is not existing in the list...");
-                    }
-
-                    break;
-
-                case 2:
-                    if (!deleteTutorStack.isEmpty()) {
-
-                        tutorUI.displayListDivider();
-                        System.out.println(deleteTutorStack.peek());
-                        tutorUI.displayListDivider();
-
-                        char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
-                        if (undoConfirmation == 'Y') {
-                            Tutor undoTutor = deleteTutorStack.pop();
-                            int undoIndex = indexStack.pop();
-                            tutorList.add(undoIndex, undoTutor);
                         } else {
-                            System.out.println("Exit undo function...");
+                            tutorUI.tutorNotExisting();
                         }
 
-                    } else {
-                        System.out.println("There is nothing can undo...");
-                    }
-                    break;
+                        break;
 
-                case 0:
-                    System.out.println("Exit remove tutor function...");
-                    tutorDAO.saveToFile(tutorList);
-                    break;
-            }
-        } while (selection != 0);
+                    case 2:
+                        if (!deleteTutorStack.isEmpty()) {
+                            tutorUI.displayListDivider();
+                            System.out.println(deleteTutorStack.peek());
+                            tutorUI.displayListDivider();
+
+                            char undoConfirmation = tutorUI.undoRemoveTutorConfirmation();
+                            if (undoConfirmation == 'Y') {
+                                Tutor undoTutor = deleteTutorStack.pop();
+                                int undoIndex = indexStack.pop();
+                                tutorList.add(undoIndex, undoTutor);
+                            } else {
+                                System.out.println("------------------------------------------");
+                                System.out.println("Exit undo function...");
+                                System.out.println("------------------------------------------");
+                            }
+
+                        } else {
+                            System.out.println("------------------------------------------");
+                            System.out.println("There is nothing can undo...");
+                            System.out.println("------------------------------------------");
+                        }
+                        break;
+
+                    case 0:
+                        System.out.println("------------------------------------------");
+                        System.out.println("Exit remove tutor function...");
+                        System.out.println("------------------------------------------");
+                        tutorDAO.saveToFile(tutorList);
+                        break;
+                }
+            } while (selection != 0);
+        }
     }
 
     public void findTutor() {
 
         tutorUI.findTutorHeader();
-        
-        char nextOrExit = 'E';
-        do {
-            Tutor targetTutor = findTutorSelection();
+        System.out.println();
 
-            if (targetTutor != null) {
-                tutorUI.displayListDivider();
-                System.out.println(targetTutor);
-                tutorUI.displayListDivider();
-                System.out.println();
-                MessageUI.pause();
-            }
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            char nextOrExit = 'E';
+            do {
+                Tutor targetTutor = findTutorSelection();
 
-            nextOrExit = tutorUI.nextOrExit();
+                if (targetTutor != null) {
+                    tutorUI.displayListDivider();
+                    System.out.println(targetTutor);
+                    tutorUI.displayListDivider();
+                    System.out.println();
+                    MessageUI.pause();
+                } else {
+                    tutorUI.tutorNotExisting();
+                }
 
-        } while (nextOrExit == 'N');
+                nextOrExit = tutorUI.nextOrExit();
 
+            } while (nextOrExit == 'N');
+
+            System.out.println("------------------------------------------");
+            System.out.println("Exit find tutor function...");
+            System.out.println("------------------------------------------");
+        }
     }
 
     public void modifyTutor() {
 
         tutorUI.modifyTutorHeader();
-        
-        Tutor targetTutor = findTutorSelection();
+        System.out.println();
 
-        if (targetTutor != null) {
-            ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
-            int selection = -1;
-            do {
-                tutorUI.displayListDivider();
-                System.out.println(targetTutor);
-                tutorUI.displayListDivider();
-                selection = tutorUI.modifyTutorSelection(targetTutor);
-                if (selection != 0) {
-                    switch (selection) {
-                        case 1:
-                            targetTutor.setName(tutorUI.inputTutorName());
-                            break;
-                        case 2:
-                            targetTutor.setPhoneNum(tutorUI.inputTutorPhoneNum());
-                            break;
-                        case 3:
-                            targetTutor.setEmail(tutorUI.inputTutorEmail());
-                            break;
-                        case 4:
-                            targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
-                            break;
-                        case 5:
-                            int modifySelection = tutorUI.modifyTutorDomain();
-                            switch (modifySelection) {
-                                case 1:
-                                    domains = inputDomainList(domains);
-                                    targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
-                                    break;
-                                case 2:
-                                    domains = removeDomainKnowledge(domains);
-                                    targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
-                                    break;
-                                default:
-                                    System.out.println("Tutor domain knowledged updated...");
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            Tutor targetTutor = findTutorSelection();
 
-                                    break;
-                            }
+            if (targetTutor != null) {
+                ListInterface<String> domains = targetTutor.getDomainKnowledgeList();
+                int selection = -1;
+                do {
+                    tutorUI.displayListDivider();
+                    System.out.println(targetTutor);
+                    tutorUI.displayListDivider();
+                    selection = tutorUI.modifyTutorSelection(targetTutor);
+                    if (selection != 0) {
+                        switch (selection) {
+                            case 1:
+                                targetTutor.setName(tutorUI.inputTutorName());
+                                break;
+                            case 2:
+                                targetTutor.setPhoneNum(tutorUI.inputTutorPhoneNum());
+                                break;
+                            case 3:
+                                targetTutor.setEmail(tutorUI.inputTutorEmail());
+                                break;
+                            case 4:
+                                targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
+                                break;
+                            case 5:
+                                int modifySelection = tutorUI.modifyTutorDomain();
+                                switch (modifySelection) {
+                                    case 1:
+                                        domains = inputDomainList(domains);
+                                        targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
+                                        break;
+                                    case 2:
+                                        domains = removeDomainKnowledge(domains);
+                                        targetTutor.setDomainKnowledgeList((ArrayList<String>) domains);
+                                        break;
+                                    default:
+                                        System.out.println("------------------------------------------");
+                                        System.out.println("Tutor domain knowledged updated...");
+                                        System.out.println("------------------------------------------");
+
+                                        break;
+                                }
+                        }
+                    } else {
+                        System.out.println("------------------------------------------");
+                        System.out.println("Done edit...");
+                        System.out.println("------------------------------------------");
                     }
-                } else {
-                    System.out.println("Done edit...");
-                }
-            } while (selection != 0);
+                } while (selection != 0);
 
-        } 
-        tutorDAO.saveToFile(tutorList);
+            } else {
+                tutorUI.tutorNotExisting();
+            }
+            tutorDAO.saveToFile(tutorList);
+        }
     }
 
     public void displayTutor() {
 
         tutorUI.displayTutorHeader();
         System.out.println();
-        
-        tutorUI.displayListDivider();
-        tutorUI.displayAllTutors(tutorList);
-        tutorUI.displayListDivider();
-        
+
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            tutorUI.displayListDivider();
+            tutorUI.displayAllTutors(tutorList);
+            tutorUI.displayListDivider();
+        }
+
         System.out.println();
         MessageUI.pause();
     }
@@ -234,126 +279,144 @@ public class TutorManagement {
     public void filterTutor() {
 
         tutorUI.filterTutorHeader();
-        
+
         Tutor target;
         Iterator<Tutor> it;
         String domain = null;
 
         int selection = 0;
 
-        do {
-            selection = tutorUI.filterTutorMenu();
-            switch (selection) {
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            do {
+                selection = tutorUI.filterTutorMenu();
+                switch (selection) {
+                    case 1:
+                        char filterGender = tutorUI.inputTutorGender();
+                        tutorUI.displayListDivider();
+                        target = null;
+                        it = tutorList.getIterator();
 
-                case 1:
-                    char filterGender = tutorUI.inputTutorGender();
-                    tutorUI.displayListDivider();
-                    target = null;
-                    it = tutorList.getIterator();
-
-                    while (it.hasNext()) {
-                        target = it.next();
-                        if (target.getGender() == filterGender) {
-                            System.out.println(target);
-                        }
-                    }
-                    tutorUI.displayListDivider();
-                    System.out.println();
-                    MessageUI.pause();
-                    break;
-                case 2:
-                    String filterEducationLevel = tutorUI.inputTutorEduLevel();
-                    tutorUI.displayListDivider();
-                    target = null;
-                    it = tutorList.getIterator();
-
-                    while (it.hasNext()) {
-                        target = it.next();
-                        if (target.getEducationLevel().equals(filterEducationLevel)) {
-                            System.out.println(target);
-                        }
-                    }
-                    tutorUI.displayListDivider();
-                    System.out.println();
-                    MessageUI.pause();
-                    break;
-                case 3:
-
-                    String filterDomain = tutorUI.inputOneDomain();
-                    tutorUI.displayListDivider();
-                    target = null;
-                    it = tutorList.getIterator();
-
-                    while (it.hasNext()) {
-                        target = it.next();
-                        if (filterDomain != null) {
-                            Iterator<String> et = target.getDomainKnowledgeList().getIterator();
-                            while (et.hasNext()) {
-                                domain = et.next();
-
-                                if (domain.equals(filterDomain)) {
-                                    System.out.println(target);
-                                }
+                        tutorUI.displayRecordHeader();
+                        while (it.hasNext()) {
+                            target = it.next();
+                            if (target.getGender() == filterGender) {
+                                System.out.println(target);
                             }
-
                         }
-                    }
-                    tutorUI.displayListDivider();
-                    System.out.println();
-                    MessageUI.pause();
-                    break;
-            }
-        } while (selection != 0);
+                        tutorUI.displayListDivider();
+                        System.out.println();
+                        MessageUI.pause();
+                        break;
+                    case 2:
+                        String filterEducationLevel = tutorUI.inputTutorEduLevel();
+                        tutorUI.displayListDivider();
+                        target = null;
+                        it = tutorList.getIterator();
+
+                        tutorUI.displayRecordHeader();
+                        while (it.hasNext()) {
+                            target = it.next();
+                            if (target.getEducationLevel().equals(filterEducationLevel)) {
+                                System.out.println(target);
+                            }
+                        }
+                        tutorUI.displayListDivider();
+                        System.out.println();
+                        MessageUI.pause();
+                        break;
+                    case 3:
+                        String filterDomain = tutorUI.inputOneDomain();
+                        tutorUI.displayListDivider();
+                        target = null;
+                        it = tutorList.getIterator();
+
+                        tutorUI.displayRecordHeader();
+                        while (it.hasNext()) {
+                            target = it.next();
+                            if (filterDomain != null) {
+                                Iterator<String> et = target.getDomainKnowledgeList().getIterator();
+                                while (et.hasNext()) {
+                                    domain = et.next();
+
+                                    if (domain.equals(filterDomain)) {
+                                        System.out.println(target);
+                                    }
+                                }
+
+                            }
+                        }
+                        tutorUI.displayListDivider();
+                        System.out.println();
+                        MessageUI.pause();
+                        break;
+                }
+            } while (selection != 0);
+
+            System.out.println("------------------------------------------");
+            System.out.println("Exit filter tutor function...");
+            System.out.println("------------------------------------------");
+        }
     }
 
     public void generateTutorReport() {
 
         tutorUI.reportTutorHeader();
-        
+
         int selection;
-        do {
-            ListInterface<Tutor> sorted;
-            sorted = convertToArrayList(tutorList);
-            selection = tutorUI.tutorReportMenu();
-            switch (selection) {
-                case 1:
-                    for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-                        int j = i;
-                        while (j > 0 && sorted.getEntry(j).getName().compareTo(sorted.getEntry(j + 1).getName()) > 0) {
-                            Tutor temp = sorted.getEntry(j);
-                            sorted.replace(j, sorted.getEntry(j + 1));
-                            sorted.replace(j + 1, temp);
-                            j--;
+
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            do {
+                ListInterface<Tutor> sorted;
+                sorted = convertToArrayList(tutorList);
+                selection = tutorUI.tutorReportMenu();
+                switch (selection) {
+                    case 1:
+                        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
+                            int j = i;
+                            while (j > 0 && sorted.getEntry(j).getName().compareTo(sorted.getEntry(j + 1).getName()) > 0) {
+                                Tutor temp = sorted.getEntry(j);
+                                sorted.replace(j, sorted.getEntry(j + 1));
+                                sorted.replace(j + 1, temp);
+                                j--;
+                            }
                         }
-                    }
-                    tutorUI.displayListDivider();
-                    tutorUI.displayAllTutors(sorted);
-                    tutorUI.displayListDivider();
-                    System.out.println();
-                    MessageUI.pause();
-                    break;
+                        tutorUI.displayListDivider();
+                        tutorUI.displayAllTutors(sorted);
+                        tutorUI.displayListDivider();
+                        System.out.println();
+                        MessageUI.pause();
+                        break;
 
-                case 2:
-                    for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
-                        int j = i;
-                        while (j > 0 && sorted.getEntry(j).getSalary() > (sorted.getEntry(j + 1).getSalary())) {
-                            Tutor temp = sorted.getEntry(j);
-                            sorted.replace(j, sorted.getEntry(j + 1));
-                            sorted.replace(j + 1, temp);
-                            j--;
+                    case 2:
+
+                        for (int i = 1; i < sorted.getNumberOfEntries(); i++) {
+                            int j = i;
+                            while (j > 0 && sorted.getEntry(j).getSalary() > (sorted.getEntry(j + 1).getSalary())) {
+                                Tutor temp = sorted.getEntry(j);
+                                sorted.replace(j, sorted.getEntry(j + 1));
+                                sorted.replace(j + 1, temp);
+                                j--;
+                            }
                         }
-                    }
-                    tutorUI.displayListDivider();
-                    tutorUI.displayAllTutors(sorted);
-                    tutorUI.displayListDivider();
-                    System.out.println();
-                    MessageUI.pause();
-                    break;
+                        tutorUI.displayListDivider();
+                        tutorUI.displayAllTutors(sorted);
+                        tutorUI.displayListDivider();
+                        System.out.println();
+                        MessageUI.pause();
+                        break;
 
-            }
+                }
 
-        } while (selection != 0);
+            } while (selection != 0);
 
+            System.out.println("------------------------------------------");
+            System.out.println("Exit tutor report function...");
+            System.out.println("------------------------------------------");
+        }
     }
 
     public Tutor findTutorSelection() {
@@ -363,39 +426,40 @@ public class TutorManagement {
 
         Tutor target = null;
 
-        switch (findSelection) {
-            case 1:
-                String targetTutorID = tutorUI.inputTargetTutorID();
-                while (it.hasNext()) {
-                    target = it.next();
-                    if (target.getTutorID().equals(targetTutorID)) {
-                        return target;
+        if (tutorList.isEmpty()) {
+            tutorUI.displayEmptyList();
+        } else {
+            switch (findSelection) {
+                case 1:
+                    String targetTutorID = tutorUI.inputTargetTutorID();
+                    while (it.hasNext()) {
+                        target = it.next();
+                        if (target.getTutorID().equals(targetTutorID)) {
+                            return target;
+                        }
                     }
-                }
-                break;
-            case 2:
-                String targetTutorName = tutorUI.inputTargetTutorName();
-                while (it.hasNext()) {
-                    target = it.next();
-                    if (target.getName().equals(targetTutorName)) {
-                        return target;
+                    break;
+                case 2:
+                    String targetTutorName = tutorUI.inputTargetTutorName();
+                    while (it.hasNext()) {
+                        target = it.next();
+                        if (target.getName().equals(targetTutorName)) {
+                            return target;
+                        }
                     }
-                }
-                break;
-            case 3:
-                String targetTutorEmail = tutorUI.inputTargetTutorEmail();
-                while (it.hasNext()) {
-                    target = it.next();
-                    if (target.getEmail().equals(targetTutorEmail)) {
-                        return target;
+                    break;
+                case 3:
+                    String targetTutorEmail = tutorUI.inputTargetTutorEmail();
+                    while (it.hasNext()) {
+                        target = it.next();
+                        if (target.getEmail().equals(targetTutorEmail)) {
+                            return target;
+                        }
                     }
-                }
-                break;
-            case 0:
-                System.out.println("Exit...");
-        }
-        if(target == null && findSelection != 0){
-            System.out.println("This tutor is not existing in the list...");
+                    break;
+                case 0:
+                    System.out.println("Exit...");
+            }
         }
         return null;
     }
@@ -423,11 +487,16 @@ public class TutorManagement {
             String domain = tutorUI.getDomainName(tutorDomainSelection);
             if (!copyArray.contains(domain)) {
                 copyArray.add(domain);
+                System.out.println("------------------------------------------");
                 System.out.println("Domain added: " + domain);
+                System.out.println("------------------------------------------");
             } else {
+                System.out.println("------------------------------------------");
                 System.out.println("This domain is already selected.");
+                System.out.println("------------------------------------------");
             }
 
+            System.out.println();
             System.out.print("Do you want to select more domain knowledge? (Y or N)");
         } while (sc.next().equalsIgnoreCase("Y"));
 
@@ -458,7 +527,9 @@ public class TutorManagement {
         if (copyArray.contains(domain)) {
             copyArray.remove(indexRemove);
         } else {
-            System.out.println("domain is not in the list...");
+            System.out.println("------------------------------------------");
+            System.out.println("Selected domain is not in the list...");
+            System.out.println("------------------------------------------");
         }
 
         return copyArray;
@@ -497,10 +568,15 @@ public class TutorManagement {
                 case 0:
                     confirmation = tutorManagementUI.confirmationForUndo();
                     if (confirmation == 'Y') {
+                        System.out.println();
+                        System.out.println("------------------------------------------");
                         System.out.println("Exit tutor management...");
-                        //back to the main menu;
+                        System.out.println("------------------------------------------");
                     } else {
+                        System.out.println();
+                        System.out.println("------------------------------------------");
                         System.out.println("Reenter tutor management...");
+                        System.out.println("------------------------------------------");
                     }
 
                     break;

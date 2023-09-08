@@ -210,6 +210,7 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
         for (int index = removedIndex; index < lastIndex; index++) {
             array[index] = array[index + 1];
         }
+  
     }
 
     @Override
@@ -322,6 +323,5 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
             return currentElement;
         }
     }
-    
-    
+
 }
