@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 /**
  *
- * Adopted from Frank M. Carrano
+ * Adopted from Frank M. Carrano (ListInterface is adopted, implementations are done by ourselves)
  * @author Kho Ka Jie, Lim Yu Her, Ong Cheng Leong, Sia Yeong Sheng
  */
 public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializable {
