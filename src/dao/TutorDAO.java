@@ -16,7 +16,7 @@ import java.io.ObjectOutputStream;
 
 /**
  *
- * @author kho ka jie
+ * @author KHO KA JIE
  */
 public class TutorDAO {
     

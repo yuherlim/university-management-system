@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Kho Ka Jie
+ * @author KHO KA JIE
  */
 public class TutorManagementUI {
 
@@ -192,8 +192,9 @@ public class TutorManagementUI {
                 System.out.println("1. Modify tutor name");
                 System.out.println("2. Modify tutor phone number");
                 System.out.println("3. Modify tutor email");
-                System.out.println("4. Modify tutor education level");
-                System.out.println("5. Modify tutor domain knowledge");
+                System.out.println("4. Modify tutor salary");
+                System.out.println("5. Modify tutor education level");
+                System.out.println("6. Modify tutor domain knowledge");
                 System.out.println("0. Exit");
                 System.out.print("Your selection : ");
                 selection = sc.nextInt();
@@ -202,7 +203,7 @@ public class TutorManagementUI {
                 sc.nextLine();
                 valid = false;
             }
-            if (selection < 0 || selection > 5) {
+            if (selection < 0 || selection > 6) {
                 valid = false;
             }
             if (!valid) {
@@ -304,14 +305,23 @@ public class TutorManagementUI {
             }
         } while (!valid);
 
-        Character.toUpperCase(tutorName.charAt(0));
-        for (int i = 0; i < tutorName.length(); i++) {
-            if (Character.isSpaceChar(tutorName.charAt(0))) {
-                Character.toUpperCase(tutorName.charAt(i + 1));
+        StringBuilder capitalizedTutorName = new StringBuilder();
+        capitalizedTutorName.append(Character.toUpperCase(tutorName.charAt(0)));
+
+        for (int i = 1; i < tutorName.length(); i++) {
+            char currentChar = tutorName.charAt(i);
+            char previousChar = tutorName.charAt(i - 1);
+
+            if (Character.isSpaceChar(previousChar)) {
+                capitalizedTutorName.append(Character.toUpperCase(currentChar));
+            } else {
+                capitalizedTutorName.append(currentChar);
             }
         }
 
-        return tutorName;
+        String result = capitalizedTutorName.toString();
+
+        return result;
     }
 
     public char inputTutorGender() {
@@ -605,8 +615,24 @@ public class TutorManagementUI {
             }
 
         } while (!valid);
+        
+        StringBuilder capitalizedTutorName = new StringBuilder();
+        capitalizedTutorName.append(Character.toUpperCase(targetTutorName.charAt(0)));
 
-        return targetTutorName;
+        for (int i = 1; i < targetTutorName.length(); i++) {
+            char currentChar = targetTutorName.charAt(i);
+            char previousChar = targetTutorName.charAt(i - 1);
+
+            if (Character.isSpaceChar(previousChar)) {
+                capitalizedTutorName.append(Character.toUpperCase(currentChar));
+            } else {
+                capitalizedTutorName.append(currentChar);
+            }
+        }
+
+        String result = capitalizedTutorName.toString();
+
+        return result;
     }
 
     public String inputTargetTutorEmail() {
@@ -696,7 +722,9 @@ public class TutorManagementUI {
 
         boolean valid;
 
+        displayListDivider();
         System.out.println(tutor);
+        displayListDivider();
         char yOrN = 'N';
 
         do {
@@ -762,7 +790,7 @@ public class TutorManagementUI {
         do {
             valid = true;
             try {
-                System.out.println("Your input: ");
+                System.out.print("Your input: ");
                 tutorDomainSelection = sc.nextInt();
                 sc.nextLine();
             } catch (Exception e) {
