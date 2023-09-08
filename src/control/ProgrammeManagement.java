@@ -708,6 +708,8 @@ public class ProgrammeManagement {
         while (it.hasNext()) {
             TutorialGroup currentTutGroup = it.next();
             if (currentTutGroup.getBatch().equals(currentBatchNo) && currentTutGroup.getProgramme().equals(code)) {
+                String newTutGroupID = currentBatchNo + newCode + currentTutGroup.getGroup();
+                currentTutGroup.setId(newTutGroupID);
                 currentTutGroup.setProgramme(newCode);
             }
         }
