@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * An interface for the ADT Stack.
  *
- * Adopted from Frank M. Carrano
+ * Adapted from Frank M. Carrano
  * @author Kho Ka Jie, Lim Yu Her, Ong Cheng Leong, Sia Yeong Sheng
  * @version 2.0
  *
