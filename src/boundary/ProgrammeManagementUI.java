@@ -5,6 +5,7 @@
 package boundary;
 
 import adt.*;
+import control.ProgrammeManagement;
 import dao.ProgrammeDAO;
 import java.util.Scanner;
 import entity.Programme;
@@ -273,9 +274,9 @@ public class ProgrammeManagementUI {
     public int getGenerateReportMenuChoice() {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
-        System.out.println("1. View programme list sorted by highest total fees.");
-        System.out.println("2. View programme list sorted by programme type.");
-        System.out.println("3. View programme list grouped by programmes with assigned and unassigned tutorial groups.");
+        System.out.println("1. View total fee report.");
+        System.out.println("2. View programme type report.");
+        System.out.println("3. View tutorial group assignment report.");
         int choice;
         boolean valid = false;
         do {
@@ -441,37 +442,105 @@ public class ProgrammeManagementUI {
         System.out.println("\nUndo cancelled.");
     }
 
-    public void generateHighestTotalFeeReport(ListInterface<Programme> sortedProgrammeListByTotalFee) {
+    public void generateTotalFeeReport(ListInterface<Programme> sortedProgrammeListByTotalFee) {
         String outputStr = "";
+        String sortedData = "";
         
         for (int i = 1; i <= sortedProgrammeListByTotalFee.getNumberOfEntries(); i++) {
             Programme currentElement = sortedProgrammeListByTotalFee.getEntry(i);
-            outputStr += String.format("%-4s %-80s %15.2f", currentElement.getCode(), currentElement.getName(), currentElement.getTotalFee()) + "\n";
+            sortedData += String.format("%-4s %-80s %15.2f\n", currentElement.getCode(), currentElement.getName(), currentElement.getTotalFee());
         }
         
         Programme programmeWithHighestTotalFee = sortedProgrammeListByTotalFee.getFirst();
         Programme programmeWithLowestTotalFee = sortedProgrammeListByTotalFee.getLast();
-        String highestFeeOutputStr = String.format("%-4s %-80s %15.2f", 
-                programmeWithHighestTotalFee.getCode(), programmeWithHighestTotalFee.getName(), programmeWithHighestTotalFee.getTotalFee()) + "\n";
-        String lowestFeeOutputStr = String.format("%-4s %-80s %15.2f", 
-                programmeWithLowestTotalFee.getCode(), programmeWithLowestTotalFee.getName(), programmeWithLowestTotalFee.getTotalFee()) + "\n";
+        String highestFeeOutputStr = String.format("%-4s %-80s %15.2f\n", 
+                programmeWithHighestTotalFee.getCode(), programmeWithHighestTotalFee.getName(), programmeWithHighestTotalFee.getTotalFee());
+        String lowestFeeOutputStr = String.format("%-4s %-80s %15.2f\n", 
+                programmeWithLowestTotalFee.getCode(), programmeWithLowestTotalFee.getName(), programmeWithLowestTotalFee.getTotalFee());
         
-        System.out.println("\nProgramme list sorted by highest total fees: ");
-        System.out.printf("%-4s %-80s %-15s\n" + outputStr, "Code", "Name", "Total Fees (RM)");
-        System.out.println("\nProgramme with the highest total fee:");
-        System.out.printf("%-4s %-80s %-15s\n" + highestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
-        System.out.println("\nProgramme with the lowest total fee:");
-        System.out.printf("%-4s %-80s %-15s\n" + lowestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
+        outputStr += "\n------------------\n";
+        outputStr +=   " Total Fee Report \n";
+        outputStr +=   "------------------\n";
+        outputStr += "\nProgramme list sorted by highest total fees: \n";
+        outputStr += String.format("%-4s %-80s %-15s\n" + sortedData, "Code", "Name", "Total Fees (RM)");
+        outputStr += "\nProgramme with the highest total fee: \n";
+        outputStr += String.format("%-4s %-80s %-15s\n" + highestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
+        outputStr += "\nProgramme with the lowest total fee: \n";
+        outputStr += String.format("%-4s %-80s %-15s\n" + lowestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
         
-        System.out.println("");
+        System.out.println(outputStr);
         MessageUI.pause();
     }
 
-    public void generateSortedByProgrammeTypeReport(ListInterface<Programme> sortedProgrammeListByProgrammeType) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void generateProgrammeTypeReport(ListInterface<Programme> sortedProgrammeListByProgrammeType) {
+        String outputStr = "";
+        String sortedData = "";
+        int[] programmeTypeCount = new int[5];
+        
+        for (int i = 1; i <= sortedProgrammeListByProgrammeType.getNumberOfEntries(); i++) {
+            Programme currentElement = sortedProgrammeListByProgrammeType.getEntry(i);
+            sortedData += String.format("%-4s %-80s %-10s\n", currentElement.getCode(), currentElement.getName(), currentElement.getProgrammeType());
+            
+            switch (currentElement.getProgrammeType()) {
+                case "Bachelor":
+                    programmeTypeCount[0]++;
+                    break;
+                case "Diploma":
+                    programmeTypeCount[1]++;
+                    break;
+                case "Foundation":
+                    programmeTypeCount[2]++;
+                    break;
+                case "Masters":
+                    programmeTypeCount[3]++;
+                    break;
+                case "PhD":
+                    programmeTypeCount[4]++;
+                    break;
+            }
+        }
+        
+        outputStr += "\n-----------------------\n";
+        outputStr +=   " Programme Type Report \n";
+        outputStr +=   "-----------------------\n";
+        outputStr += "\nProgramme list sorted by programme type: \n";
+        outputStr += String.format("%-4s %-80s %-10s\n" + sortedData, "Code", "Name", "Type");
+        outputStr += String.format("\nNumber of Bachelor programmes     : %d\n", programmeTypeCount[0]);
+        outputStr += String.format(  "Number of Diploma programmes      : %d\n", programmeTypeCount[1]);
+        outputStr += String.format(  "Number of Foundation programmes   : %d\n", programmeTypeCount[2]);
+        outputStr += String.format(  "Number of Masters programmes      : %d\n", programmeTypeCount[3]);
+        outputStr += String.format(  "Number of PhD programmes          : %d\n", programmeTypeCount[4]);
+        
+        System.out.println(outputStr);
+        MessageUI.pause();
     }
 
     public void generateTutGroupAssignmentReport(ListInterface<Programme> assignedTutGroupProgrammes, ListInterface<Programme> unassignedTutGroupProgrammes) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String outputStr = "";
+        String sortedDataAssigned = "";
+        String sortedDataUnassigned = "";
+        
+        for (int i = 1; i <= assignedTutGroupProgrammes.getNumberOfEntries(); i++) {
+            Programme currentElement = assignedTutGroupProgrammes.getEntry(i);
+            sortedDataAssigned += String.format("%-4s %-80s %-35s\n", currentElement.getCode(), currentElement.getName(), ProgrammeManagement.createTutorialGroupStr(currentElement.getTutorialGroups()));
+        }
+        
+        for (int i = 1; i <= unassignedTutGroupProgrammes.getNumberOfEntries(); i++) {
+            Programme currentElement = unassignedTutGroupProgrammes.getEntry(i);
+            sortedDataUnassigned += String.format("%-4s %-80s %-35s\n", currentElement.getCode(), currentElement.getName(), "none");
+        }
+        
+        outputStr += "\n----------------------------------\n";
+        outputStr +=   " Tutorial Group Assignment Report \n";
+        outputStr +=   "----------------------------------\n";
+        outputStr += "\nProgramme list with assigned tutorial groups: \n";
+        outputStr += String.format("%-4s %-80s %-35s\n" + sortedDataAssigned, "Code", "Name", "Tutorial Groups");
+        outputStr += "\nProgramme list with unassigned tutorial groups: \n";
+        outputStr += String.format("%-4s %-80s %-35s\n" + sortedDataUnassigned, "Code", "Name", "Tutorial Groups");
+        outputStr += String.format("\nNumber of programmes with assigned tutorial groups: %d\n", assignedTutGroupProgrammes.getNumberOfEntries());
+        outputStr += String.format("Number of programmes with assigned tutorial groups: %d\n", unassignedTutGroupProgrammes.getNumberOfEntries());
+        
+        System.out.println(outputStr);
+        MessageUI.pause();
     }
 }

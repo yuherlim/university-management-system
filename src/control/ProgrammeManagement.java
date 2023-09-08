@@ -139,7 +139,7 @@ public class ProgrammeManagement {
 
         ArrayStack<Integer> undoStackPosition = new ArrayStack<>();
         ArrayStack<Programme> undoStackProgramme = new ArrayStack<>();
-        ArrayList<String> codeToRemove = new ArrayList<>(); // used to modify course list if there is changes to programme code.
+        ArrayList<String> codeToRemove = new ArrayList<>(); // used to modify course list and tutorial group list if there is changes to programme code.
         boolean isRemoved = false;
         int selection;
         do {
@@ -302,6 +302,7 @@ public class ProgrammeManagement {
         programmeDAO.saveToFile(programmeList);
         System.out.println("\nThe above programmes has been successfully removed.");
         removeProgrammeFromCourseList(codeToRemove);
+        removeProgrammeFromTutGroup(codeToRemove);
     }
 
     private void updateTutGroupRemovalToFile(ArrayList<String> tutGroupCodeToRemove) {
@@ -446,7 +447,7 @@ public class ProgrammeManagement {
         boolean isModified = false;
         int programmeToModifyPosition = ((CircularDoublyLinkedList) programmeList).locatePosition(programmeToModify);
         int selection;
-        codeBeforeModification = programmeToModify.getCode(); // used to modify course list if there is changes to programme code.
+        codeBeforeModification = programmeToModify.getCode(); // used to modify course list and tutorial group list if there is changes to programme code.
         programmeManagementUI.printProgrammeDetails(programmeToModify);
         System.out.println("");
         do {
@@ -654,7 +655,7 @@ public class ProgrammeManagement {
             System.out.println("\nThere are currently no programmes.");
             return;
         }
-        
+
         ListInterface<Programme> assignedTutGroupProgrammes = new ArrayList<>();
         ListInterface<Programme> unassignedTutGroupProgrammes = new ArrayList<>();
         int selection;
@@ -665,10 +666,10 @@ public class ProgrammeManagement {
                     System.out.println("\nExiting report generation...");
                     break;
                 case 1:
-                    programmeManagementUI.generateHighestTotalFeeReport(getSortedProgrammeListByTotalFee());
+                    programmeManagementUI.generateTotalFeeReport(getSortedProgrammeListByTotalFee());
                     break;
                 case 2:
-                    programmeManagementUI.generateSortedByProgrammeTypeReport(getSortedProgrammeListByProgrammeType());
+                    programmeManagementUI.generateProgrammeTypeReport(getSortedProgrammeListByProgrammeType());
                     break;
                 case 3:
                     getAssignedAndUnassignedProgrammes(assignedTutGroupProgrammes, unassignedTutGroupProgrammes);
@@ -698,6 +699,20 @@ public class ProgrammeManagement {
         }
         courseDAO.saveToFile(courseList);
     }
+    
+    private void modifyProgrammeInTutGroupList(String code, String newCode) {
+        TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
+        ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();
+
+        Iterator<TutorialGroup> it = tutGroupList.getIterator();
+        while (it.hasNext()) {
+            TutorialGroup currentTutGroup = it.next();
+            if (currentTutGroup.getBatch().equals(currentBatchNo) && currentTutGroup.getProgramme().equals(code)) {
+                currentTutGroup.setProgramme(newCode);
+            }
+        }
+        tutGroupDAO.saveToFile(tutGroupList);
+    }
 
     private void removeProgrammeFromCourseList(ArrayList<String> codeToRemove) {
         CourseDAO courseDAO = new CourseDAO();
@@ -714,6 +729,22 @@ public class ProgrammeManagement {
             }
         }
         courseDAO.saveToFile(courseList);
+    }
+
+    private void removeProgrammeFromTutGroup(ArrayList<String> codeToRemove) {
+        TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
+        ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();
+
+        Iterator<TutorialGroup> it = tutGroupList.getIterator();
+        while (it.hasNext()) {
+            TutorialGroup currentTutGroup = it.next();
+            for (int i = 1; i <= codeToRemove.getNumberOfEntries(); i++) {
+                if (currentTutGroup.getBatch().equals(currentBatchNo) && currentTutGroup.getProgramme().equals(codeToRemove.getEntry(i))) {
+                    tutGroupList.remove(currentTutGroup);
+                }
+            }
+        }
+        tutGroupDAO.saveToFile(tutGroupList);
     }
 
     private void removeTutGroupFromTutGroupList(ArrayList<String> tutGroupCodeToRemove) {
@@ -783,6 +814,7 @@ public class ProgrammeManagement {
                 System.out.println("\nProgramme ammendment successful.");
                 if (codeIsModified) {
                     modifyProgrammeInCourseList(codeBeforeModification, programmeToModify.getCode());
+                    modifyProgrammeInTutGroupList(codeBeforeModification, programmeToModify.getCode());
                 }
             } else { // reset list to original.
                 programmeList = programmeDAO.retrieveFromFile();
@@ -828,7 +860,7 @@ public class ProgrammeManagement {
         System.out.println("\nTutorial " + latestGroup + " addition successful.");
     }
 
-    private String createTutorialGroupStr(ArrayList<String> currentTutorialGroupList) {
+    public static String createTutorialGroupStr(ArrayList<String> currentTutorialGroupList) {
         String outputStr = "";
         for (int i = 1; i <= currentTutorialGroupList.getNumberOfEntries(); i++) {
             outputStr += currentTutorialGroupList.getEntry(i) + ", ";
