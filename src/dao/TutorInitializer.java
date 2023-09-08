@@ -24,7 +24,7 @@ public class TutorInitializer {
         ArrayList<String> domainList3 = new ArrayList<>();
 
         domainList1.add("Accounting");
-        domainList1.add("Add.Math");
+        domainList1.add("Add-Math");
         domainList1.add("Biology");
         domainList1.add("Chemistry");
 
