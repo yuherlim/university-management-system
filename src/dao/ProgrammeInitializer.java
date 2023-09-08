@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class ProgrammeInitializer {
 

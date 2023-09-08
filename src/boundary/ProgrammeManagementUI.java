@@ -13,7 +13,7 @@ import utility.MessageUI;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class ProgrammeManagementUI {
 
@@ -22,7 +22,9 @@ public class ProgrammeManagementUI {
     private ProgrammeDAO programmeDAO = new ProgrammeDAO();
 
     public int getMenuChoice() {
-        System.out.println("\nPROGRAMME MANAGEMENT MENU");
+        MessageUI.programmeTopDivider();
+        System.out.println("PROGRAMME MANAGEMENT MENU");
+        MessageUI.programmeBtmDivider();
         System.out.println("1. Add a new programme");
         System.out.println("2. Remove a programme");
         System.out.println("3. Find programme");
@@ -32,7 +34,9 @@ public class ProgrammeManagementUI {
         System.out.println("7. Remove a tutorial group from a programme");
         System.out.println("8. List all tutorial groups for a programme");
         System.out.println("9. Generate reports");
+        MessageUI.programmeBtmDivider();
         System.out.println("0. Quit");
+        MessageUI.programmeBtmDivider();
         System.out.print("Enter choice: ");
         int choice = scanner.nextInt();
         scanner.nextLine();

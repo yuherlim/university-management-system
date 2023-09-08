@@ -9,7 +9,7 @@ import entity.TutorialGroup;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class TutorialGroupInitializer {
     

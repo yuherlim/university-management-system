@@ -10,7 +10,7 @@ import java.io.*;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class TutorialGroupDAO {
 

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Yu
+ * @author Lim Yu Her
  */
 public class Programme implements Serializable {
     private String code;
