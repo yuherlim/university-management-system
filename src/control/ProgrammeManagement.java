@@ -831,7 +831,46 @@ public class ProgrammeManagement {
         tutGroupDAO.saveToFile(tutGroupList);
     }
 
+    private ListInterface<Programme> getSortedProgrammeListByTotalFee() {
+        ProgrammeDAO progDAO = new ProgrammeDAO();
+        ListInterface<Programme> sortedList = convertToArrayList(progDAO.retrieveFromFile()); // the list that will be sorted.
+        
+        
+        
+        return sortedList;
+    }
     
+    private ListInterface<Programme> getSortedProgrammeListByProgrammeType() {
+        ProgrammeDAO progDAO = new ProgrammeDAO();
+        ListInterface<Programme> sortedList = convertToArrayList(progDAO.retrieveFromFile()); // the list that will be sorted.
+        
+        
+        
+        return sortedList;
+    }
+    
+    private void getAssignedAndUnassignedProgrammes(ListInterface<Programme> assignedTutGroupProgrammes, ListInterface<Programme> unassignedTutGroupProgrammes) {
+        Iterator<Programme> it = programmeList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            ArrayList<String> currentProgTutGroups = currentProgramme.getTutorialGroups();
+            if (currentProgTutGroups == null || currentProgTutGroups.isEmpty()) {
+                unassignedTutGroupProgrammes.add(currentProgramme);
+            } else {
+                assignedTutGroupProgrammes.add(currentProgramme);
+            }
+        }
+    }
+    
+    public ListInterface<Programme> convertToArrayList(ListInterface<Programme> programmeList) {
+        ListInterface<Programme> arrayList = new ArrayList<>();
+        Iterator<Programme> it = programmeList.getIterator();
+        while (it.hasNext()) {
+            Programme currentProgramme = it.next();
+            arrayList.add(currentProgramme);
+        }
+        return arrayList;
+    }
 }
 
 /*
