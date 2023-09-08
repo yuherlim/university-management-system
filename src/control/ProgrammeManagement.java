@@ -68,6 +68,21 @@ public class ProgrammeManagement {
     }
 
     private void addNewProgramme() {
+        int selection;
+        do {
+            selection = programmeManagementUI.getAddProgrammeMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("\nExiting programme addition...");
+                    break;
+                case 1:
+                    performProgrammeAddition();
+                    break;
+            }
+        } while (selection != 0);
+    }
+
+    private void performProgrammeAddition() {
         char cont;
         char confirmation;
         do {
@@ -89,7 +104,6 @@ public class ProgrammeManagement {
             System.out.println("Continue adding programmes?");
             cont = programmeManagementUI.inputConfirmation();
         } while (cont == 'Y');
-        System.out.println("\nExiting programme addition...");
     }
 
     private String getAllProgrammesFromList(ListInterface<Programme> programmeList) {
@@ -656,11 +670,13 @@ public class ProgrammeManagement {
             return;
         }
 
-        ListInterface<Programme> assignedTutGroupProgrammes = new ArrayList<>();
-        ListInterface<Programme> unassignedTutGroupProgrammes = new ArrayList<>();
+        ListInterface<Programme> assignedTutGroupProgrammes;
+        ListInterface<Programme> unassignedTutGroupProgrammes;
         int selection;
         do {
             selection = programmeManagementUI.getGenerateReportMenuChoice();
+            assignedTutGroupProgrammes = new ArrayList<>();
+            unassignedTutGroupProgrammes = new ArrayList<>();
             switch (selection) {
                 case 0:
                     System.out.println("\nExiting report generation...");
@@ -699,7 +715,7 @@ public class ProgrammeManagement {
         }
         courseDAO.saveToFile(courseList);
     }
-    
+
     private void modifyProgrammeInTutGroupList(String code, String newCode) {
         TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
         ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();

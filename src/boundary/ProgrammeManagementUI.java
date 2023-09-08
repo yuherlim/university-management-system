@@ -333,6 +333,25 @@ public class ProgrammeManagementUI {
         return choice;
     }
     
+    public int getAddProgrammeMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. Start adding a programme");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 1) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
     public int getModifyProgrammeDetailsMenuChoice() {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
@@ -538,7 +557,7 @@ public class ProgrammeManagementUI {
         outputStr += "\nProgramme list with unassigned tutorial groups: \n";
         outputStr += String.format("%-4s %-80s %-35s\n" + sortedDataUnassigned, "Code", "Name", "Tutorial Groups");
         outputStr += String.format("\nNumber of programmes with assigned tutorial groups: %d\n", assignedTutGroupProgrammes.getNumberOfEntries());
-        outputStr += String.format("Number of programmes with assigned tutorial groups: %d\n", unassignedTutGroupProgrammes.getNumberOfEntries());
+        outputStr += String.format("Number of programmes with unassigned tutorial groups: %d\n", unassignedTutGroupProgrammes.getNumberOfEntries());
         
         System.out.println(outputStr);
         MessageUI.pause();
