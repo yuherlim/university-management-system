@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 /**
  * ArrayStack.java A class that implements the ADT Stack using an array.
- * Adopted from Frank M. Carrano
+ * Adapted from Frank M. Carrano
  * @author Kho Ka Jie, Lim Yu Her, Ong Cheng Leong, Sia Yeong Sheng
  * @version 2.0
  * @param <T>

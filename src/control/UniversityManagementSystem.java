@@ -8,9 +8,12 @@ import dao.ProgrammeDAO;
 import dao.ProgrammeInitializer;
 import dao.TutorDAO;
 import dao.TutorInitializer;
+import dao.TutorialGroupDAO;
+import dao.TutorialGroupInitializer;
 import entity.Course;
 import entity.Programme;
 import entity.Tutor;
+import entity.TutorialGroup;
 import utility.MessageUI;
 
 /*
@@ -28,9 +31,11 @@ public class UniversityManagementSystem {
         ProgrammeDAO programmeDAO = new ProgrammeDAO();
         CourseDAO courseDAO = new CourseDAO();
         TutorDAO tutorDAO = new TutorDAO();
+        TutorialGroupDAO tutorialGroupDao = new TutorialGroupDAO();
         ListInterface<Programme> programList = programmeDAO.retrieveFromFile();
         ListInterface<Course> courseList = courseDAO.retrieveFromFile();
         ListInterface<Tutor> tutorList = tutorDAO.retrieveFromFile();
+        ListInterface<TutorialGroup> tutGrpList = tutorialGroupDao.retrieveFromFile();
         if (programList.isEmpty()) {           
             ProgrammeInitializer.main(args);
             System.out.println("Programme Record Loaded");
@@ -44,6 +49,11 @@ public class UniversityManagementSystem {
         if (tutorList.isEmpty()) {           
             TutorInitializer.main(args);
             System.out.println("Tutor Record Loaded");
+        }
+        
+        if (tutGrpList.isEmpty()) {           
+            TutorialGroupInitializer.main(args);
+            System.out.println("Tutor Group Record Loaded");
         }
         
 

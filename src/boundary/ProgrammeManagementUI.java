@@ -5,6 +5,7 @@
 package boundary;
 
 import adt.*;
+import control.ProgrammeManagement;
 import dao.ProgrammeDAO;
 import java.util.Scanner;
 import entity.Programme;
@@ -42,6 +43,11 @@ public class ProgrammeManagementUI {
     public void listProgrammes(String outputStr) {
         System.out.println("\nList of Programmes:");
         System.out.printf("%-4s %-80s %-60s %-10s %-15s\n" + outputStr, "Code", "Name", "Faculty", "Type", "Total fees (RM)");
+    }
+    
+    public void listTutGroupsForProgrammes(String outputStr) {
+        System.out.println("\nList of Programmes with their current tutorial groups:");
+        System.out.printf("%-4s %-80s %-35s\n" + outputStr, "Code", "Name", "Tutorial Groups");
     }
 
     public void printProgrammeDetails(Programme programme) {
@@ -206,6 +212,26 @@ public class ProgrammeManagementUI {
         return choice;
     }
     
+    public int getRemoveTutGroupMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Stop removing tutorial groups");
+        System.out.println("1. Remove a tutorial group from a programme");
+        System.out.println("2. Undo tutorial group removal");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 2) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
     public int getAddTutorialGroupMenuChoice() {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
@@ -217,6 +243,47 @@ public class ProgrammeManagementUI {
             choice = scanner.nextInt();
             scanner.nextLine();
             if (choice >= 0 && choice <= 1) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getDisplayTutorialGroupMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. View tutorial groups for a programme.");
+        System.out.println("2. View tutorial groups for all programmes.");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 2) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getGenerateReportMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. View total fee report.");
+        System.out.println("2. View programme type report.");
+        System.out.println("3. View tutorial group assignment report.");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 3) {
                 valid = true;
             } else {
                 MessageUI.displayInvalidChoiceMessage();
@@ -251,6 +318,25 @@ public class ProgrammeManagementUI {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
         System.out.println("1. View programme details");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 1) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
+    public int getAddProgrammeMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. Start adding a programme");
         int choice;
         boolean valid = false;
         do {
@@ -365,5 +451,115 @@ public class ProgrammeManagementUI {
     
     public void nonexistentProductCodeMsg() {
         System.out.println("\nThe programme code entered does not exist.");
+    }
+    
+    public void nothingToUndoMsg() {
+        System.out.println("\nThere is nothing to undo.");
+    }
+    
+    public void undoCancelledMsg() {
+        System.out.println("\nUndo cancelled.");
+    }
+
+    public void generateTotalFeeReport(ListInterface<Programme> sortedProgrammeListByTotalFee) {
+        String outputStr = "";
+        String sortedData = "";
+        
+        for (int i = 1; i <= sortedProgrammeListByTotalFee.getNumberOfEntries(); i++) {
+            Programme currentElement = sortedProgrammeListByTotalFee.getEntry(i);
+            sortedData += String.format("%-4s %-80s %15.2f\n", currentElement.getCode(), currentElement.getName(), currentElement.getTotalFee());
+        }
+        
+        Programme programmeWithHighestTotalFee = sortedProgrammeListByTotalFee.getFirst();
+        Programme programmeWithLowestTotalFee = sortedProgrammeListByTotalFee.getLast();
+        String highestFeeOutputStr = String.format("%-4s %-80s %15.2f\n", 
+                programmeWithHighestTotalFee.getCode(), programmeWithHighestTotalFee.getName(), programmeWithHighestTotalFee.getTotalFee());
+        String lowestFeeOutputStr = String.format("%-4s %-80s %15.2f\n", 
+                programmeWithLowestTotalFee.getCode(), programmeWithLowestTotalFee.getName(), programmeWithLowestTotalFee.getTotalFee());
+        
+        outputStr += "\n------------------\n";
+        outputStr +=   " Total Fee Report \n";
+        outputStr +=   "------------------\n";
+        outputStr += "\nProgramme list sorted by highest total fees: \n";
+        outputStr += String.format("%-4s %-80s %-15s\n" + sortedData, "Code", "Name", "Total Fees (RM)");
+        outputStr += "\nProgramme with the highest total fee: \n";
+        outputStr += String.format("%-4s %-80s %-15s\n" + highestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
+        outputStr += "\nProgramme with the lowest total fee: \n";
+        outputStr += String.format("%-4s %-80s %-15s\n" + lowestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
+        
+        System.out.println(outputStr);
+        MessageUI.pause();
+    }
+
+    public void generateProgrammeTypeReport(ListInterface<Programme> sortedProgrammeListByProgrammeType) {
+        String outputStr = "";
+        String sortedData = "";
+        int[] programmeTypeCount = new int[5];
+        
+        for (int i = 1; i <= sortedProgrammeListByProgrammeType.getNumberOfEntries(); i++) {
+            Programme currentElement = sortedProgrammeListByProgrammeType.getEntry(i);
+            sortedData += String.format("%-4s %-80s %-10s\n", currentElement.getCode(), currentElement.getName(), currentElement.getProgrammeType());
+            
+            switch (currentElement.getProgrammeType()) {
+                case "Bachelor":
+                    programmeTypeCount[0]++;
+                    break;
+                case "Diploma":
+                    programmeTypeCount[1]++;
+                    break;
+                case "Foundation":
+                    programmeTypeCount[2]++;
+                    break;
+                case "Masters":
+                    programmeTypeCount[3]++;
+                    break;
+                case "PhD":
+                    programmeTypeCount[4]++;
+                    break;
+            }
+        }
+        
+        outputStr += "\n-----------------------\n";
+        outputStr +=   " Programme Type Report \n";
+        outputStr +=   "-----------------------\n";
+        outputStr += "\nProgramme list sorted by programme type: \n";
+        outputStr += String.format("%-4s %-80s %-10s\n" + sortedData, "Code", "Name", "Type");
+        outputStr += String.format("\nNumber of Bachelor programmes     : %d\n", programmeTypeCount[0]);
+        outputStr += String.format(  "Number of Diploma programmes      : %d\n", programmeTypeCount[1]);
+        outputStr += String.format(  "Number of Foundation programmes   : %d\n", programmeTypeCount[2]);
+        outputStr += String.format(  "Number of Masters programmes      : %d\n", programmeTypeCount[3]);
+        outputStr += String.format(  "Number of PhD programmes          : %d\n", programmeTypeCount[4]);
+        
+        System.out.println(outputStr);
+        MessageUI.pause();
+    }
+
+    public void generateTutGroupAssignmentReport(ListInterface<Programme> assignedTutGroupProgrammes, ListInterface<Programme> unassignedTutGroupProgrammes) {
+        String outputStr = "";
+        String sortedDataAssigned = "";
+        String sortedDataUnassigned = "";
+        
+        for (int i = 1; i <= assignedTutGroupProgrammes.getNumberOfEntries(); i++) {
+            Programme currentElement = assignedTutGroupProgrammes.getEntry(i);
+            sortedDataAssigned += String.format("%-4s %-80s %-35s\n", currentElement.getCode(), currentElement.getName(), ProgrammeManagement.createTutorialGroupStr(currentElement.getTutorialGroups()));
+        }
+        
+        for (int i = 1; i <= unassignedTutGroupProgrammes.getNumberOfEntries(); i++) {
+            Programme currentElement = unassignedTutGroupProgrammes.getEntry(i);
+            sortedDataUnassigned += String.format("%-4s %-80s %-35s\n", currentElement.getCode(), currentElement.getName(), "none");
+        }
+        
+        outputStr += "\n----------------------------------\n";
+        outputStr +=   " Tutorial Group Assignment Report \n";
+        outputStr +=   "----------------------------------\n";
+        outputStr += "\nProgramme list with assigned tutorial groups: \n";
+        outputStr += String.format("%-4s %-80s %-35s\n" + sortedDataAssigned, "Code", "Name", "Tutorial Groups");
+        outputStr += "\nProgramme list with unassigned tutorial groups: \n";
+        outputStr += String.format("%-4s %-80s %-35s\n" + sortedDataUnassigned, "Code", "Name", "Tutorial Groups");
+        outputStr += String.format("\nNumber of programmes with assigned tutorial groups: %d\n", assignedTutGroupProgrammes.getNumberOfEntries());
+        outputStr += String.format("Number of programmes with unassigned tutorial groups: %d\n", unassignedTutGroupProgrammes.getNumberOfEntries());
+        
+        System.out.println(outputStr);
+        MessageUI.pause();
     }
 }
