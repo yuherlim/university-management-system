@@ -11,7 +11,7 @@ import entity.Tutor;
 
 /**
  *
- * @author ASUS
+ * @author KHO KA JIE
  */
 public class TutorInitializer {
 
@@ -72,7 +72,7 @@ public class TutorInitializer {
 
         tutorList.add(new Tutor("T031", "Henry", 'M', "950823045527", "013-3456811", "henry@gmail.com", 3700.00, "Master's Degree", domainList1));
         tutorList.add(new Tutor("T032", "Alexander", 'M', "940716017887", "015-3456812", "alexander@gmail.com", 4100.00, "Bachelor's Degree", domainList2));
-        tutorList.add(new Tutor("T033", "Grace", 'F', "970420061236", "012-3456813", "grace@gmail.com", 3500.00, "Master's Degree", domainList3));
+        tutorList.add(new Tutor("T033", "Gracer", 'F', "970420061236", "012-3456813", "grace@gmail.com", 3500.00, "Master's Degree", domainList3));
         tutorList.add(new Tutor("T034", "Daniel", 'M', "980213011241", "016-3456814", "daniel@gmail.com", 3300.00, "Diploma", domainList1));
         tutorList.add(new Tutor("T035", "Aria", 'F', "920928011290", "012-3456815", "aria@gmail.com", 3900.00, "phD", domainList2));
 

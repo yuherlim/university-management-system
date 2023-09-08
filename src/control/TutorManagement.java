@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author Kho Ka Jie
+ * @author KHO KA JIE
  */
 public class TutorManagement {
 
@@ -61,11 +61,11 @@ public class TutorManagement {
             tutorList.add(new Tutor(tutorID, tutorName, tutorGender, tutorIC, tutorPhoneNum, tutorEmail, tutorSalary, educationLevel, tutorDomainList));
             tutorDAO.saveToFile(tutorList);
 
-            nextOrExit = tutorUI.nextOrExit();
-
             System.out.println("------------------------------------------");
             System.out.println("Tutor added : " + tutorList.getLast().getTutorID());
             System.out.println("------------------------------------------");
+            
+            nextOrExit = tutorUI.nextOrExit();
 
         } while (nextOrExit == 'N');
 
@@ -85,9 +85,10 @@ public class TutorManagement {
         } else {
             ListInterface<TeachingAssignment> teachingAssignmentList = taDAO.retrieveFromFile();
 
-            boolean valid = true;
+            boolean valid;
             int selection;
             do {
+                valid = true;
                 selection = tutorUI.removeTutorMenu();
                 switch (selection) {
                     case 1:
@@ -224,9 +225,12 @@ public class TutorManagement {
                                 targetTutor.setEmail(tutorUI.inputTutorEmail());
                                 break;
                             case 4:
-                                targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
+                                targetTutor.setSalary(tutorUI.inputTutorSalary());
                                 break;
                             case 5:
+                                targetTutor.setEducationLevel(tutorUI.inputTutorEduLevel());
+                                break;
+                            case 6:
                                 int modifySelection = tutorUI.modifyTutorDomain();
                                 switch (modifySelection) {
                                     case 1:
@@ -535,7 +539,7 @@ public class TutorManagement {
         return copyArray;
     }
 
-    public static void main(String[] args) {
+    public void TutorManagementMain() {
         TutorManagement tutorManagement = new TutorManagement();
         TutorManagementUI tutorManagementUI = new TutorManagementUI();
         char confirmation = ' ';
