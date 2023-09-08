@@ -270,6 +270,27 @@ public class ProgrammeManagementUI {
         return choice;
     }
     
+    public int getGenerateReportMenuChoice() {
+        System.out.println("\nPlease select a choice: ");
+        System.out.println("0. Go back");
+        System.out.println("1. View programme list sorted by highest total fees.");
+        System.out.println("2. View programme list sorted by programme type.");
+        System.out.println("3. View programme list grouped by programmes with assigned and unassigned tutorial groups.");
+        int choice;
+        boolean valid = false;
+        do {
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice >= 0 && choice <= 3) {
+                valid = true;
+            } else {
+                MessageUI.displayInvalidChoiceMessage();
+            }
+        } while (valid == false);
+        return choice;
+    }
+    
     public int getFindProgrammeMenuChoice() {
         System.out.println("\nPlease select a choice: ");
         System.out.println("0. Go back");
@@ -418,5 +439,39 @@ public class ProgrammeManagementUI {
     
     public void undoCancelledMsg() {
         System.out.println("\nUndo cancelled.");
+    }
+
+    public void generateHighestTotalFeeReport(ListInterface<Programme> sortedProgrammeListByTotalFee) {
+        String outputStr = "";
+        
+        for (int i = 1; i <= sortedProgrammeListByTotalFee.getNumberOfEntries(); i++) {
+            Programme currentElement = sortedProgrammeListByTotalFee.getEntry(i);
+            outputStr += String.format("%-4s %-80s %15.2f", currentElement.getCode(), currentElement.getName(), currentElement.getTotalFee()) + "\n";
+        }
+        
+        Programme programmeWithHighestTotalFee = sortedProgrammeListByTotalFee.getFirst();
+        Programme programmeWithLowestTotalFee = sortedProgrammeListByTotalFee.getLast();
+        String highestFeeOutputStr = String.format("%-4s %-80s %15.2f", 
+                programmeWithHighestTotalFee.getCode(), programmeWithHighestTotalFee.getName(), programmeWithHighestTotalFee.getTotalFee()) + "\n";
+        String lowestFeeOutputStr = String.format("%-4s %-80s %15.2f", 
+                programmeWithLowestTotalFee.getCode(), programmeWithLowestTotalFee.getName(), programmeWithLowestTotalFee.getTotalFee()) + "\n";
+        
+        System.out.println("\nProgramme list sorted by highest total fees: ");
+        System.out.printf("%-4s %-80s %-15s\n" + outputStr, "Code", "Name", "Total Fees (RM)");
+        System.out.println("\nProgramme with the highest total fee:");
+        System.out.printf("%-4s %-80s %-15s\n" + highestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
+        System.out.println("\nProgramme with the lowest total fee:");
+        System.out.printf("%-4s %-80s %-15s\n" + lowestFeeOutputStr, "Code", "Name", "Total Fees (RM)");
+        
+        System.out.println("");
+        MessageUI.pause();
+    }
+
+    public void generateSortedByProgrammeTypeReport(ListInterface<Programme> sortedProgrammeListByProgrammeType) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void generateTutGroupAssignmentReport(ListInterface<Programme> assignedTutGroupProgrammes, ListInterface<Programme> unassignedTutGroupProgrammes) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

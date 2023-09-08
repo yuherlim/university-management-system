@@ -110,7 +110,7 @@ public class ProgrammeManagement {
         }
         return outputStr;
     }
-    
+
     private String getAllTutGroupAndProgrammesFromStack(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
         String outputStr = "";
         Iterator<Programme> itProgramme = undoStackProgramme.getIterator();
@@ -205,7 +205,7 @@ public class ProgrammeManagement {
         programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         return false;
     }
-    
+
     private boolean undoTutGroupRemoval(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
         while (!(undoStackProgramme.isEmpty())) {
             undoStackProgramme.pop().getTutorialGroups().add(undoStackTutGroup.pop());
@@ -222,7 +222,7 @@ public class ProgrammeManagement {
         undoConfirmation = programmeManagementUI.inputConfirmation();
         return undoConfirmation;
     }
-    
+
     private char getUndoTutGroupRemovalConfirmation(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
         char undoConfirmation;
         programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupAndProgrammesFromStack(undoStackProgramme, undoStackTutGroup));
@@ -240,7 +240,7 @@ public class ProgrammeManagement {
         programmeManagementUI.listProgrammes(getAllProgrammesFromList(programmeList));
         return true;
     }
-    
+
     private boolean removeProgrammeTutGroupTemporarily(ArrayStack<Programme> undoStackProgramme, Programme programmeToRemoveTutGroup, ArrayStack<String> undoStackTutGroup) {
         undoStackProgramme.push(programmeToRemoveTutGroup);
         undoStackTutGroup.push(programmeToRemoveTutGroup.getTutorialGroups().getLast());
@@ -257,7 +257,7 @@ public class ProgrammeManagement {
         removeConfirmation = programmeManagementUI.inputConfirmation();
         return removeConfirmation;
     }
-    
+
     private char getTutGroupRemovalConfirmation(Programme programmeToRemoveTutGroup) {
         char removeConfirmation;
         programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForOneProgramme(programmeToRemoveTutGroup));
@@ -273,7 +273,7 @@ public class ProgrammeManagement {
         }
         undoStackPosition.clear();
     }
-    
+
     private void getTutGroupCodeFromUndoStack(ArrayStack<Programme> undoStackProgramme, ArrayList<String> tutGroupCodeToRemove, ArrayStack<String> undoStackTutGroup) {
         // clear the undo stack data.
         while (!(undoStackProgramme.isEmpty())) {
@@ -289,7 +289,7 @@ public class ProgrammeManagement {
         confirmation = programmeManagementUI.inputConfirmation();
         return confirmation;
     }
-    
+
     private char getTutGroupRemovalConfirmation(ArrayStack<Programme> undoStackProgramme, ArrayStack<String> undoStackTutGroup) {
         char confirmation;
         programmeManagementUI.listTutGroupsForProgrammes(getAllTutGroupAndProgrammesFromStack(undoStackProgramme, undoStackTutGroup));
@@ -303,7 +303,7 @@ public class ProgrammeManagement {
         System.out.println("\nThe above programmes has been successfully removed.");
         removeProgrammeFromCourseList(codeToRemove);
     }
-    
+
     private void updateTutGroupRemovalToFile(ArrayList<String> tutGroupCodeToRemove) {
         programmeDAO.saveToFile(programmeList);
         System.out.println("\nThe above tutorial groups has been successfully removed from their respective programmes.");
@@ -316,7 +316,7 @@ public class ProgrammeManagement {
         Programme programmeToRemove = searchByProgrammeCode(programmeList);
         return programmeToRemove;
     }
-    
+
     private Programme getProgrammeToRemoveTutGroup() {
         programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
         System.out.println("\nEnter the programme code of the program to remove a tutorial group.");
@@ -330,7 +330,7 @@ public class ProgrammeManagement {
         Programme programmeToAddTutGroup = searchByProgrammeCode(programmeList);
         return programmeToAddTutGroup;
     }
-    
+
     private Programme getProgrammeToViewTutGroup() {
         System.out.println("\nEnter the programme code of the program that you want to view all tutorial groups.");
         Programme programmeToViewTutGroup = searchByProgrammeCode(programmeList);
@@ -528,7 +528,7 @@ public class ProgrammeManagement {
             System.out.println("\nThere are currently no programmes.");
             return;
         }
-        
+
         ArrayStack<Programme> undoStackProgramme = new ArrayStack<>();
         ArrayStack<String> undoStackTutGroup = new ArrayStack<>();
         ArrayList<String> tutGroupCodeToRemove = new ArrayList<>(); // used to modify tutorial group list if there is removal of tut groups from programmes.
@@ -557,9 +557,9 @@ public class ProgrammeManagement {
                         programmeManagementUI.nonexistentProductCodeMsg();
                         break;
                     }
-                    
+
                     ArrayList<String> tutGroupList = programmeToRemoveTutGroup.getTutorialGroups();
-                    
+
                     if (tutGroupList == null || tutGroupList.isEmpty()) {
                         System.out.println("\nThere are currently no tutorial groups for this programme.");
                         break;
@@ -596,7 +596,7 @@ public class ProgrammeManagement {
             System.out.println("\nThere are currently no programmes.");
             return;
         }
-        
+
         int selection;
         do {
             selection = programmeManagementUI.getDisplayTutorialGroupMenuChoice();
@@ -619,10 +619,10 @@ public class ProgrammeManagement {
                     break;
             }
         } while (selection != 0);
-        
+
         programmeManagementUI.listTutGroupsForProgrammes(getTutGroupsForAllProgrammes(programmeList));
     }
-    
+
     private String getTutGroupsForAllProgrammes(ListInterface<Programme> programmeList) {
         String outputStr = "";
         Iterator<Programme> it = programmeList.getIterator();
@@ -632,29 +632,51 @@ public class ProgrammeManagement {
         }
         return outputStr;
     }
-    
+
     private String getTutGroupsForOneProgramme(Programme programmeToViewTutGroup) {
         String outputStr = "";
         String groupStr = "";
         ArrayList<String> currentProgrammeTutGroupList = programmeToViewTutGroup.getTutorialGroups();
-        
+
         if (currentProgrammeTutGroupList != null && !currentProgrammeTutGroupList.isEmpty()) {
             groupStr += createTutorialGroupStr(currentProgrammeTutGroupList);
         } else {
             groupStr += "none";
         }
-        
+
         outputStr += String.format("%-4s %-80s %-35s\n", programmeToViewTutGroup.getCode(), programmeToViewTutGroup.getName(), groupStr);
-        
+
         return outputStr;
     }
 
     private void generateReports() {
-//        if (programmeList.isEmpty()) {
-//            System.out.println("\nThere are currently no programmes.");
-//            return;
-//        }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (programmeList.isEmpty()) {
+            System.out.println("\nThere are currently no programmes.");
+            return;
+        }
+        
+        ListInterface<Programme> assignedTutGroupProgrammes = new ArrayList<>();
+        ListInterface<Programme> unassignedTutGroupProgrammes = new ArrayList<>();
+        int selection;
+        do {
+            selection = programmeManagementUI.getGenerateReportMenuChoice();
+            switch (selection) {
+                case 0:
+                    System.out.println("\nExiting report generation...");
+                    break;
+                case 1:
+                    programmeManagementUI.generateHighestTotalFeeReport(getSortedProgrammeListByTotalFee());
+                    break;
+                case 2:
+                    programmeManagementUI.generateSortedByProgrammeTypeReport(getSortedProgrammeListByProgrammeType());
+                    break;
+                case 3:
+                    getAssignedAndUnassignedProgrammes(assignedTutGroupProgrammes, unassignedTutGroupProgrammes);
+                    programmeManagementUI.generateTutGroupAssignmentReport(assignedTutGroupProgrammes, unassignedTutGroupProgrammes);
+                    break;
+            }
+
+        } while (selection != 0);
     }
 
     public static void main(String[] args) {
@@ -693,7 +715,7 @@ public class ProgrammeManagement {
         }
         courseDAO.saveToFile(courseList);
     }
-    
+
     private void removeTutGroupFromTutGroupList(ArrayList<String> tutGroupCodeToRemove) {
         TutorialGroupDAO tutGroupDAO = new TutorialGroupDAO();
         ListInterface<TutorialGroup> tutGroupList = tutGroupDAO.retrieveFromFile();
@@ -701,7 +723,7 @@ public class ProgrammeManagement {
         for (int i = 1; i <= tutGroupCodeToRemove.getNumberOfEntries(); i++) {
             tutGroupList.remove(new TutorialGroup(tutGroupCodeToRemove.getEntry(i)));
         }
-        
+
         tutGroupDAO.saveToFile(tutGroupList);
     }
 
@@ -831,24 +853,37 @@ public class ProgrammeManagement {
         tutGroupDAO.saveToFile(tutGroupList);
     }
 
+    //The total fee of each programme is sorted through descending order.
     private ListInterface<Programme> getSortedProgrammeListByTotalFee() {
-        ProgrammeDAO progDAO = new ProgrammeDAO();
-        ListInterface<Programme> sortedList = convertToArrayList(progDAO.retrieveFromFile()); // the list that will be sorted.
-        
-        
-        
+        ListInterface<Programme> sortedList = convertToArrayList(programmeList); // the list that will be sorted.
+
+        // Insertion sort, descending order
+        for (int i = 2; i <= sortedList.getNumberOfEntries(); i++) {
+            int j = i;
+            while (j > 1 && sortedList.getEntry(j - 1).getTotalFee() < sortedList.getEntry(j).getTotalFee()) {
+                swapProgrammePosition(sortedList, j, j - 1);
+                j--;
+            }
+        }
+
         return sortedList;
     }
-    
+
     private ListInterface<Programme> getSortedProgrammeListByProgrammeType() {
-        ProgrammeDAO progDAO = new ProgrammeDAO();
-        ListInterface<Programme> sortedList = convertToArrayList(progDAO.retrieveFromFile()); // the list that will be sorted.
-        
-        
-        
+        ListInterface<Programme> sortedList = convertToArrayList(programmeList); // the list that will be sorted.
+
+        // Insertion sort, ascending order
+        for (int i = 2; i <= sortedList.getNumberOfEntries(); i++) {
+            int j = i;
+            while (j > 1 && sortedList.getEntry(j - 1).getProgrammeType().compareTo(sortedList.getEntry(j).getProgrammeType()) > 0) {
+                swapProgrammePosition(sortedList, j, j - 1);
+                j--;
+            }
+        }
+
         return sortedList;
     }
-    
+
     private void getAssignedAndUnassignedProgrammes(ListInterface<Programme> assignedTutGroupProgrammes, ListInterface<Programme> unassignedTutGroupProgrammes) {
         Iterator<Programme> it = programmeList.getIterator();
         while (it.hasNext()) {
@@ -861,7 +896,7 @@ public class ProgrammeManagement {
             }
         }
     }
-    
+
     public ListInterface<Programme> convertToArrayList(ListInterface<Programme> programmeList) {
         ListInterface<Programme> arrayList = new ArrayList<>();
         Iterator<Programme> it = programmeList.getIterator();
@@ -871,6 +906,13 @@ public class ProgrammeManagement {
         }
         return arrayList;
     }
+
+    private void swapProgrammePosition(ListInterface<Programme> sortedList, int firstProgrammePosition, int secondProgrammePosition) {
+        Programme temp = sortedList.getEntry(firstProgrammePosition);
+        sortedList.replace(firstProgrammePosition, sortedList.getEntry(secondProgrammePosition));
+        sortedList.replace(secondProgrammePosition, temp);
+    }
+
 }
 
 /*

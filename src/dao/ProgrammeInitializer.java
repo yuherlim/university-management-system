@@ -126,7 +126,14 @@ public class ProgrammeInitializer {
         programmeList.add(new Programme("RMM", "Bachelor of Science (Honours) in Management Mathematics with Computing", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme is a multi-disciplinary blend with Management Mathematics as the major, Computing as the minor and Economics or Accounting Methods as the associate study.", 3, 34100, courseListRMM, tutGroupListRMM));
         programmeList.add(new Programme("RSS", "Bachelor of Information Technology (Honours) in Software Systems Development", "Faculty of Computing and Information Technology (FOCS)", "Bachelor", "This programme produces and equips graduates with in-depth knowledge and skills that are essential to work as professionals in the software systems development and computer networking sectors.", 3, 34600, courseListRSS, null));
         
+        // mock data for testing sorting
+        programmeList.add(new Programme("FIS", "Foundation in Science", "Faculty of Applied Sciences (FOAS)", "Foundation", "This programme prepares SPM/ O Level school leavers for progression to STEM-related bachelor's degree programmes.", 1, 10200));
+        programmeList.add(new Programme("DSC", "Diploma in Science", "Faculty of Applied Sciences (FOAS)", "Diploma", "This programme aims to produce chemistry and biology graduates at the sub-professional level.", 2, 18300));
+        programmeList.add(new Programme("FIA", "Foundation in Arts", "Faculty of Communications and Creative Industries (FCCI)", "Foundation", "This programme teaches the fundamentals of general subjects that prepare students for a multitude of bachelor's degree programmes.", 1, 9900));
+        programmeList.add(new Programme("DCS", "Diploma in Computer Science", "Faculty of Computing and Information Technology (FOCS)", "Diploma", "Students are trained in both theoretical knowledge and practical skills for software development, system design and related mathematical techniques.", 2, 17600));
+        programmeList.add(new Programme("FIC", "Foundation in Computing", "Faculty of Computing and Information Technology (FOCS)", "Foundation", "The programme offers computer science/IT-related courses to prepare SPM/O Level school leavers for progression to undergraduate studies.", 1, 10200));
         programmeList.add(new Programme("RFS", "Bachelor of Science (Hons) in Food Science", "Faculty of Applied Sciences (FOAS)", "Bachelor", "This programme applies the pure science subjects, such as chemistry, biochemistry, nutrition, biology and microbiology to the study of the nature, properties and composition of foods.", 3, 30000));
+        
         
         programmeDAO.saveToFile(programmeList);
     }
